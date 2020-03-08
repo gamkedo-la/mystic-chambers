@@ -15,7 +15,18 @@ window.onload = function()
         new ImageObject("images/ground.png", vec2(160, 160)),
         new ImageObject("images/wall.png", vec2(160, 160)),
     ];
+    wallColors = [
+        "yellow",
+        "grey",
+        "red"
+    ];
     wall = [];
+
+    areaColors = [
+        "#00ff0020",
+        "#0000ff20",
+        "#80800020"
+    ];
     area = [];
 
     playerInit();
@@ -82,9 +93,7 @@ function events(deltaTime)
 
 function update(deltaTime)
 {
-    //called in update because it needs to run only when all images are loaded
-    //the function has a boolean which allows it to run only once
-    loadRoofAndFloorTextureData();
+    loadRoofAndFloorTextureDataOnce();
 
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
@@ -102,6 +111,7 @@ function draw()
 
     if(mapMode)
     {
+        //Offsets added before rendering and removed after rendering for Camera Movement
         for(let i = 0; i < wall.length; i++)
             wall[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
                 -(ray[ray.length/2].p.y - (window.innerHeight/2))));
@@ -124,7 +134,7 @@ function draw()
 
         for(let i = 0; i < area.length; i++)
         {
-            area[i].draw(renderer, ["#00ff0020", "#0000ff20", "#80800020"]);
+            area[i].draw(renderer, areaColors);
             
             area[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
@@ -136,7 +146,7 @@ function draw()
 
         for (let i = 0; i < wall.length; i++)
         {
-            wall[i].draw(renderer, ["yellow", "grey", "red"]);
+            wall[i].draw(renderer, wallColors);
 
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));

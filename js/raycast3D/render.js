@@ -24,8 +24,8 @@ var maxDepthChangeFactor = textureSize / 2.0;
 var roofFloorRenderTexture = false;
 var roofFloorPointSize = 10;
 
-var colorDepthYG1 = 225;//for texture rendering
-var colorDepthYG2 = 250;//for texture rendering
+var colorDepthYG1 = 225; //for texture rendering
+var colorDepthYG2 = 250; //for texture rendering
 
 var depthYGStep = 16;
 
@@ -112,7 +112,7 @@ function renderRaycast3D(renderer, ray, wall)
     }
 }
 
-function loadRoofAndFloorTextureData()
+function loadRoofAndFloorTextureDataOnce()
 {
     if(!imgDataDone)
     {

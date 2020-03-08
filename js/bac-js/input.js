@@ -2,8 +2,6 @@ function onResize(ev)
 {
     renderer.canvas.width = window.innerWidth;
     renderer.canvas.height = window.innerHeight;
-    
-    //window.onload();
 }
 
 var isTouched = false;

@@ -391,7 +391,7 @@ function enableFullScreen(canvas)
 
 function writeFile(file, str)
 {
-  //HOW? Not possible in JS?
+  //HOW? Not possible in Vanilla JS?
 
   //But you can output on console and copy/paste in the file manually.
   console.log("COPY PASTE IT IN FILE: " + file);

@@ -476,7 +476,7 @@ class RadioButton extends UIObject
             (this.transform.scale.x + this.transform.scale.y)/2);
 
         this.enableRadius = typeof enableRadius == "undefined" ?
-            this.transform.scale.x /* or y; doesnt matter*/ - 4 : enableRadius;
+            this.transform.scale.x /* or y; doesnt matter */ - 4 : enableRadius;
 
         this.color = typeof color == "undefined" ? uiContext.bgSecondaryColor : color;
 
@@ -529,8 +529,7 @@ class Panel extends UIObject
     {
         super(transform);
 
-        //COOL BUG: this.fixPosition = this.transform.position;
-        //(Reference vs Copying in JS!?)
+        //COOL BUG: this.fixPosition = this.transform.position; //Reference/Copy Confusion!!?
 
         //FIXED:
         this.fixPosition = vec2(this.transform.position.x, this.transform.position.y);
@@ -1083,7 +1082,7 @@ class Slider extends UIObject
         }
     }
 }
-
+ // *** WORK IN PROGRESS ***
 class CircularPad extends UIObject
 {
     constructor(transform, controlRadius, padRadius, controlColor, padColor, limitArea)
