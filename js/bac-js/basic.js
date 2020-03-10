@@ -389,13 +389,30 @@ function enableFullScreen(canvas)
     canvas.webkitRequestFullScreen();
 }
 
+// example:
+// downloadString("a,b,c\n1,2,3", "text/plain", "myLevelData.txt")
+function downloadString(text, fileType, fileName)
+{
+    var blob = new Blob([text], { type: fileType });
+    var a = document.createElement('a');
+    a.download = fileName;
+    a.href = URL.createObjectURL(blob);
+    a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+}
+  
+
 function writeFile(file, str)
 {
-  //HOW? Not possible in Vanilla JS?
-
-  //But you can output on console and copy/paste in the file manually.
-  console.log("COPY PASTE IT IN FILE: " + file);
-  console.log(str);
+    // FIXME: sanitize the input better!
+    // watch for invalid filenames w backslashes etc
+    if (!file || !file.length || !str || !str.length) return;
+    console.log("Downloading a "+str.length+" byte text file named: " + file);
+    downloadString(str,"text/plain",file);
 }
 
 function readFile(file)
