@@ -29,6 +29,8 @@ window.onload = function()
     ];
     area = [];
 
+    entCol = false;
+
     ent = new Entity();
     ent.set(600, 200, new Sprite(tr(),
         new ImageObject("images/door.png", vec2(160, 160))));
@@ -158,9 +160,13 @@ function draw()
 
         ent.addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
             -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-        ent.draw(renderer, null, true);
+        if(!entCol) ent.draw(renderer, null, true);
         ent.addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
             ray[ray.length/2].p.y - (window.innerHeight/2)));
+
+        var coll = ent.getCollValue(plPos);
+        if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
+        //plPos = plPos.add(coll);
     }
     else
     {
@@ -169,13 +175,17 @@ function draw()
                 ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall);
 
-        ent.draw(renderer, ray[ray.length/2], false);
+        if(!entCol) ent.draw(renderer, ray[ray.length/2], false);
 
         for(let i = 0; i < area.length; i++)
         {
             var coll = area[i].getCollValue(plPos, prevPlPos);
             plPos = plPos.add(coll);
         }
+
+        var coll = ent.getCollValue(plPos);
+        if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
+        //plPos = plPos.add(coll);
     }
 
     ui.draw();

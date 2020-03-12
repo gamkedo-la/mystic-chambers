@@ -1,4 +1,8 @@
 
+var entityCollisionSize = 4.0;
+var entityAfterCollisionGap = 0.25;
+var entityCollisionAngleDiff = degToRad(-2.5);
+
 //Requires Sprite
 class Entity
 {
@@ -28,6 +32,8 @@ class Entity
                 this.p.y - (Math.sin(this.angle) * this.size)),
                 vec2(this.p.x + (Math.cos(this.angle) * this.size),
                 this.p.y + (Math.sin(this.angle) * this.size)), "white");
+
+            drawCircle(renderer, this.p, entityCollisionSize, false, "white");
         }
         else
         {
@@ -45,6 +51,19 @@ class Entity
                 (window.innerHeight/2) - (this.sprite.transform.scale.y/2));
             this.sprite.drawSc();
         }
+    }
+
+    getCollValue(plP)
+    {
+        var dist = plP.distance(this.p);
+
+        if(dist < entityCollisionSize)
+        {
+            return vec2((entityCollisionSize + entityAfterCollisionGap - dist) * Math.cos(this.angle + entityCollisionAngleDiff),
+                (entityCollisionSize + entityAfterCollisionGap - dist) * Math.sin(this.angle + entityCollisionAngleDiff));
+        }
+        
+        return vec2(0, 0);
     }
 
     addOffset(vec2)
