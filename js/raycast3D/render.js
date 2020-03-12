@@ -43,6 +43,7 @@ var imgDataDone = false;
 function renderRaycast3D(renderer, ray, wall)
 {
     prevDepth = -1.0;
+
     for (let i = 0; i < ray.length; i++)
     {
         var data = ray[i].draw(renderer, wall, false);
@@ -54,6 +55,9 @@ function renderRaycast3D(renderer, ray, wall)
 
             if(prevDepth > -0.999 && Math.abs(data.depth - prevDepth) < fishEyeRemoveThreshold)
                 data.depth = lerp(data.depth, prevDepth, fishEyeRemoveFactor);
+
+            //data.depth = Math.sqrt(data.depth * 25);
+            //data.depth = data.depth * Math.cos(degToRad(ray[ray.length/2].angle) - degToRad(ray[i].angle));
 
             segmentSize = vec2(
                 (window.innerWidth / ray.length) + 2,

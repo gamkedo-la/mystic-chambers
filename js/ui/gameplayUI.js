@@ -346,7 +346,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         ray = [];
         for (let i = -rayRenderFOV; i < 0.0; i += rayAngleDiff)
             ray.push(new Ray(pos, i));
-        console.log(ray.length);
         
         rayRenderObjects[2].button.resetOutput();
     }

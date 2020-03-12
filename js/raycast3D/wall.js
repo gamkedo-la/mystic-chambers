@@ -1,4 +1,5 @@
 
+//Requires Vector2
 totalWalls = 0;
 class Wall
 {

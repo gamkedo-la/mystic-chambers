@@ -48,7 +48,7 @@ class Ray
 
                 if(isPointOnLine( vec2(x3, y3), vec2(x4, y4), vec2(_px, _py), 0.01 )
                 && isPointOnLine( vec2(x1, y1), vec2(x2, y2), vec2(_px, _py), 0.01 )
-                && _pdist < pdist)
+                && Math.abs(_pdist) < Math.abs(pdist))
                 {
                     pdist = _pdist;
                     px = _px;

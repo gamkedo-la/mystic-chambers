@@ -30,7 +30,8 @@ window.onload = function()
     area = [];
 
     ent = new Entity();
-    ent.set(500, 500);
+    ent.set(600, 200, new Sprite(tr(),
+        new ImageObject("images/door.png", vec2(160, 160))));
 
     playerInit();
 
@@ -110,7 +111,7 @@ function draw()
 
     drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, "black");
 
-    drawSprites();
+    //drawSprites();
 
     if(mapMode)
     {
@@ -154,6 +155,12 @@ function draw()
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
+
+        ent.addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
+            -(ray[ray.length/2].p.y - (window.innerHeight/2))));
+        ent.draw(renderer, null, true);
+        ent.addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+            ray[ray.length/2].p.y - (window.innerHeight/2)));
     }
     else
     {
@@ -161,6 +168,9 @@ function draw()
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
                 ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall);
+
+        ent.draw(renderer, ray[ray.length/2], false);
+
         for(let i = 0; i < area.length; i++)
         {
             var coll = area[i].getCollValue(plPos, prevPlPos);
@@ -168,14 +178,7 @@ function draw()
         }
     }
 
-    ent.addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-         -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-    ent.draw(renderer, vec2(window.innerWidth/2, window.innerHeight/2));
-    ent.addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-        ray[ray.length/2].p.y - (window.innerHeight/2)));
-
     ui.draw();
-    //ui.debugDraw("#ffff00");
 }
 
 function frame()

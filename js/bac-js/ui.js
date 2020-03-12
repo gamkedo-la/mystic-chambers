@@ -984,6 +984,8 @@ class Slider extends UIObject
         this.selectKnobColor = typeof selectKnobColor == "undefined" ? uiContext.fgSecondaryColor : selectKnobColor;
         this.disabledKnobColor = typeof disabledKnobColor == "undefined" ? uiContext.fgPrimaryColor + "80" : disabledKnobColor;
 
+        this.startKnobValueSet = 10;
+        
         this.event = function()
         {
             if(this.enabled)
@@ -992,7 +994,11 @@ class Slider extends UIObject
                 this.transform.position.y + (this.knobRadius * 2));
                 var knobEndPos = knobStartPos.add(vec2(this.transform.scale.x/2, this.bgLineThickness));
 
-                this.updatePositionFromKnobValue(knobStartPos.x, knobEndPos.x);
+                if(this.startKnobValueSet > 0)
+                {
+                    this.updatePositionFromKnobValue(knobStartPos.x, knobEndPos.x);
+                    this.startKnobValueSet--;
+                }
 
                 this.touchId = touched(this.knobTransform);
                 
