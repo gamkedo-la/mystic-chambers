@@ -8,7 +8,11 @@ window.onload = function()
     setPointerLock(canvas);
     platform = getPlatform();
     spritesRenderer = renderer;
+    audio.init();
     uiSettings();
+
+    musicStarted = false;
+    loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
     wallImages = [
         new ImageObject("images/door.png", vec2(160, 160)),
@@ -112,6 +116,12 @@ function events(deltaTime)
 function update(deltaTime)
 {
     loadRoofAndFloorTextureDataOnce();
+
+    if(!musicStarted && typeof bgMusicBuffer != "undefined")
+    {
+        musicStarted = true;
+        audio.playMusic(bgMusicBuffer);
+    }
 
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));

@@ -165,3 +165,19 @@ function AudioGlobal() {
 
     return this;
 }
+
+
+//--//Game Specific functions------------------------------------------------------
+
+bgMusicBuffer = undefined;
+function loadBGMusic (url) {
+	var request = new XMLHttpRequest();
+	request.open('GET', url, true);
+	request.responseType = 'arraybuffer';
+	request.onload = function() {
+		audio.context.decodeAudioData(request.response, function(buffer) {
+			bgMusicBuffer = buffer;
+		});
+	}
+	request.send();
+}
