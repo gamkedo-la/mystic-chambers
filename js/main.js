@@ -51,6 +51,14 @@ window.onload = function()
     ent = new Entity();
     ent.set(600, 200, entIdleImages);
 
+    
+
+    decorationImages = [
+        new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
+    ];
+    
+    decorations.scatter(decorationImages,32,400,0,800,400); // experimenal WIP
+
     playerInit();
 
     editorInit(wall, area);
@@ -189,6 +197,7 @@ function draw()
         var coll = ent.getCollValue(plPos);
         if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
         //plPos = plPos.add(coll);
+
     }
     else
     {
@@ -209,6 +218,8 @@ function draw()
         if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
         //plPos = plPos.add(coll);
     }
+
+    decorations.draw(renderer, ray[ray.length/2], mapMode);
 
     ui.draw();
 }
