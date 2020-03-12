@@ -57,7 +57,7 @@ window.onload = function()
         new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
     ];
     
-    decorations.scatter(decorationImages,32,400,0,800,400); // experimenal WIP
+    decorations.scatter(decorationImages,64,400,0,800,400); // experimenal WIP
 
     playerInit();
 
