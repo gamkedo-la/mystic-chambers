@@ -54,7 +54,7 @@ class Entity
             var posRatio = radToDeg(plRay.p.angle(this.p) + (Math.PI/2.0))
                 - (plRay.angle + 270.0);
             var posSegment = 30.0;
-            var scaleFactor = 30.0 * 16;
+            var scaleFactor = 50.0;
 
             var imageSide = radToDeg(plRay.p.angle(this.p) + Math.PI)
                 / (360.0 / this.idleImages.length);

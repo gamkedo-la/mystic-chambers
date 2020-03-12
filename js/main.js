@@ -34,14 +34,14 @@ window.onload = function()
     //entity complex rendering works only for seperate images, not spritesheets
     //dynamic; can be ANY number of images
     entIdleImages = [
-        new ImageObject("images/complexEntityTest0.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest1.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest2.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest3.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest4.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest5.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest6.png", vec2(28, 36)),
-        new ImageObject("images/complexEntityTest7.png", vec2(28, 36)),
+        new ImageObject("images/fireSkull0.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull1.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull2.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull3.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull4.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull5.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull6.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull7.png", vec2(160, 160)),
     ];
 
     ent = new Entity();
