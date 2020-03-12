@@ -31,9 +31,21 @@ window.onload = function()
 
     entCol = false;
 
+    //entity complex rendering works only for seperate images, not spritesheets
+    //dynamic; can be ANY number of images
+    entIdleImages = [
+        new ImageObject("images/complexEntityTest0.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest1.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest2.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest3.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest4.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest5.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest6.png", vec2(28, 36)),
+        new ImageObject("images/complexEntityTest7.png", vec2(28, 36)),
+    ];
+
     ent = new Entity();
-    ent.set(600, 200, new Sprite(tr(),
-        new ImageObject("images/door.png", vec2(160, 160))));
+    ent.set(600, 200, entIdleImages);
 
     playerInit();
 
