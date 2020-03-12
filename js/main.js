@@ -29,6 +29,9 @@ window.onload = function()
     ];
     area = [];
 
+    ent = new Entity();
+    ent.set(500, 500);
+
     playerInit();
 
     editorInit(wall, area);
@@ -164,6 +167,12 @@ function draw()
             plPos = plPos.add(coll);
         }
     }
+
+    ent.addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
+         -(ray[ray.length/2].p.y - (window.innerHeight/2))));
+    ent.draw(renderer, vec2(window.innerWidth/2, window.innerHeight/2));
+    ent.addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+        ray[ray.length/2].p.y - (window.innerHeight/2)));
 
     ui.draw();
     //ui.debugDraw("#ffff00");

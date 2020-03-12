@@ -4,9 +4,9 @@ class Wall
 {
     constructor()
     {
-        this.p1 = vec2(0, 0);
-        this.p2 = vec2(0, 0);
-        this.angle = 0;
+        this.p1 = vec2(0.0, 0.0);
+        this.p2 = vec2(0.0, 0.0);
+        this.angle = 0.0;
         this.type = 0;
 
         this.index = totalWalls++;
