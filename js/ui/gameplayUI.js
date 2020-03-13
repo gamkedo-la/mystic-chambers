@@ -33,6 +33,9 @@ function setupGameplayUI()
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Save")));
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
 
+    decorEditorObjects = [];
+    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
+
     itemsEditorObjects = [];
     itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
 
@@ -44,10 +47,12 @@ function setupGameplayUI()
         new TextButton(tr(), new Label(tr(), "WALLS")), true, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), areasEditorObjects, undefined,
         new TextButton(tr(), new Label(tr(), "AREAS")), false, "#024050", "#000000"));
+    cpEditTabs.push(new Tab(tr(vec2(), tabSize), decorEditorObjects, undefined,
+        new TextButton(tr(), new Label(tr(), "DECOR.")), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), itemsEditorObjects, undefined,
         new TextButton(tr(), new Label(tr(), "ITEMS")), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), enemiesEditorObjects,
-        [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2]],
+        [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2], cpEditTabs[3]],
         new TextButton(tr(), new Label(tr(), "ENEMIES")), false, "#024050", "#000000"));
 
     cpEditObjects = [];
@@ -60,9 +65,12 @@ function setupGameplayUI()
         new SubState(tr(), [cpEditTabs[0], cpEditTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpEditTabs[2], cpEditTabs[3]]), false, vec2(5, 0), vec2(2, 1), true));
+    cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
+        new SubState(tr(), [cpEditTabs[4]]), false, vec2(5, 0), vec2(2, 1), true));
 
     cpEditObjects = pushArr(cpEditObjects, wallEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, areasEditorObjects);
+    cpEditObjects = pushArr(cpEditObjects, decorEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, itemsEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, enemiesEditorObjects);
     

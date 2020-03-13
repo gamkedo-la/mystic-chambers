@@ -38,18 +38,18 @@ window.onload = function()
     //entity complex rendering works only for seperate images, not spritesheets
     //dynamic; can be ANY number of images
     entIdleImages = [
-        new ImageObject("images/fireSkull0.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull1.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull2.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull3.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull4.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull5.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull6.png", vec2(160, 160)),
-        new ImageObject("images/fireSkull7.png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (1).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (2).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (3).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (4).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (5).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (6).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (7).png", vec2(160, 160)),
+        new ImageObject("images/fireSkull (8).png", vec2(160, 160)),
     ];
-
-    ent = new Entity();
-    ent.set(600, 200, entIdleImages);
+    ent = new Entity(window.innerWidth/2, window.innerHeight/2);
+    ent.set(0, 0, entIdleImages);
+    entities.push(ent);
 
     
 
@@ -57,7 +57,7 @@ window.onload = function()
         new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
     ];
     
-    decorations.scatter(decorationImages,64,1000,300,1400,700,vec2(1, -100)); // experimental WIP
+    decorations.scatter(decorationImages,200,1000,300,1400,700,vec2(1, -160)); // experimental WIP
 
     playerInit();
 
@@ -190,12 +190,6 @@ function draw()
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
 
-        ent.addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-            -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-        if(!entCol) ent.draw(renderer, null, true);
-        ent.addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-            ray[ray.length/2].p.y - (window.innerHeight/2)));
-
         var coll = ent.getCollValue(plPos);
         if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
         //plPos = plPos.add(coll);
@@ -208,8 +202,6 @@ function draw()
                 ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall);
 
-        if(!entCol) ent.draw(renderer, ray[ray.length/2], false);
-
         for(let i = 0; i < area.length; i++)
         {
             var coll = area[i].getCollValue(plPos, prevPlPos);
@@ -221,7 +213,7 @@ function draw()
         //plPos = plPos.add(coll);
     }
 
-    decorations.draw(renderer, ray[ray.length/2], mapMode);
+    drawEntities(renderer, ray[ray.length/2], mapMode);
 
     ui.draw();
 }

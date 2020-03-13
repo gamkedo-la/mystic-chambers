@@ -1,4 +1,6 @@
 
+var maxEntityVisibilityDistance = 250.0;
+
 var entityCollisionSize = 4.0;
 var entityAfterCollisionGap = 0.25;
 var entityCollisionAngleDiff = degToRad(-2.5);
@@ -52,21 +54,24 @@ class Entity
         {
             var dist = plRay.p.distance(this.p);
 
-            var posRatio = radToDeg(plRay.p.angle(this.p) + (Math.PI/2.0))
-                - (plRay.angle + 270.0);
-            var posSegment = 30.0;
-            var scaleFactor = 50.0;
+            //if(dist < maxEntityVisibilityDistance)
+            {
+                var posRatio = radToDeg(plRay.p.angle(this.p) + (Math.PI/2.0))
+                    - (plRay.angle + 270.0);
+                var posSegment = 30.0;
+                var scaleFactor = 50.0;
 
-            var imageSide = radToDeg(plRay.p.angle(this.p) + Math.PI)
-                / (360.0 / this.idleImages.length);
-            this.sprite.imageObject = this.idleImages[Math.floor(imageSide)];
+                var imageSide = radToDeg(plRay.p.angle(this.p) + Math.PI)
+                    / (360.0 / this.idleImages.length);
+                this.sprite.imageObject = this.idleImages[Math.floor(imageSide)];
 
-            this.sprite.transform.scale = vec2(scaleFactor / dist, scaleFactor / dist);
-            this.sprite.transform.position = vec2(
-                ((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
-                + posRatio * (window.innerWidth/posSegment),
-                (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
-            this.sprite.drawSc();
+                this.sprite.transform.scale = vec2(scaleFactor / dist, scaleFactor / dist);
+                this.sprite.transform.position = vec2(
+                    ((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
+                    + posRatio * (window.innerWidth/posSegment),
+                    (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
+                this.sprite.drawSc();
+            }
         }
     }
 
@@ -87,5 +92,17 @@ class Entity
     {
         this.p.x += vec2.x;
         this.p.y += vec2.y;
+    }
+}
+
+var entities = [];
+
+function drawEntities(renderer, plRay, line)
+{
+    for (var num = 0, max = this.entities.length; num < max; num++) 
+    {
+        if(line) { entities[num].addOffset(vec2(-plRay.p.x, -plRay.p.y)); }
+        entities[num].draw(renderer, plRay, line);
+        if(line) { entities[num].addOffset(plRay.p); }
     }
 }
