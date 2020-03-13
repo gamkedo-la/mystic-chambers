@@ -74,6 +74,7 @@ class Ray
             data.length = getDistBtwVec2( w[index].p1, w[index].p2 );
             data.angle = w[index].angle;
             data.type = w[index].type;
+            data.decal = w[index].decal;
         }
 
         return data;

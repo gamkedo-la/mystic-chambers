@@ -57,7 +57,7 @@ window.onload = function()
         new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
     ];
     
-    decorations.scatter(decorationImages,64,400,0,800,400); // experimenal WIP
+    decorations.scatter(decorationImages,64,1000,300,1400,700,vec2(1, -100)); // experimental WIP
 
     playerInit();
 
@@ -65,6 +65,8 @@ window.onload = function()
 
     setupGameplayUI();
     setupMainMenuUI();
+
+    wall[10].decal = entIdleImages[0];
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));

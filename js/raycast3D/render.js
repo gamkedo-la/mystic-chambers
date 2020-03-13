@@ -95,6 +95,15 @@ function renderRaycast3D(renderer, ray, wall)
                     segmentPos.x - 1, segmentPos.y + jumpOffset,
                     segmentSize.x, segmentSize.y);
 
+                if(typeof data.decal != "undefined")
+                {
+                    renderer.drawImage(
+                        data.decal.image,
+                        sx, 0, sw, textureSize,
+                        segmentPos.x - 1, segmentPos.y + jumpOffset,
+                        segmentSize.x, segmentSize.y);
+                }
+
                 if(wallDarkening && segmentSize.y - (segmentSize.y/wallDarkeningFactor) < window.innerHeight)
                 {
                     renderer.globalAlpha = 1.0 - ((segmentSize.y - (segmentSize.y/wallDarkeningFactor)) / window.innerHeight);
@@ -129,7 +138,6 @@ function loadRoofAndFloorTextureDataOnce()
         roofImageData
         = renderer.getImageData(0, 0,
             wallImages[1].image.width, wallImages[1].image.height);
-        
 
         imgDataDone = true;
     }

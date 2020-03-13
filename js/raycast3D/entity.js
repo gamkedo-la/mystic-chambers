@@ -12,6 +12,7 @@ class Entity
         this.size = 4.0;
         this.angle = 0.0;
         this.sprite = new Sprite(tr());
+        this.renderOffset = vec2(0.0, 0.0);
 
         this.idleImages = [];
         this.walkImages = [];
@@ -62,9 +63,9 @@ class Entity
 
             this.sprite.transform.scale = vec2(scaleFactor / dist, scaleFactor / dist);
             this.sprite.transform.position = vec2(
-                ((window.innerWidth/2) - (this.sprite.transform.scale.x/2))
+                ((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
                 + posRatio * (window.innerWidth/posSegment),
-                (window.innerHeight/2) - (this.sprite.transform.scale.y/2));
+                (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
             this.sprite.drawSc();
         }
     }
