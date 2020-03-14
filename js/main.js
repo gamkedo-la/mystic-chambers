@@ -11,8 +11,7 @@ window.onload = function()
     audio.init();
     uiSettings();
 
-    musicStarted = false;
-    loadBGMusic("audio/ambientBackgroundMusic1.mp3");
+    audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
     revolver = new Sprite(
         tr(vec2(screen.width/2, screen.height - 180), vec2(1.5, 1.5)),
@@ -119,12 +118,6 @@ function events(deltaTime)
 function update(deltaTime)
 {
     loadRoofAndFloorTextureDataOnce();
-
-    if(!musicStarted && typeof bgMusicBuffer != "undefined")
-    {
-        musicStarted = true;
-        audio.playMusic(bgMusicBuffer);
-    }
 
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));

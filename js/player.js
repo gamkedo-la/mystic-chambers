@@ -129,4 +129,6 @@ function playerEvents(deltaTime)
             ray[i].p = plPos;
         }
     }
+
+    audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }

@@ -117,7 +117,7 @@ function AudioGlobal() {
 		panNode.coneOuterAngle  = 1;
 		panNode.rolloffFactor  = 0.5;// will need to be fixed to use what ever get implemented for objects
 		panNode.refDistance = 10;// will need to be fixed to use what ever get implemented for objects
-		panNode.setPosition(object.x, 0, object.y);// will need to be fixed to use what ever get implemented for objects
+		panNode.setPosition(object.x, object.y, 0);// will need to be fixed to use what ever get implemented for objects
 
 		source.connect(gainNode);
 		gainNode.connect(panNode);
@@ -161,23 +161,17 @@ function AudioGlobal() {
 		return {sound: source, volume: gainNode};
 	}
 
-//--//Gameplay functions------------------------------------------------------
+	this.loadBGMusic = function(url) {
+		var request = new XMLHttpRequest();
+		request.open('GET', url, true);
+		request.responseType = 'arraybuffer';
+		request.onload = function() {
+			audio.context.decodeAudioData(request.response, function(buffer) {
+				audio.playMusic(buffer);
+			});
+		}
+		request.send();
+	}
 
     return this;
-}
-
-
-//--//Game Specific functions------------------------------------------------------
-
-bgMusicBuffer = undefined;
-function loadBGMusic (url) {
-	var request = new XMLHttpRequest();
-	request.open('GET', url, true);
-	request.responseType = 'arraybuffer';
-	request.onload = function() {
-		audio.context.decodeAudioData(request.response, function(buffer) {
-			bgMusicBuffer = buffer;
-		});
-	}
-	request.send();
 }
