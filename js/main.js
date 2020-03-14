@@ -37,7 +37,7 @@ window.onload = function()
 
     //entity complex rendering works only for seperate images, not spritesheets
     //dynamic; can be ANY number of images
-    entIdleImages = [
+    fireSkullIdle = [
         new ImageObject("images/fireSkull (1).png", vec2(160, 160)),
         new ImageObject("images/fireSkull (2).png", vec2(160, 160)),
         new ImageObject("images/fireSkull (3).png", vec2(160, 160)),
@@ -47,8 +47,18 @@ window.onload = function()
         new ImageObject("images/fireSkull (7).png", vec2(160, 160)),
         new ImageObject("images/fireSkull (8).png", vec2(160, 160)),
     ];
-    ent = new Entity(window.innerWidth/2, window.innerHeight/2);
-    ent.set(0, 0, entIdleImages);
+    healthBox = [
+        new ImageObject("images/healthBox (1).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (2).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (3).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (4).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (5).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (6).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (7).png", vec2(160, 160)),
+        new ImageObject("images/healthBox (8).png", vec2(160, 160)),
+    ]
+    ent = new Entity();
+    ent.set(window.innerWidth/2, window.innerHeight/2, healthBox);
     entities.push(ent);
 
     
@@ -66,7 +76,7 @@ window.onload = function()
     setupGameplayUI();
     setupMainMenuUI();
 
-    wall[10].decal = entIdleImages[0];
+    wall[10].decal = fireSkullIdle[0];
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
