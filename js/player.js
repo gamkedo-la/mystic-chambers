@@ -8,6 +8,8 @@ var speedIncrement = 0.004;
 var speedDecrement = 0.006;
 var speedThreshold = 0.16;
 
+var playerAngleMovement = true;
+
 var jumpKeyPress = 'q';
 var jumpOffset = 0.0;
 var jumpActive = false;
@@ -37,17 +39,20 @@ function playerInit()
 
 function playerEvents(deltaTime)
 {
-    for (let i = 0; i < ray.length; i++)
+    if(playerAngleMovement)
     {
-        if(isTouchMoved)
-            ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x, 0.5 );
+        for (let i = 0; i < ray.length; i++)
+        {
+            if(isTouchMoved)
+                ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x, 0.5 );
 
-        if (ray[i].angle >= 0.0)
-            ray[i].angle -= 360.0;
-        else if (ray[i].angle <= -360.0)
-            ray[i].angle += 360.0;
+            if (ray[i].angle >= 0.0)
+                ray[i].angle -= 360.0;
+            else if (ray[i].angle <= -360.0)
+                ray[i].angle += 360.0;
+        }
+        relTouchPos[0] = vec2(0.0, 0.0);
     }
-    relTouchPos[0] = vec2(0.0, 0.0);
 
     if(jumpActive)
     {
@@ -85,6 +90,10 @@ function playerEvents(deltaTime)
         jumpFall = false;
 
         jumpOffset = 0;
+    }
+    else if(keysDown.indexOf('m') != -1)
+    {
+        playerAngleMovement = !playerAngleMovement;
     }
 
     prevPlPos = plPos;

@@ -146,8 +146,15 @@ function setupGameplayUI()
         wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
         new Label(tr(), "Dark Thres."), 20.0, wallDarknessThreshold, sliderKnobSize));
 
-    miscRenderObjects = [];
-    miscRenderObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
+    entRenderObjects = [];
+    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 500),
+        new Label(tr(), "Pos. Seg."), 100, entPosSegment, sliderKnobSize));
+    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 500),
+        new Label(tr(), "Scale F."), 100, entScaleFactor, sliderKnobSize));
+    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 360),
+        new Label(tr(), "Ang. Off."), 72, entAngleOffset, sliderKnobSize));
+    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 10000),
+        new Label(tr(), "X Off."), 10000, entXOffset, sliderKnobSize));
 
     cpRenderTabs = [];
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), rayRenderObjects, undefined,
@@ -156,9 +163,9 @@ function setupGameplayUI()
         new TextButton(tr(), new Label(tr(), "RF./FL.")), false, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), wallRenderObjects, undefined,
         new TextButton(tr(), new Label(tr(), "WALLS")), false, "#024050", "#000000"));
-    cpRenderTabs.push(new Tab(tr(vec2(), tabSize), miscRenderObjects,
+    cpRenderTabs.push(new Tab(tr(vec2(), tabSize), entRenderObjects,
         [cpRenderTabs[0], cpRenderTabs[1], cpRenderTabs[2]],
-        new TextButton(tr(), new Label(tr(), "MISC.")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ENT.")), false, "#024050", "#000000"));
 
     cpRenderObjects = [];
     cpRenderObjects.push(new Label(tr(), "FPS: 0/0/0"));
@@ -171,7 +178,7 @@ function setupGameplayUI()
     cpRenderObjects = pushArr(cpRenderObjects, rayRenderObjects);
     cpRenderObjects = pushArr(cpRenderObjects, roofFloorRenderObjects);
     cpRenderObjects = pushArr(cpRenderObjects, wallRenderObjects);
-    cpRenderObjects = pushArr(cpRenderObjects, miscRenderObjects);
+    cpRenderObjects = pushArr(cpRenderObjects, entRenderObjects);
 
     cpRenderPanel = new Panel(
         tr(vec2(5, 60), panelSize), new SubState(tr(), [
@@ -484,4 +491,16 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    roofFloorRenderObjects[8].label.text = "Depth Thr. " + roofFloorRenderObjects[8].knobValue;
 
    renderRoofFloor = roofFloorRenderObjects[9].subState.uiObjects[1].check;
+
+   entPosSegment = entRenderObjects[0].knobValue;
+   entRenderObjects[0].label.text = "Pos. Seg. " + entRenderObjects[0].knobValue;
+
+   entScaleFactor = entRenderObjects[1].knobValue;
+   entRenderObjects[1].label.text = "Scale F. " + entRenderObjects[1].knobValue;
+
+   entAngleOffset = entRenderObjects[2].knobValue;
+   entRenderObjects[2].label.text = "Ang. Off. " + entRenderObjects[2].knobValue;
+
+   entXOffset = entRenderObjects[3].knobValue;
+   entRenderObjects[3].label.text = "X Off. " + entRenderObjects[3].knobValue;
 }

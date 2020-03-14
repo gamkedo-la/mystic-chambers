@@ -6,7 +6,7 @@ class ItemManager {
         this.ents = [];
     }
 
-    draw(renderer, plRay, line)
+    /*draw(renderer, plRay, line)
     {
         for (var num=0,max=this.ents.length; num<max; num++) 
         {
@@ -14,22 +14,44 @@ class ItemManager {
             this.ents[num].draw(renderer, plRay, line);
             this.ents[num].addOffset(plRay.p);
         }
+    }*/
+
+    add(x, y, id, offset)
+    {
+        var ent = new Entity();
+        ent.set(x, y, id);
+        if(typeof offset != "undefined") ent.renderOffset = offset;
+
+        this.ents.push(ent);
+        entities.push(ent);
     }
 
-    scatter(spritelist,quantity,minX,minY,maxX,maxY,offset) 
+    check(plPos)
     {
-        console.log("scattering " + quantity + " entities...")
-        for (var num=0; num<quantity; num++) {
-            var ent = new Entity();
-            ent.set(
-                Math.round(minX+Math.random()*(maxX-minX)),
-                Math.round(minY+Math.random()*(maxY-minY)), 
-                spritelist);
-            if(typeof offset != "undefined") ent.renderOffset = offset
-            this.ents.push(ent);
-        }
+        for(let i = 0; i < this.ents.length; i++)
+        {
+            var coll = this.ents[i].getCollValue(plPos);
+            if(coll.x != 0.0 && coll.y != 0.0)
+            {
+                switch(this.ents[i].id)
+                {
+                    case ENT_HEALTHBOX:
+                        //Increase player health
+                        break;
 
+                    case 283 /* ENT_SOME_OTHER_ITEM */:
+                        //...
+                        break;
+
+                    default:
+                        //do nothing
+                }
+
+                removeEntity(this.ents[i]);
+                this.ents.splice(i, 1);
+            }
+        }
     }
 }
 
-var decorations = new DecorationManager();
+var items = new ItemManager();

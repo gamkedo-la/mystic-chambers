@@ -33,41 +33,20 @@ window.onload = function()
     ];
     area = [];
 
-    entCol = false;
-
-    //entity complex rendering works only for seperate images, not spritesheets
-    //dynamic; can be ANY number of images
-    fireSkullIdle = [
-        new ImageObject("images/fireSkull (1).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (2).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (3).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (4).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (5).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (6).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (7).png", vec2(160, 160)),
-        new ImageObject("images/fireSkull (8).png", vec2(160, 160)),
-    ];
-    healthBox = [
-        new ImageObject("images/healthBox (1).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (2).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (3).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (4).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (5).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (6).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (7).png", vec2(160, 160)),
-        new ImageObject("images/healthBox (8).png", vec2(160, 160)),
-    ]
     ent = new Entity();
-    ent.set(window.innerWidth/2, window.innerHeight/2, healthBox);
+    ent.set(window.innerWidth/2, window.innerHeight/2, ENT_FIRESKULL_NEW);
     entities.push(ent);
 
-    
+    ent2 = new Entity();
+    ent2.set(window.innerWidth/2 + 10, window.innerHeight/2 - 5, ENT_FIRESKULL_OLD);
+    entities.push(ent2);
 
-    decorationImages = [
-        new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
-    ];
+    items.add(800, 400, ENT_HEALTHBOX, vec2(1, -80));
+    items.add(840, 420, ENT_HEALTHBOX, vec2(1, -80));
+    items.add(880, 410, ENT_HEALTHBOX, vec2(1, -80));
     
-    decorations.scatter(decorationImages,200,1000,300,1400,700,vec2(1, -160)); // experimental WIP
+    decorations.scatter(ENT_TECHTORCH, 20,
+        400, 0, 800, 400, vec2(1, -120)); // experimental WIP
 
     playerInit();
 
@@ -76,7 +55,7 @@ window.onload = function()
     setupGameplayUI();
     setupMainMenuUI();
 
-    wall[10].decal = fireSkullIdle[0];
+    wall[10].decal = entImg[0][0];
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
@@ -186,10 +165,6 @@ function draw()
             
             area[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
-
-            //No area collision in map mode
-            //var coll = area[i].getCollValue(plPos, prevPlPos);
-            //plPos = plPos.add(coll);
         }
 
         for (let i = 0; i < wall.length; i++)
@@ -200,8 +175,8 @@ function draw()
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
 
-        var coll = ent.getCollValue(plPos);
-        if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
+        //var coll = ent.getCollValue(plPos);
+        //if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
         //plPos = plPos.add(coll);
 
     }
@@ -218,9 +193,7 @@ function draw()
             plPos = plPos.add(coll);
         }
 
-        var coll = ent.getCollValue(plPos);
-        if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
-        //plPos = plPos.add(coll);
+        items.check(plPos);
     }
 
     drawEntities(renderer, ray[ray.length/2], mapMode);

@@ -8,7 +8,7 @@ class DecorationManager {
         this.ents = [];
     }
 
-    scatter(spritelist, quantity, minX, minY, maxX, maxY, offset)
+    scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
         console.log("scattering " + quantity + " entities...")
 
@@ -18,7 +18,7 @@ class DecorationManager {
             ent.set(
                 Math.round(minX+Math.random()*(maxX-minX)),
                 Math.round(minY+Math.random()*(maxY-minY)), 
-                spritelist);
+                id);
             if(typeof offset != "undefined") ent.renderOffset = offset;
 
             this.ents.push(ent);
