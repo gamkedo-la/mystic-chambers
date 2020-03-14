@@ -24,6 +24,8 @@ var jumpSetZero = 2.0;
 var rayAngleDiff = 0;
 var rayRenderFOV = 0;
 
+var gunMoveCounter = 0;
+
 function playerInit()
 {
     plPos = vec2(window.innerWidth / 2, window.innerHeight / 2);
@@ -102,7 +104,9 @@ function playerEvents(deltaTime)
     {
         plPos.x += currentSpeed[keyI] * Math.cos(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
         plPos.y += currentSpeed[keyI] * Math.sin(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
-        
+
+        gunMoveCounter += (currentSpeed[keyI] * deltaTime) / 300.0;
+
         if(keysDown.indexOf(keyPresses[keyI]) != -1
         || (platform == ANDROID && gameplayUI[gameplayUI.length - 1 - keyI].button.output == UIOUTPUT_SELECT))
         {

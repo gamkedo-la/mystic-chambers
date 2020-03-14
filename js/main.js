@@ -14,6 +14,10 @@ window.onload = function()
     musicStarted = false;
     loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
+    revolver = new Sprite(
+        tr(vec2(screen.width/2, screen.height - 180), vec2(1.5, 1.5)),
+        new ImageObject("images/revolver.png", vec2(240, 240)));
+
     wallImages = [
         new ImageObject("images/door.png", vec2(160, 160)),
         new ImageObject("images/ground.png", vec2(160, 160)),
@@ -197,6 +201,11 @@ function draw()
     }
 
     drawEntities(renderer, ray[ray.length/2], mapMode);
+
+    revolver.transform.position = vec2(
+        screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
+        screen.height - 180 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
+    revolver.drawSc();
 
     ui.draw();
 }
