@@ -145,6 +145,13 @@ var entities = [];
 
 function drawEntities(renderer, plRay, line)
 {
+    //z indexing before draw
+    entities.sort(
+        function(entA, entB) {
+            return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
+        }
+    );
+
     for (var num = 0, max = this.entities.length; num < max; num++) 
     {
         if(line) entities[num].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));

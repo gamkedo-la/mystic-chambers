@@ -83,9 +83,10 @@ class Area
 
     toString()
     {
-        return Math.floor(this.pos.x.toString()) + " " + Math.floor(this.pos.y.toString()) + " " +
-            Math.floor(this.size.x.toString()) + " " + Math.floor(this.size.y.toString()) + " " +
-            Math.floor(this.type.toString()) + " ";
+        if(isNaN(Math.floor(this.pos.x)) || isNaN(Math.floor(this.pos.y))) return "";
+        return Math.floor(this.pos.x).toString() + " " + Math.floor(this.pos.y).toString() + " " +
+            Math.floor(this.size.x).toString() + " " + Math.floor(this.size.y).toString() + " " +
+            Math.floor(this.type).toString() + " ";
     }
 }
 

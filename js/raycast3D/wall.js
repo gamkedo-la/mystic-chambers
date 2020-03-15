@@ -56,9 +56,10 @@ class Wall
 
     toString()
     {
-        return Math.floor(this.p1.x.toString()) + " " + Math.floor(this.p1.y.toString()) + " " +
-            Math.floor(this.p2.x.toString()) + " " + Math.floor(this.p2.y.toString()) + " " +
-            Math.floor(this.type.toString()) + " ";
+        if(isNaN(Math.floor(this.p1.x * 100.0)) || isNaN(Math.floor(this.p1.y * 100.0))) return "";
+        return Math.floor(this.p1.x * 100.0).toString() + " " + Math.floor(this.p1.y * 100.0).toString() + " " +
+            Math.floor(this.p2.x * 100.0).toString() + " " + Math.floor(this.p2.y * 100.0).toString() + " " +
+            Math.floor(this.type).toString() + " ";
     }
 }
 
@@ -115,7 +116,7 @@ function generateWallsFromString(walls, str)
     for(let i = 0; i < values.length; i+=5)
     {
         var newWall = new Wall();
-        newWall.set(parseInt(values[i]), parseInt(values[i+1]), parseInt(values[i+2]), parseInt(values[i+3]));
+        newWall.set(parseInt(values[i] / 100.0), parseInt(values[i+1] / 100.0), parseInt(values[i+2] / 100.0), parseInt(values[i+3] / 100.0));
         newWall.type = parseInt(values[i+4]);
         walls.push(newWall);
     }

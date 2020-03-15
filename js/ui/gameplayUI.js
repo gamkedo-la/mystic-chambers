@@ -21,7 +21,6 @@ function setupGameplayUI()
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected")));
     wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1), 4, currentWallType, sliderKnobSize));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Save")));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
 
     areasEditorObjects = [];
@@ -30,7 +29,6 @@ function setupGameplayUI()
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected")));
     areasEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1), 4, 0, sliderKnobSize));
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Save")));
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
 
     decorEditorObjects = [];
@@ -196,11 +194,12 @@ function setupGameplayUI()
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos.")),
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level")),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level")),
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Hide UI")),
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv.")),
         new Label(tr(vec2(), btnSize), getLevelName()),
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"))
-    ]), false, vec2(5, 5), vec2(3, 2), false));
+    ]), false, vec2(5, 5), vec2(4, 2), false));
 
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
         [
@@ -281,32 +280,37 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (cpStartObjects[2].subState.uiObjects[2].button.output == UIOUTPUT_SELECT)
     {
-        showControlPanel = !showControlPanel;
-        cpStartObjects[0].enabled = cpStartObjects[1].enabled = cpEditPanel.enabled = cpRenderPanel.enabled = showControlPanel;
-        for(let i = 0; i < 6; i++) { if(i==2) continue; cpStartObjects[2].subState.uiObjects[i].enabled = showControlPanel; }
-        cpStartObjects[2].subState.uiObjects[2].label.text = showControlPanel ? "Hide UI" : "Show UI";
-
+        writeFile(getLevelName(), convertWallsToString(wall) + convertAreasToString(area));
         cpStartObjects[2].subState.uiObjects[2].button.resetOutput();
     }
     else if (cpStartObjects[2].subState.uiObjects[3].button.output == UIOUTPUT_SELECT)
+    {
+        showControlPanel = !showControlPanel;
+        cpStartObjects[0].enabled = cpStartObjects[1].enabled = cpEditPanel.enabled = cpRenderPanel.enabled = showControlPanel;
+        for(let i = 0; i < 7; i++) { if(i==3) continue; cpStartObjects[2].subState.uiObjects[i].enabled = showControlPanel; }
+        cpStartObjects[2].subState.uiObjects[3].label.text = showControlPanel ? "Hide UI" : "Show UI";
+
+        cpStartObjects[2].subState.uiObjects[3].button.resetOutput();
+    }
+    else if (cpStartObjects[2].subState.uiObjects[4].button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
         while(area.length > 0) area.pop();
         currentLevel--;
         if(currentLevel <= 0) currentLevel = totalLevels;
         loadLevel(wall, area);
-        cpStartObjects[2].subState.uiObjects[4].text = getLevelName();
-        cpStartObjects[2].subState.uiObjects[3].button.resetOutput();
+        cpStartObjects[2].subState.uiObjects[5].text = getLevelName();
+        cpStartObjects[2].subState.uiObjects[4].button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[5].button.output == UIOUTPUT_SELECT)
+    else if (cpStartObjects[2].subState.uiObjects[6].button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
         while(area.length > 0) area.pop();
         currentLevel++;
         if(currentLevel >= totalLevels + 1) currentLevel = 1;
         loadLevel(wall, area);
-        cpStartObjects[2].subState.uiObjects[4].text = getLevelName();
-        cpStartObjects[2].subState.uiObjects[5].button.resetOutput();
+        cpStartObjects[2].subState.uiObjects[5].text = getLevelName();
+        cpStartObjects[2].subState.uiObjects[6].button.resetOutput();
     }
     else if (wallEditorObjects[0].button.output == UIOUTPUT_SELECT)
     {
@@ -337,13 +341,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (wallEditorObjects[6].button.output == UIOUTPUT_SELECT)
     {
-        writeFile(getLevelName(), convertWallsToString(wall));
-        wallEditorObjects[6].button.resetOutput();
-    }
-    else if (wallEditorObjects[7].button.output == UIOUTPUT_SELECT)
-    {
         while(wall.length > 0) wall.pop();
-        wallEditorObjects[7].button.resetOutput();
+        wallEditorObjects[6].button.resetOutput();
     }
     else if (areasEditorObjects[1].button.output == UIOUTPUT_SELECT)
     {
@@ -365,14 +364,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (areasEditorObjects[5].button.output == UIOUTPUT_SELECT)
     {
-        writeFile(getLevelName(), convertAreasToString(area));
-        areasEditorObjects[5].button.resetOutput();
-    }
-    else if (areasEditorObjects[6].button.output == UIOUTPUT_SELECT)
-    {
         while(area.length > 0) area.pop();
         area = new Array();
-        areasEditorObjects[6].button.resetOutput();
+        areasEditorObjects[5].button.resetOutput();
     }
     else if(cpRenderObjects[1].button.output == UIOUTPUT_SELECT)
     {
