@@ -167,6 +167,18 @@ class Sprite
             img.width * scale.x, img.height * scale.y);
     }
 
+    drawScIn(inPos, inSize)
+    {
+        var img = this.imageObject.image;
+        var pos = this.transform.position;
+        var scale = this.transform.scale;
+
+        spritesRenderer.drawImage(img,
+            inPos.x, inPos.y, inSize.x, inSize.y,
+            pos.x - ((inSize.x * scale.x) / 2), pos.y - ((inSize.y * scale.y) / 2),
+            inSize.x * scale.x, inSize.y * scale.y);
+    }
+
     drawRot()
     {
         var img = this.imageObject.image;

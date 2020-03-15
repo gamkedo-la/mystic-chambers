@@ -12,8 +12,6 @@ var entityCollisionSize = 4.0;
 var entityAfterCollisionGap = 0.25;
 var entityCollisionAngleDiff = degToRad(-2.5);
 
-var entSize = vec2(160, 160);
-
 //Entity IDs
 const ENT_TECHTORCH = 0;
 const ENT_HEALTHBOX = 1;
@@ -22,49 +20,16 @@ const ENT_FIRESKULL_OLD = 3;
 
 entImg = [
     //DECOR IMAGES START
-        //TechTorch
-        [
-            new ImageObject("images/tech_torch_x10.png", entSize)
-        ],
+        new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
     //DECOR IMAGES END
 
     //ITEM IMAGES START
-        //HealthBox
-        [
-            new ImageObject("images/healthBox (1).png", entSize),
-            new ImageObject("images/healthBox (2).png", entSize),
-            new ImageObject("images/healthBox (3).png", entSize),
-            new ImageObject("images/healthBox (4).png", entSize),
-            new ImageObject("images/healthBox (5).png", entSize),
-            new ImageObject("images/healthBox (6).png", entSize),
-            new ImageObject("images/healthBox (7).png", entSize),
-            new ImageObject("images/healthBox (8).png", entSize),
-        ],
+        new ImageObject("images/healthBox.png", vec2(1280, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START
-        //FireSkull New
-        [
-            new ImageObject("images/fireSkull (1).png", entSize),
-            new ImageObject("images/fireSkull (2).png", entSize),
-            new ImageObject("images/fireSkull (3).png", entSize),
-            new ImageObject("images/fireSkull (4).png", entSize),
-            new ImageObject("images/fireSkull (5).png", entSize),
-            new ImageObject("images/fireSkull (6).png", entSize),
-            new ImageObject("images/fireSkull (7).png", entSize),
-            new ImageObject("images/fireSkull (8).png", entSize),
-        ],
-        //FireSkull Old
-        [
-            new ImageObject("images/fireSkull0.png", entSize),
-            new ImageObject("images/fireSkull1.png", entSize),
-            new ImageObject("images/fireSkull2.png", entSize),
-            new ImageObject("images/fireSkull3.png", entSize),
-            new ImageObject("images/fireSkull4.png", entSize),
-            new ImageObject("images/fireSkull5.png", entSize),
-            new ImageObject("images/fireSkull6.png", entSize),
-            new ImageObject("images/fireSkull7.png", entSize),
-        ],
+        new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
+        new ImageObject("images/fireSkullOldIdle.png", vec2(1280, 160)),
     //ENEMY IMAGES END
 ];
 
@@ -95,14 +60,14 @@ class Entity
         this.p.y = y;
         this.id = id;
 
-        this.sprite.imageObject = entImg[this.id][0];
+        this.sprite.imageObject = entImg[this.id];
     }
 
     draw(renderer, plRay, line)
     {
         if(line)
         {
-            var plPosT = vec2(window.innerWidth/2, window.innerHeight/2);
+            //var plPosT = vec2(window.innerWidth/2, window.innerHeight/2);
             drawLine(renderer,
                 vec2(this.p.x - (Math.cos(degToRad(this.angle)) * this.size),
                 this.p.y - (Math.sin(degToRad(this.angle)) * this.size)),
@@ -128,9 +93,10 @@ class Entity
                 var posRatio = radToDeg(ang + (Math.PI/2.0))
                     - (plRayAngle + entAngleOffset);
 
-                var imageSide = radToDeg(ang + Math.PI)
-                    / (360.0 / entImg[this.id].length);
-                this.sprite.imageObject = entImg[this.id][Math.floor(imageSide)];
+                var imageSide = radToDeg(ang + Math.PI) / (360.0 /
+                    (entImg[this.id].size.x / 160.0));
+
+                this.sprite.imageObject = entImg[this.id];
 
                 renderer.globalAlpha = round(1.0 - (dist / maxEntityVisibilityDistance), 0.2, 0);
 
@@ -139,7 +105,7 @@ class Entity
                     (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
                     + posRatio * (window.innerWidth/entPosSegment)) + entXOffset,
                     (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
-                this.sprite.drawSc();
+                this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), vec2(160, 160));
 
                 renderer.globalAlpha = 1.0;
 

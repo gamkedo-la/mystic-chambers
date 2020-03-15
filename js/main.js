@@ -198,7 +198,7 @@ function draw()
     revolver.transform.position = vec2(
         screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
         screen.height - 180 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
-    revolver.drawSc();
+    if(!mapMode) revolver.drawSc();
 
     ui.draw();
 }
