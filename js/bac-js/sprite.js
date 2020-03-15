@@ -4,7 +4,6 @@ const AUTOSCALE_SPRITES = false; // WIP
 imagesLoadingLeft = 0;
 class ImageObject
 {
-
     constructor(imageSrc, size)
     {
         var me = this; // because onload events have a different "this"

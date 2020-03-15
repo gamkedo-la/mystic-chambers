@@ -6,7 +6,7 @@ var entXOffset = 0.0;
 var entMinRenderAngle = 155.0;
 var entMaxRenderAngle = 205.0;
 
-var maxEntityVisibilityDistance = 2500.0;
+var maxEntityVisibilityDistance = 250.0;
 
 var entityCollisionSize = 4.0;
 var entityAfterCollisionGap = 0.25;
@@ -132,12 +132,25 @@ class Entity
                     / (360.0 / entImg[this.id].length);
                 this.sprite.imageObject = entImg[this.id][Math.floor(imageSide)];
 
+                renderer.globalAlpha = round(1.0 - (dist / maxEntityVisibilityDistance), 0.2, 0);
+
                 this.sprite.transform.scale = vec2(entScaleFactor / dist, entScaleFactor / dist);
                 this.sprite.transform.position = vec2(
                     (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
                     + posRatio * (window.innerWidth/entPosSegment)) + entXOffset,
                     (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
                 this.sprite.drawSc();
+
+                renderer.globalAlpha = 1.0;
+
+                /*
+                renderer.globalCompositeOperation = "source-atop";
+                var computedSize = vec2(160, 160).multiply(this.sprite.transform.scale)
+                drawRect(renderer, this.sprite.transform.position.subtract(vec2(computedSize.x/2, computedSize.y/2)),
+                    computedSize,
+                    true, "#FFFFFFFF");
+                renderer.globalCompositeOperation = "source-over";
+                */
             }
         }
     }
