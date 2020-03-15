@@ -214,11 +214,13 @@ function setupGameplayUI()
 
     gameplayUI.push(controlPanel);
 
+    healthLabel = new Label(tr(vec2(), vec2(200, 60)), playerHealth.toString(), (scrSizeFactor * 0.08).toString() + "px Lucida, sans-serif");
+
     gameplayUI.push(
         new FlexGroup(
             tr(vec2(scrSizeFactor * -0.05, screen.height - 120), vec2(200, 80)),
             new SubState(tr(), [
-                new Label(tr(vec2(), vec2(200, 60)), "100", (scrSizeFactor * 0.08).toString() + "px Lucida, sans-serif"),
+                healthLabel,
                 new Label(tr(vec2(), vec2(200, 20)), "HP", (scrSizeFactor * 0.04).toString() + "px Lucida, sans-serif")
             ]),
             true, vec2(0, 0), vec2(1, 2), false
@@ -255,6 +257,8 @@ function setupGameplayUI()
 
 function gameplayUICustomEvents(deltaTime, wall, area)
 {
+    healthLabel.text = playerHealth.toString();
+
     controlPanel.enabled = mapMode;
 
     if (gameplayUI[0].button.output == UIOUTPUT_SELECT)

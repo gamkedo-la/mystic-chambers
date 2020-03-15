@@ -1,4 +1,7 @@
 
+var playerMaxHealth = 100;
+var playerHealth = playerMaxHealth;
+
 //[forward, backward, left, right]
 var keyPresses = ['w', 's', 'a', 'd'];
 var movementAngles = [0.0, 180.0, 270.0, 90.0];

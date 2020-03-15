@@ -36,7 +36,9 @@ class ItemManager {
                 switch(this.ents[i].id)
                 {
                     case ENT_HEALTHBOX:
-                        //Increase player health
+                        playerHealth += 25;
+                        if(playerHealth > playerMaxHealth)
+                            playerHealth = playerMaxHealth;
                         break;
 
                     case 283 /* ENT_SOME_OTHER_ITEM */:
