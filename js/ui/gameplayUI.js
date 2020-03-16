@@ -17,8 +17,8 @@ function setupGameplayUI()
         new Button()));
 
     wallEditorObjects = [];
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add")));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected")));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"ADD TOOLTIP!"));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"DEL TOOLTIP!"));
     wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1), 4, currentWallType, sliderKnobSize));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
@@ -260,19 +260,44 @@ function setupGameplayUI()
     }
 }
 
+function showTooltip(txt) { // abstract tooltip called by ui.js
+    if (!txt) {
+        txt="FIXME: Missing tooltip!";
+    }
+
+    var parts = txt.split("\n");
+    if (parts.length>1) {
+        toolTipTitle.text = parts[0];
+        parts.splice(0,1); // remove 1st line
+        toolTipLabel.text = parts.join(""); // ALL the rest
+    } else {
+        toolTipTitle.text = "Click this button to";
+        toolTipLabel.text = txt;
+    }
+}
+
 function handleToolTips() {
     
     // FIXME these hardcoded array references are hard to maintain!
     // we have no idea what each control is... yuck...
     
-    if (gameplayUI[0].button.output == UIOUTPUT_HOVER) 
-    toolTipLabel.text = "Toggle Map Mode ON/OFF";
 
-    if (cpStartObjects[2].subState.uiObjects[0].button.output == UIOUTPUT_HOVER)
-    toolTipLabel.text = "Reset layer Start Position";
+    // temporary hack: find hardcoded references, TODO: put into the inits
 
-    if (cpStartObjects[2].subState.uiObjects[1].button.output == UIOUTPUT_HOVER)
-    toolTipLabel.text = "Reload the level data";
+    if (gameplayUI[0].button.output == UIOUTPUT_HOVER) {
+        toolTipTitle.text = "Click this button to";
+        toolTipLabel.text = "Toggle Map Mode ON/OFF";
+    }
+
+    if (cpStartObjects[2].subState.uiObjects[0].button.output == UIOUTPUT_HOVER) {
+        toolTipTitle.text = "Click this button to";
+        toolTipLabel.text = "Reset layer Start Position";
+    }
+
+    if (cpStartObjects[2].subState.uiObjects[1].button.output == UIOUTPUT_HOVER) {
+        toolTipTitle.text = "Click this button to";
+        toolTipLabel.text = "Reload the level data";
+    }
 
     // no way to know what each does without trial and error
 }
@@ -282,7 +307,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     
     healthLabel.text = playerHealth.toString();
 
-    handleToolTips();
+    //handleToolTips();
 
     controlPanel.enabled = mapMode;
 

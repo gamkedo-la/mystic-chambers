@@ -137,6 +137,7 @@ function defUIEvent(output, transform, touchId)
         else if (hover(transform))
         {
             output = UIOUTPUT_HOVER;
+            showTooltip(this.tooltip);
         }
         else
         {
@@ -303,6 +304,7 @@ class Button extends UIObject
                 {
                     this.btnColor = this.hoverColor;
                     this.output = UIOUTPUT_HOVER;
+                    showTooltip(this.tooltip);
                 }
                 else if (this.output == UIOUTPUT_DISABLED)
                 {
@@ -841,9 +843,11 @@ class FlexGroup extends UIObject
 
 class TextButton extends UIObject
 {
-    constructor(transform, label, button)
+    constructor(transform, label, button, tooltip)
     {
         super(transform);
+
+        this.tooltip = tooltip;
         
         this.label = typeof label == "undefined" ? new Label(this.transform) : label;
         this.label.transform = this.transform;
