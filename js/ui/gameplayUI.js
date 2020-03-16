@@ -17,45 +17,47 @@ function setupGameplayUI()
         new Button()));
 
     wallEditorObjects = [];
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"ADD TOOLTIP!"));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"DEL TOOLTIP!"));
-    wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1), 4, currentWallType, sliderKnobSize));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to insert another\nof the selected type."));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously added entity."));
+    
+    //transform, rangeVec2, label, steps, knobValue, knobRadius, knobColor, bgLineThickness, bgLineColor, selectKnobColor, disabledKnobColor,tooltip
+    wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"), 4, currentWallType, sliderKnobSize, undefined,undefined,undefined,undefined,undefined,"This slider\nselects a wall type"));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),undefined,"Toggle grid snap\non or off, for alignment."));
+    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"),"Delete all entities\nof the current type."));
 
     areasEditorObjects = [];
     areasEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1), 40, areaPadding, sliderKnobSize));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add")));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected")));
+    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to spawn a new entity\nof the current type."));
+    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously selected entity."));
     areasEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1), 4, 0, sliderKnobSize));
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
     areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
 
     decorEditorObjects = [];
-    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
+    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\ndecorations you can place."));
 
     itemsEditorObjects = [];
-    itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
+    itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\nitems you can place."));
 
     enemiesEditorObjects = [];
-    enemiesEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP")));
+    enemiesEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\nenemies you can place."));
 
     cpEditTabs = [];
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), wallEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "WALLS")), true, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,"Click to switch into\nWALL EDITING MODE"), true, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), areasEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "AREAS")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "AREAS"),undefined,"Click to switch into\nAREA EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), decorEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "DECOR.")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "DECOR."),undefined,"Click to switch into\nDECORATION EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), itemsEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "ITEMS")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ITEMS"),undefined,"Click to switch into\nITEM EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), enemiesEditorObjects,
         [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2], cpEditTabs[3]],
-        new TextButton(tr(), new Label(tr(), "ENEMIES")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ENEMIES"),undefined,"Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
     cpEditObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Grid"), new Checkbox(tr(), vec2(48, 10), undefined, showGrid, "#44bb44", "#bb4444")
+        new Label(tr(), "Grid",undefined,undefined,undefined,"Click to toggle grid\nsnapping ON/OFF for alignment."), new Checkbox(tr(), vec2(48, 10), undefined, showGrid, "#44bb44", "#bb4444")
         ]), false, vec2(5, 0), vec2(2, 1), true));
     cpEditObjects.push(new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
         "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize));
@@ -156,18 +158,18 @@ function setupGameplayUI()
 
     cpRenderTabs = [];
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), rayRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "RAYS")), true, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "RAYS"),undefined,"Debug stats toggle:\nShow RAYCASTING stats."), true, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), roofFloorRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "RF./FL.")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "RF./FL."),undefined,"Debug stats toggle:\nShow camera and rendering stats"), false, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), wallRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "WALLS")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,"Debug stats toggle:\nShow WALL stats."), false, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), entRenderObjects,
         [cpRenderTabs[0], cpRenderTabs[1], cpRenderTabs[2]],
-        new TextButton(tr(), new Label(tr(), "ENT.")), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ENT."),undefined,"Debug stats toggle:\nShow ENTITY stats."), false, "#024050", "#000000"));
 
     cpRenderObjects = [];
     cpRenderObjects.push(new Label(tr(), "FPS: 0/0/0"));
-    cpRenderObjects.push(new TextButton(tr(), new Label(tr(), "Reset FPS")));
+    cpRenderObjects.push(new TextButton(tr(), new Label(tr(), "Reset FPS"),undefined,"Click here to reset the\nframerate stats so far."));
     cpRenderObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpRenderTabs[0], cpRenderTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
     cpRenderObjects.push(new FlexGroup(tr(vec2(), tabSize),
@@ -189,23 +191,24 @@ function setupGameplayUI()
     cpRenderPanel.enabled = false;
     
     cpStartObjects = [];
-    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit")), true));
-    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"))));
+    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu."), true));
+    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display.")));
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos.")),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level")),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level")),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Hide UI")),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv.")),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults."),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved."),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level"),undefined,"Click here to download the\nlevel data to save locally."),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Hide UI"),undefined,"Toggle the level editor\nGUI on or off."),
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv."),undefined,"Discard any recent changes\nand load the previous level."),
         new Label(tr(vec2(), btnSize), getLevelName()),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"))
+        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"),undefined,"Discard any recent changes\nand load the next level.")
     ]), false, vec2(5, 5), vec2(4, 2), false));
 
     var tooltipSize = vec2(320,64);
     var tooltipLabelSize = vec2(320,32);
-    toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the\nMystic Chambers\nLevel Editor!");
-    toolTipLabel = new Label(tr(vec2(0,24), tooltipLabelSize), "Hover the mouse cursor over any button.");
-    cpStartObjects.push(new SubState(tr(), [toolTipTitle,toolTipLabel]));
+    var toolTipBackground = new TextButton(tr(vec2(),vec2(320,56)),undefined,undefined,"Welcome to the Mystic Chambers\nIn-game Level Editor!");
+    toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers");
+    toolTipLabel = new Label(tr(vec2(0,24), tooltipLabelSize), "In-game Level Editor!");
+    cpStartObjects.push(new SubState(tr(), [toolTipBackground,toolTipTitle,toolTipLabel]));
 
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
         [

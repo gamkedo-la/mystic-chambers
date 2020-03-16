@@ -239,11 +239,12 @@ class SubState extends UIObject
 
 class Label extends UIObject
 {
-    constructor(transform, text, font, textColor, align)
+    constructor(transform, text, font, textColor, align, tooltip)
     {
         super(transform);
         
         this.text = text;
+        this.tooltip = tooltip;
     
         this.font = typeof font == "undefined" ? uiContext.fontSize.toString() + "px " + uiContext.fontFamily : font;
     
@@ -256,7 +257,7 @@ class Label extends UIObject
     {
         if(this.enabled)
         {
-            if(this.visible)
+            if(this.visible && this.text!=undefined)
             {
                 uiContext.renderer.font = this.font;
                 var lineHeight = uiContext.renderer.measureText('M').width;
@@ -851,9 +852,11 @@ class TextButton extends UIObject
         
         this.label = typeof label == "undefined" ? new Label(this.transform) : label;
         this.label.transform = this.transform;
+        this.label.tooltip = tooltip;
 
         this.button = typeof button == "undefined" ? new Button(this.transform) : button;
         this.button.transform = this.transform;
+        this.button.tooltip = tooltip;
 
         this.event = function()
         {
@@ -958,15 +961,18 @@ class Tab extends UIObject
 
 class Slider extends UIObject
 {
-    constructor(transform, rangeVec2, label, steps, knobValue, knobRadius, knobColor, bgLineThickness, bgLineColor, selectKnobColor, disabledKnobColor)
+    constructor(transform, rangeVec2, label, steps, knobValue, knobRadius, knobColor, bgLineThickness, bgLineColor, selectKnobColor, disabledKnobColor,tooltip)
     {
         super(transform);
+
+        this.tooltip = tooltip;
 
         this.range = typeof rangeVec2 == "undefined" ? vec2(0, 1) : rangeVec2;
 
         this.label = typeof label == "undefined" ? new Label(new Transform(transform.position), '') : label;
         this.label.transform.position = this.transform.position;
         this.label.transform.scale = vec2(this.transform.scale.x/2, this.transform.scale.y);
+        this.label.tooltip = tooltip;
 
         this.steps = typeof steps == "undefined" ? 0 : steps;
 
