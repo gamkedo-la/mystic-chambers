@@ -7,6 +7,8 @@ var maxFPS = 0;
 
 var gameplayUI = [];
 
+var toolTipTitle,tooltipLabel;
+
 function setupGameplayUI()
 {
     gameplayUI.push(new TextButton(
@@ -199,6 +201,12 @@ function setupGameplayUI()
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"))
     ]), false, vec2(5, 5), vec2(4, 2), false));
 
+    var tooltipSize = vec2(320,64);
+    var tooltipLabelSize = vec2(320,32);
+    toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the\nMystic Chambers\nLevel Editor!");
+    toolTipLabel = new Label(tr(vec2(0,24), tooltipLabelSize), "Hover the mouse cursor over any button.");
+    cpStartObjects.push(new SubState(tr(), [toolTipTitle,toolTipLabel]));
+
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
         [
         new FlexGroup(
@@ -212,7 +220,7 @@ function setupGameplayUI()
     gameplayUI.push(controlPanel);
 
     healthLabel = new Label(tr(vec2(), vec2(200, 60)), playerHealth.toString(), (scrSizeFactor * 0.08).toString() + "px Lucida, sans-serif");
-
+   
     gameplayUI.push(
         new FlexGroup(
             tr(vec2(scrSizeFactor * -0.05, screen.height - 120), vec2(200, 80)),
@@ -252,9 +260,29 @@ function setupGameplayUI()
     }
 }
 
+function handleToolTips() {
+    
+    // FIXME these hardcoded array references are hard to maintain!
+    // we have no idea what each control is... yuck...
+    
+    if (gameplayUI[0].button.output == UIOUTPUT_HOVER) 
+    toolTipLabel.text = "Toggle Map Mode ON/OFF";
+
+    if (cpStartObjects[2].subState.uiObjects[0].button.output == UIOUTPUT_HOVER)
+    toolTipLabel.text = "Reset layer Start Position";
+
+    if (cpStartObjects[2].subState.uiObjects[1].button.output == UIOUTPUT_HOVER)
+    toolTipLabel.text = "Reload the level data";
+
+    // no way to know what each does without trial and error
+}
+
 function gameplayUICustomEvents(deltaTime, wall, area)
 {
+    
     healthLabel.text = playerHealth.toString();
+
+    handleToolTips();
 
     controlPanel.enabled = mapMode;
 
