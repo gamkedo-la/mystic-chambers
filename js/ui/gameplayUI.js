@@ -15,8 +15,6 @@ function setupGameplayUI()
         new Button()));
 
     wallEditorObjects = [];
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Generate Random")));
-    wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(), "Gen Amount", undefined, undefined, -1), 18, generateWallsAmount, sliderKnobSize));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add")));
     wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected")));
     wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1), 4, currentWallType, sliderKnobSize));
@@ -314,35 +312,28 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (wallEditorObjects[0].button.output == UIOUTPUT_SELECT)
     {
-        while(wall.length > 0) wall.pop();
-        while(area.length > 0) area.pop();
-        generateRandomWalls(wall, generateWallsAmount, wallImages);
-        wallEditorObjects[0].button.resetOutput();
-    }
-    else if (wallEditorObjects[2].button.output == UIOUTPUT_SELECT)
-    {
         newWall = new Wall();
         newWall.set(ray[ray.length/2].p.x, ray[ray.length/2].p.y,
             ray[ray.length/2].p.x, ray[ray.length/2].p.y - gridCellSize);
         newWall.type = 0;
         wall.push(newWall);
-        wallEditorObjects[2].button.resetOutput();
+        wallEditorObjects[0].button.resetOutput();
     }
-    else if (wallEditorObjects[3].button.output == UIOUTPUT_SELECT)
+    else if (wallEditorObjects[1].button.output == UIOUTPUT_SELECT)
     {
         if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length) wall.splice(lastSelectedWallIndex, 1);
         lastSelectedWallIndex = -1;
-        wallEditorObjects[3].button.resetOutput();
+        wallEditorObjects[1].button.resetOutput();
     }
-    else if (wallEditorObjects[5].button.output == UIOUTPUT_SELECT)
+    else if (wallEditorObjects[3].button.output == UIOUTPUT_SELECT)
     {
         snapWallsToGrid(wall, vec2(0, 0));
-        wallEditorObjects[5].button.resetOutput();
+        wallEditorObjects[3].button.resetOutput();
     }
-    else if (wallEditorObjects[6].button.output == UIOUTPUT_SELECT)
+    else if (wallEditorObjects[4].button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
-        wallEditorObjects[6].button.resetOutput();
+        wallEditorObjects[4].button.resetOutput();
     }
     else if (areasEditorObjects[1].button.output == UIOUTPUT_SELECT)
     {
@@ -400,11 +391,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    gridCellSize = cpEditObjects[1].knobValue;
    cpEditObjects[1].label.text = "Grid Size " + cpEditObjects[1].knobValue.toString();
 
-   generateWallsAmount = wallEditorObjects[1].knobValue;
-   wallEditorObjects[1].label.text = "Gen. Am. " + wallEditorObjects[1].knobValue.toString();
-
-   currentWallType = wallEditorObjects[4].knobValue;
-   wallEditorObjects[4].label.text = "Type " + wallEditorObjects[4].knobValue.toString();
+   currentWallType = wallEditorObjects[2].knobValue;
+   wallEditorObjects[2].label.text = "Type " + wallEditorObjects[2].knobValue.toString();
    if(selectedWallIndex > -1 && selectedWallIndex < wall.length) wall[selectedWallIndex].type = currentWallType; 
 
    areaPadding = areasEditorObjects[0].knobValue;

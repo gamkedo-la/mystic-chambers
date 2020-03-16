@@ -77,31 +77,6 @@ class WallData
     }
 };
 
-function generateRandomWalls(walls, totalWalls, wallImages)
-{
-    for (let i = 0; i < totalWalls; i++) walls.push(new Wall());
-
-    for (let i = 0; i < totalWalls; i++)
-    {
-        if (Math.random() < 0.5)
-        {
-            walls[i].p1.x = Math.random() * window.innerWidth;
-            walls[i].p1.y = Math.random() * window.innerHeight;
-            walls[i].p2.x = walls[i].p1.x;
-            walls[i].p2.y = Math.random() * window.innerHeight;
-        }
-        else
-        {
-            walls[i].p1.x = Math.random() * window.innerWidth;
-            walls[i].p1.y = Math.random() * window.innerHeight;
-            walls[i].p2.x = Math.random() * window.innerWidth;
-            walls[i].p2.y = walls[i].p1.y;
-        }
-        walls[i].angle = walls[i].p1.angle(walls[i].p2);
-        walls[i].type = i % wallImages.length;
-    }
-}
-
 function convertWallsToString(walls)
 {
     var str = "";

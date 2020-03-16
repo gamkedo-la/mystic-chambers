@@ -6,16 +6,6 @@ class ItemManager {
         this.ents = [];
     }
 
-    /*draw(renderer, plRay, line)
-    {
-        for (var num=0,max=this.ents.length; num<max; num++) 
-        {
-            this.ents[num].addOffset(vec2(-plRay.p.x, -plRay.p.y));
-            this.ents[num].draw(renderer, plRay, line);
-            this.ents[num].addOffset(plRay.p);
-        }
-    }*/
-
     add(x, y, id, offset)
     {
         var ent = new Entity();
