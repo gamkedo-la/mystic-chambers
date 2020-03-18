@@ -17,21 +17,30 @@ function setupGameplayUI()
         new Button()));
 
     wallEditorObjects = [];
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to insert another\nof the selected type."));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously added entity."));
-    
-    //transform, rangeVec2, label, steps, knobValue, knobRadius, knobColor, bgLineThickness, bgLineColor, selectKnobColor, disabledKnobColor,tooltip
-    wallEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"), 4, currentWallType, sliderKnobSize, undefined,undefined,undefined,undefined,undefined,"This slider\nselects a wall type"));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),undefined,"Toggle grid snap\non or off, for alignment."));
-    wallEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"),"Delete all entities\nof the current type."));
+    wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to insert another\nof the selected type.");
+    wallEditorObjects.push(wallAddBtn);
+    wallDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously added entity.");
+    wallEditorObjects.push(wallDelBtn);
+    wallTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"), 4, currentWallType, sliderKnobSize, undefined, undefined, undefined, undefined, undefined, "This slider\nselects a wall type");
+    wallEditorObjects.push(wallTypeSlider);
+    wallSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),undefined,"Toggle grid snap\non or off, for alignment.");
+    wallEditorObjects.push(wallSnapBtn);
+    wallDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"),"Delete all entities\nof the current type.");
+    wallEditorObjects.push(wallDelAllBtn);
 
     areasEditorObjects = [];
-    areasEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1), 40, areaPadding, sliderKnobSize));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to spawn a new entity\nof the current type."));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously selected entity."));
-    areasEditorObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1), 4, 0, sliderKnobSize));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap")));
-    areasEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222")));
+    areaPaddingSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1), 40, areaPadding, sliderKnobSize);
+    areasEditorObjects.push(areaPaddingSlider);
+    areaAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to spawn a new entity\nof the current type.");
+    areasEditorObjects.push(areaAddBtn);
+    areaDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously selected entity.");
+    areasEditorObjects.push(areaDelBtn);
+    areaTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1), 4, 0, sliderKnobSize);
+    areasEditorObjects.push(areaTypeSlider);
+    areaSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"));
+    areasEditorObjects.push(areaSnapBtn);
+    areaDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"));
+    areasEditorObjects.push(areaDelAllBtn);
 
     decorEditorObjects = [];
     decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\ndecorations you can place."));
@@ -307,7 +316,6 @@ function handleToolTips() {
 
 function gameplayUICustomEvents(deltaTime, wall, area)
 {
-    
     healthLabel.text = playerHealth.toString();
 
     //handleToolTips();
@@ -366,54 +374,54 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         cpStartObjects[2].subState.uiObjects[5].text = getLevelName();
         cpStartObjects[2].subState.uiObjects[6].button.resetOutput();
     }
-    else if (wallEditorObjects[0].button.output == UIOUTPUT_SELECT)
+    else if (wallAddBtn.button.output == UIOUTPUT_SELECT)
     {
         newWall = new Wall();
         newWall.set(ray[ray.length/2].p.x, ray[ray.length/2].p.y,
             ray[ray.length/2].p.x, ray[ray.length/2].p.y - gridCellSize);
         newWall.type = 0;
         wall.push(newWall);
-        wallEditorObjects[0].button.resetOutput();
+        wallAddBtn.button.resetOutput();
     }
-    else if (wallEditorObjects[1].button.output == UIOUTPUT_SELECT)
+    else if (wallDelBtn.button.output == UIOUTPUT_SELECT)
     {
         if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length) wall.splice(lastSelectedWallIndex, 1);
         lastSelectedWallIndex = -1;
-        wallEditorObjects[1].button.resetOutput();
+        wallDelBtn.button.resetOutput();
     }
-    else if (wallEditorObjects[3].button.output == UIOUTPUT_SELECT)
+    else if (wallSnapBtn.button.output == UIOUTPUT_SELECT)
     {
         snapWallsToGrid(wall, vec2(0, 0));
-        wallEditorObjects[3].button.resetOutput();
+        wallSnapBtn.button.resetOutput();
     }
-    else if (wallEditorObjects[4].button.output == UIOUTPUT_SELECT)
+    else if (wallDelAllBtn.button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
-        wallEditorObjects[4].button.resetOutput();
+        wallDelAllBtn.button.resetOutput();
     }
-    else if (areasEditorObjects[1].button.output == UIOUTPUT_SELECT)
+    else if (areaAddBtn.button.output == UIOUTPUT_SELECT)
     {
         newArea = new Area(vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y),
             vec2(gridCellSize, gridCellSize), 0);
         area.push(newArea);
-        areasEditorObjects[1].button.resetOutput();
+        areaAddBtn.button.resetOutput();
     }
-    else if (areasEditorObjects[2].button.output == UIOUTPUT_SELECT)
+    else if (areaDelBtn.button.output == UIOUTPUT_SELECT)
     {
         if(lastSelectedAreaIndex >= 0 && lastSelectedAreaIndex < area.length) area.splice(lastSelectedAreaIndex, 1);
         lastSelectedAreaIndex = -1;
-        areasEditorObjects[2].button.resetOutput();
+        areaDelBtn.button.resetOutput();
     }
-    else if (areasEditorObjects[4].button.output == UIOUTPUT_SELECT)
+    else if (areaSnapBtn.button.output == UIOUTPUT_SELECT)
     {
         snapAreasToGrid(area, vec2(0, 0));
-        areasEditorObjects[4].button.resetOutput();
+        areaSnapBtn.button.resetOutput();
     }
-    else if (areasEditorObjects[5].button.output == UIOUTPUT_SELECT)
+    else if (areaDelAllBtn.button.output == UIOUTPUT_SELECT)
     {
         while(area.length > 0) area.pop();
         area = new Array();
-        areasEditorObjects[5].button.resetOutput();
+        areaDelAllBtn.button.resetOutput();
     }
     else if(cpRenderObjects[1].button.output == UIOUTPUT_SELECT)
     {
@@ -447,15 +455,15 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    gridCellSize = cpEditObjects[1].knobValue;
    cpEditObjects[1].label.text = "Grid Size " + cpEditObjects[1].knobValue.toString();
 
-   currentWallType = wallEditorObjects[2].knobValue;
-   wallEditorObjects[2].label.text = "Type " + wallEditorObjects[2].knobValue.toString();
+   currentWallType = wallTypeSlider.knobValue;
+   wallTypeSlider.label.text = "Type " + wallTypeSlider.knobValue.toString();
    if(selectedWallIndex > -1 && selectedWallIndex < wall.length) wall[selectedWallIndex].type = currentWallType; 
 
-   areaPadding = areasEditorObjects[0].knobValue;
-   areasEditorObjects[0].label.text = "Padding " + areasEditorObjects[0].knobValue;
+   areaPadding = areaPaddingSlider.knobValue;
+   areaPaddingSlider.label.text = "Padding " + areaPaddingSlider.knobValue;
 
-   currentAreaType = areasEditorObjects[3].knobValue;
-   areasEditorObjects[3].label.text = "Type " + areasEditorObjects[3].knobValue;
+   currentAreaType = areaTypeSlider.knobValue;
+   areaTypeSlider.label.text = "Type " + areaTypeSlider.knobValue;
    if(selectedAreaIndex > -1 && selectedAreaIndex < area.length) area[selectedAreaIndex].type = currentAreaType; 
 
    fps = Math.floor(1000.0/deltaTime);
