@@ -212,11 +212,11 @@ function setupGameplayUI()
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"),undefined,"Discard any recent changes\nand load the next level.")
     ]), false, vec2(5, 5), vec2(4, 2), false));
 
-    var tooltipSize = vec2(320,64);
-    var tooltipLabelSize = vec2(320,32);
-    var toolTipBackground = new TextButton(tr(vec2(),vec2(320,56)),undefined,undefined,"Welcome to the Mystic Chambers\nIn-game Level Editor!");
+    var tooltipSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.08);
+    var tooltipLabelSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.05);
+    var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.08)),undefined,undefined,"Welcome to the Mystic Chambers\nIn-game Level Editor!");
     toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers");
-    toolTipLabel = new Label(tr(vec2(0,24), tooltipLabelSize), "In-game Level Editor!");
+    toolTipLabel = new Label(tr(vec2(0, scrSizeFactor * 0.032), tooltipLabelSize), "In-game Level Editor!");
     cpStartObjects.push(new SubState(tr(), [toolTipBackground,toolTipTitle,toolTipLabel]));
 
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),

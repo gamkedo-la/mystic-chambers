@@ -133,5 +133,10 @@ function playerEvents(deltaTime)
         }
     }
 
+    if(isTouched)
+        revolver.imageObject = revolverImages[1];
+    else
+        revolver.imageObject = revolverImages[0];
+
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }

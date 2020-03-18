@@ -13,9 +13,13 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
+    revolverImages = [
+        new ImageObject("images/revolver.png", vec2(480, 480)),
+        new ImageObject("images/revolverFire.png", vec2(480, 480))
+    ]
+
     revolver = new Sprite(
-        tr(vec2(screen.width/2, screen.height - 180), vec2(1.5, 1.5)),
-        new ImageObject("images/revolver.png", vec2(240, 240)));
+        tr(vec2(screen.width/2, 0)), revolverImages[0]);
 
     wallImages = [
         new ImageObject("images/door.png", vec2(160, 160)),
@@ -58,7 +62,80 @@ window.onload = function()
     setupGameplayUI();
     setupMainMenuUI();
 
-    wall[10].decal = entImg[0][0];
+    /*
+    // Wall Sector TEST
+
+    var s1_w1 = new Wall();
+    s1_w1.set(549.99, 350, 524.99, 275);
+    s1_w1.type = 2;
+    //549.99 350 524.99 275 2
+    var s1_w2 = new Wall();
+    s1_w2.set(599.99, 225, 524.99, 275);
+    s1_w2.type = 2;
+    //599.99 225 524.99 275 2
+    var s1_w3 = new Wall();
+    s1_w3.set(549.99, 350, 674.99, 225);
+    s1_w3.type = 2;
+    //549.99 350 674.99 225 2
+
+    var s2_w1 = new Wall();
+    s2_w1.set(574.99, 150, 599.99, 225);
+    s2_w1.type = 1;
+    //574.99 150 599.99 225 1
+    var s2_w2 = new Wall();
+    s2_w2.set(674.99, 175, 674.99, 225);
+    s2_w2.type = 1;
+    //674.99 175 674.99 225 1
+    var s2_w3 = new Wall();
+    s2_w3.set(674.99, 175, 599.99, 125);
+    s2_w3.type = 1;
+    //674.99 175 599.99 125 1
+
+    var s3_w1 = new Wall();
+    s3_w1.set(499.99, 150, 574.99, 150);
+    s3_w1.type = 2;
+    //499.99 150 574.99 150 2
+    var s3_w2 = new Wall();
+    s3_w2.set(449.99, 100, 499.99, 150);
+    s3_w2.type = 2;
+    //449.99 100 499.99 150 2
+    var s3_w3 = new Wall();
+    s3_w3.set(499.99, 50, 449.99, 100);
+    s3_w3.type = 2;
+    //499.99 50 449.99 100 2
+    var s3_w4 = new Wall();
+    s3_w4.set(599.99, 75, 499.99, 50);
+    s3_w4.type = 2;
+    //599.99 75 499.99 50 2
+    var s3_w5 = new Wall();
+    s3_w5.set(599.99, 125, 599.99, 75);
+    s3_w5.type = 2;
+    //599.99 125 599.99 75 2
+
+    var s1_s2 = new Wall();
+    s1_s2.set(674.99, 225, 599.99, 225);
+    s1_s2.type = 0;
+    //674.99 225 599.99 225 0
+    var s2_s3 = new Wall();
+    s2_s3.set(599.99, 125, 574.99, 150);
+    s2_s3.type = 0;
+    //599.99 125 574.99 150 0
+
+    //wall.push(s1_w1, s1_w2, s1_w3);
+    //wall.push(s2_w1, s2_w2, s2_w3);
+    //wall.push(s3_w1, s3_w2, s3_w3, s3_w4, s3_w5);
+
+    s1_s2.sectorData.wallsLeft = [s1_w1, s1_w2, s1_w3];
+    s1_s2.sectorData.wallsRight = [s2_w1, s2_w2, s2_w3];
+    s2_s3.sectorData.wallsLeft = [s2_w1, s2_w2, s2_w3];
+    s2_s3.sectorData.wallsRight = [s3_w1, s3_w2, s3_w3, s3_w4, s3_w5];
+    wall.push(s1_s2, s2_s3);
+
+    activeSector = s1_s2;
+
+    */
+
+    //wall[10].decal = entImg[0][0];
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
@@ -166,7 +243,7 @@ function draw()
 
         for (let i = 0; i < wall.length; i++)
         {
-            wall[i].draw(renderer, wallColors);
+            wall[i].draw(renderer, wallColors, vec2(window.innerWidth/2, window.innerHeight/2));
 
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
@@ -197,7 +274,7 @@ function draw()
 
     revolver.transform.position = vec2(
         screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
-        screen.height - 180 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
+        screen.height - 240 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
     if(!mapMode) revolver.drawSc();
 
     ui.draw();
