@@ -42,42 +42,8 @@ class Wall
         this.angle = this.p1.angle(this.p2);
     }
 
-    draw(renderer, typeColors, vec2, length)
+    draw(renderer, typeColors, length)
     {
-        var Ax = this.p1.x; var Ay = this.p1.y;
-        var Bx = this.p2.x; var By = this.p2.y;
-        var X = vec2.x; var Y = vec2.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
-
-        if(((pos < 0 && this.sectorData.direction > 0)
-            || (pos > 0 && this.sectorData.direction < 0))
-        && this.sectorData.direction != 0)
-        {
-            activeSector = this;
-        }
-
-        if(pos < 0)
-        {
-            this.sectorData.direction = -1;
-            if(activeSector == this
-                && typeof this.sectorData.wallsLeft != "undefined")
-            {
-                for(let i = 0; i < this.sectorData.wallsLeft.length; i++)
-                    this.sectorData.wallsLeft[i].draw(renderer, typeColors, vec2);
-            }
-        }
-        else
-        {
-            this.sectorData.direction = 1;
-            if(activeSector == this
-                && typeof this.sectorData.wallsRight != "undefined")
-            {
-                for(let i = 0; i < this.sectorData.wallsRight.length; i++)
-                    this.sectorData.wallsRight[i].draw(renderer, typeColors, vec2);
-            }
-        }
-        
         drawLine(renderer, this.p1, this.p2,
             typeof typeColors == "undefined" ? "white" : typeColors[this.type]);
 
@@ -148,4 +114,71 @@ function generateWallsFromString(walls, str)
         newWall.type = parseInt(values[i+4]);
         walls.push(newWall);
     }
+}
+
+function drawSectorsMap(renderer, typeColors, plPos, off, sec)
+{
+    var sector = undefined;
+    if(typeof sec != "undefined") sector = sec;
+    else if(typeof activeSector != "undefined") sector = activeSector
+
+    sector.addOffset(off);
+
+    if(typeof sector != "undefined")
+    {
+        var Ax = sector.p1.x; var Ay = sector.p1.y;
+        var Bx = sector.p2.x; var By = sector.p2.y;
+        var X = plPos.x; var Y = plPos.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+
+        if(((pos < 0 && sector.sectorData.direction > 0)
+            || (pos > 0 && sector.sectorData.direction < 0))
+        && sector.sectorData.direction != 0)
+        {
+            activeSector = sector;
+        }
+
+        if(pos < 0)
+        {
+            sector.sectorData.direction = -1;
+            if(typeof sector.sectorData.wallsLeft != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
+                {
+                    sector.sectorData.wallsLeft[i].addOffset(off);
+                    sector.sectorData.wallsLeft[i].draw(renderer, typeColors, plPos);
+                    sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
+                }
+            }
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsLeft != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                    drawSectorsMap(renderer, typeColors, plPos, off, sector.sectorData.sectorsLeft[i]);
+            }
+        }
+        else
+        {
+            activeSector.sectorData.direction = 1;
+            if(typeof activeSector.sectorData.wallsRight != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
+                {
+                    sector.sectorData.wallsRight[i].addOffset(off);
+                    sector.sectorData.wallsRight[i].draw(renderer, typeColors, plPos);
+                    sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
+                }
+            }
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsRight != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                    drawSectorsMap(renderer, typeColors, plPos, off, sector.sectorData.sectorsRight[i]);
+            }
+        }
+    }
+
+    sector.addOffset(vec2(-off.x, -off.y));
 }

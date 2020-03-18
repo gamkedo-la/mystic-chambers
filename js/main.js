@@ -57,12 +57,12 @@ window.onload = function()
 
     playerInit();
 
-    editorInit(wall, area);
+    //editorInit(wall, area);
 
     setupGameplayUI();
     setupMainMenuUI();
 
-    /*
+    
     // Wall Sector TEST
 
     var s1_w1 = new Wall();
@@ -121,19 +121,22 @@ window.onload = function()
     s2_s3.type = 0;
     //599.99 125 574.99 150 0
 
-    //wall.push(s1_w1, s1_w2, s1_w3);
-    //wall.push(s2_w1, s2_w2, s2_w3);
-    //wall.push(s3_w1, s3_w2, s3_w3, s3_w4, s3_w5);
+    wall.push(s1_w1, s1_w2, s1_w3);
+    wall.push(s2_w1, s2_w2, s2_w3);
+    wall.push(s3_w1, s3_w2, s3_w3, s3_w4, s3_w5);
+    wall.push(s1_s2, s2_s3);
 
     s1_s2.sectorData.wallsLeft = [s1_w1, s1_w2, s1_w3];
     s1_s2.sectorData.wallsRight = [s2_w1, s2_w2, s2_w3];
+    s1_s2.sectorData.sectorsLeft = undefined;
+    s1_s2.sectorData.sectorsRight = [s2_s3]
+
     s2_s3.sectorData.wallsLeft = [s2_w1, s2_w2, s2_w3];
     s2_s3.sectorData.wallsRight = [s3_w1, s3_w2, s3_w3, s3_w4, s3_w5];
-    wall.push(s1_s2, s2_s3);
+    s2_s3.sectorData.sectorsLeft = [s1_s2];
+    s2_s3.sectorData.sectorsRight = undefined;
 
     activeSector = s1_s2;
-
-    */
 
     //wall[10].decal = entImg[0][0];
 
@@ -241,9 +244,15 @@ function draw()
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
 
+        drawSectorsMap(renderer, wallColors,
+            vec2(window.innerWidth/2, window.innerHeight/2),
+            vec2(0,0)/*-(ray[ray.length/2].p.x - (window.innerWidth/2)),
+            -(ray[ray.length/2].p.y - (window.innerHeight/2)))*/
+        );
+
         for (let i = 0; i < wall.length; i++)
         {
-            wall[i].draw(renderer, wallColors, vec2(window.innerWidth/2, window.innerHeight/2));
+            //wall[i].draw(renderer, wallColors);
 
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));

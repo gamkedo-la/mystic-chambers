@@ -22,6 +22,8 @@ class Ray
 
         for(let o = 0; o < w.length; o++)
         {
+            if(w[o].type == 0) continue;
+
             var x1 = this.p.x;
             var y1 = this.p.y;
             var x2 = this.p.x + (this.length * Math.cos(degToRad(this.angle)));
