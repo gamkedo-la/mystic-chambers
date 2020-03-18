@@ -14,7 +14,7 @@ function setupGameplayUI()
     gameplayUI.push(new TextButton(
         tr(vec2AV(0.025, 0.025, squareBtnSize, 1), squareBtnSize),
         new Label(tr(), "X"),
-        new Button()));
+        new Button(),"Click here to exit the level editor\nand play the game fullscreen."));
 
     wallEditorObjects = [];
     wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to insert another\nof the selected type.");

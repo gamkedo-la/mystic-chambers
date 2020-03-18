@@ -1,3 +1,5 @@
+const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
+const RENDER_EDITOR_AND_GAME_TOGETHER = true; // if false, draw either editor OR game
 
 window.onload = function()
 {
@@ -164,11 +166,11 @@ function events(deltaTime)
             
 
     if(platform == WINDOWS)
-        mapMode = !isPointerLocked();
+        mapMode = !isPointerLocked(); // FIXME this can also get toggled by code elsewhere
 
     eventSprites();
 
-    if(mapMode)
+    if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
         for(let i = 0; i < wall.length; i++)
             wall[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
@@ -209,11 +211,28 @@ function draw()
 {
     renderer.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, "black");
+    drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, EDITOR_BG_COLOUR);
 
     //drawSprites();
 
-    if(mapMode)
+    // draw all the floors and walls in 3d
+    if(!mapMode || RENDER_EDITOR_AND_GAME_TOGETHER)
+    {
+        if(platform != ANDROID)
+            renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
+                ray[ray.length/2].angle)
+        renderRaycast3D(renderer, ray, wall);
+
+        for(let i = 0; i < area.length; i++)
+        {
+            var coll = area[i].getCollValue(plPos, prevPlPos);
+            plPos = plPos.add(coll);
+        }
+
+        items.check(plPos);
+    }
+
+    if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
         //Offsets added before rendering and removed after rendering for Camera Movement
         for(let i = 0; i < wall.length; i++)
@@ -263,28 +282,14 @@ function draw()
         //plPos = plPos.add(coll);
 
     }
-    else
-    {
-        if(platform != ANDROID)
-            renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
-                ray[ray.length/2].angle)
-        renderRaycast3D(renderer, ray, wall);
 
-        for(let i = 0; i < area.length; i++)
-        {
-            var coll = area[i].getCollValue(plPos, prevPlPos);
-            plPos = plPos.add(coll);
-        }
 
-        items.check(plPos);
-    }
-
-    drawEntities(renderer, ray[ray.length/2], mapMode);
+    drawEntities(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
 
     revolver.transform.position = vec2(
         screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
         screen.height - 240 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
-    if(!mapMode) revolver.drawSc();
+    if(!mapMode/*|| RENDER_EDITOR_AND_GAME_TOGETHER*/) revolver.drawSc();
 
     ui.draw();
 }
