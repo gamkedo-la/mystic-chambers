@@ -129,15 +129,15 @@ function loadRoofAndFloorTextureDataOnce()
 {
     if(!imgDataDone)
     {
-        renderer.drawImage(wallImages[1].image, 0, 0);
+        renderer.drawImage(wallImages[2].image, 0, 0);
         floorImageData
         = renderer.getImageData(0, 0,
-            wallImages[1].image.width, wallImages[1].image.height);
+            wallImages[2].image.width, wallImages[2].image.height);
 
-        renderer.drawImage(wallImages[1].image, 0, 0);
+        renderer.drawImage(wallImages[2].image, 0, 0);
         roofImageData
         = renderer.getImageData(0, 0,
-            wallImages[1].image.width, wallImages[1].image.height);
+            wallImages[2].image.width, wallImages[2].image.height);
 
         imgDataDone = true;
     }
@@ -218,23 +218,24 @@ function renderRaycast3DRoofAndFloorLining(renderer, xG, yG, angG)
                 {
                     //Lines Rendering - Very Fast, No Texture Involved (60+)
 
-                    if(Math.floor(sampleX) % 14 < 1
+                    if((Math.floor(sampleX) % 14 < 1
                     || Math.floor(sampleY) % 14 < 1)
+                    && Math.random() < 0.5)
                     {
                         var colorDepth = Math.floor(30*(Math.floor(depthYG * 255.0) / 100));
                         colorDepth = colorDepth > 255 ? 255 : colorDepth;
                         var colorDepthAlt = colorDepth - 80;
                         if(colorDepthAlt < 0) colorDepthAlt = 0;
+
+                        var pointSize = (roofFloorPointSize * (ytg/(window.innerHeight/1.5)));
                         
                         drawRect(renderer, vec2(xtg, ytg + (window.innerHeight/2) + jumpOffset),
-                            vec2((roofFloorPointSize * (ytg/(window.innerHeight/2))) + 1,
-                                (roofFloorPointSize * (ytg/(window.innerHeight/2))) + 1), true,
-                                rgb(colorDepth, colorDepthAlt + 30, colorDepth));
+                            vec2(pointSize, pointSize), true,
+                                rgb(colorDepth, colorDepthAlt/ + 30, colorDepth));
 
                         drawRect(renderer, vec2(xtg, (window.innerHeight/2) - ytg + jumpOffset),
-                            vec2((roofFloorPointSize * (ytg/(window.innerHeight/2))) + 1,
-                                (roofFloorPointSize * (ytg/(window.innerHeight/2))) + 1), true,
-                                rgb(colorDepth, colorDepth, colorDepthAlt + 30));
+                            vec2(pointSize, pointSize), true,
+                                rgb(colorDepth, colorDepth, colorDepthAlt/ + 30));
                     }
                 }
             }

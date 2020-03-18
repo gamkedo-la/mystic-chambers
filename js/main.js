@@ -23,8 +23,8 @@ window.onload = function()
 
     wallImages = [
         new ImageObject("images/door.png", vec2(160, 160)),
-        new ImageObject("images/ground.png", vec2(160, 160)),
-        new ImageObject("images/wall.png", vec2(160, 160)),
+        new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
+        new ImageObject("images/wall_stone.png", vec2(160, 160)),
     ];
     wallColors = [
         "yellow",
