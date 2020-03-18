@@ -48,9 +48,9 @@ window.onload = function()
     ent2.set(window.innerWidth/2 + 10, window.innerHeight/2 - 5, ENT_FIRESKULL_OLD);
     entities.push(ent2);
 
-    items.add(800, 400, ENT_HEALTHBOX, vec2(1, -80));
-    items.add(840, 420, ENT_HEALTHBOX, vec2(1, -80));
-    items.add(880, 410, ENT_HEALTHBOX, vec2(1, -80));
+    items.add(800, 400, ENT_REDKEY, vec2(1, -80));
+    items.add(840, 420, ENT_GREENKEY, vec2(1, -80));
+    items.add(880, 410, ENT_BLUEKEY, vec2(1, -80));
     
     decorations.scatter(ENT_TECHTORCH, 20,
         400, 0, 800, 400, vec2(1, -120)); // experimental WIP

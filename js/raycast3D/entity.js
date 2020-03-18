@@ -13,10 +13,16 @@ var entityAfterCollisionGap = 0.25;
 var entityCollisionAngleDiff = degToRad(-2.5);
 
 //Entity IDs
+
 const ENT_TECHTORCH = 0;
+
 const ENT_HEALTHBOX = 1;
-const ENT_FIRESKULL_NEW = 2;
-const ENT_FIRESKULL_OLD = 3;
+const ENT_REDKEY = 2;
+const ENT_GREENKEY = 3;
+const ENT_BLUEKEY = 4;
+
+const ENT_FIRESKULL_NEW = 5;
+const ENT_FIRESKULL_OLD = 6;
 
 entImg = [
     //DECOR IMAGES START
@@ -25,6 +31,9 @@ entImg = [
 
     //ITEM IMAGES START
         new ImageObject("images/healthBox.png", vec2(1280, 160)),
+        new ImageObject("images/redKey.png", vec2(1280, 160)),
+        new ImageObject("images/greenKey.png", vec2(1280, 160)),
+        new ImageObject("images/blueKey.png", vec2(1280, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START
