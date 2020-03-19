@@ -53,6 +53,9 @@ window.onload = function()
     items.add(800, 400, ENT_REDKEY, vec2(1, -80));
     items.add(840, 420, ENT_GREENKEY, vec2(1, -80));
     items.add(880, 410, ENT_BLUEKEY, vec2(1, -80));
+    items.add(600, 200, ENT_HEALTHBOX, vec2(1, -80));
+    items.add(640, 220, ENT_REVOLVERGUN, vec2(1, -80));
+    items.add(680, 210, ENT_REVOLVERAMMO, vec2(1, -80));
     
     /*decorations.scatter(ENT_TECHTORCH, 20,
         400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
@@ -64,7 +67,6 @@ window.onload = function()
     setupGameplayUI();
     setupMainMenuUI();
 
-    
     // Wall Sector TEST
 
     var s1_w1 = new Wall();
