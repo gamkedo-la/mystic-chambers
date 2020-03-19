@@ -132,13 +132,14 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var pos = (Bx * Y) - (By * X);
 
-
+        /*
+        //active sector is selected in the raycast sector function; no need here
         if(((pos < 0 && sector.sectorData.direction > 0)
             || (pos > 0 && sector.sectorData.direction < 0))
         && sector.sectorData.direction != 0)
         {
             activeSector = sector;
-        }
+        }*/
 
         if(pos < 0)
         {
@@ -181,4 +182,20 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
     }
 
     sector.addOffset(vec2(-off.x, -off.y));
+}
+
+function resetWallIndexes()
+{
+    //sectors are type 0 walls
+    //sectors must checked with rays BEFORE all the other walls
+    wall.sort(
+        function(wA, wB) {
+            return wA.type < wB.type ? 1 : -1;
+        }
+    );
+
+    for(let i = 0; i < wall.length; i++)
+    {
+        wall[i].index = i;
+    }
 }

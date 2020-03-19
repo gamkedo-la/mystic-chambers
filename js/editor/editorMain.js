@@ -13,6 +13,7 @@ function loadLevel(walls, areas)
     var lvStr = readFile(getLevelName());
     generateWallsFromString(walls, lvStr.split(".")[0]);
     generateAreasFromString(areas, lvStr.split(".")[1]);
+    resetWallIndexes();
 }
 
 function editorInit(walls, areas)

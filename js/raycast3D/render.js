@@ -40,13 +40,14 @@ var floorImageData = null;
 var roofImageData = null;
 var imgDataDone = false;
 
-function renderRaycast3D(renderer, ray, wall)
+function renderRaycast3D(renderer, ray, w, plPos)
 {
     prevDepth = -1.0;
 
     for (let i = 0; i < ray.length; i++)
     {
-        var data = ray[i].draw(renderer, wall, false);
+        var data = ray[i].raycastSector(w, plPos);
+        //ray[i].draw(renderer, wall, false);
 
         if (data.depth < maxDepth && data.depth > 0.1)
         {

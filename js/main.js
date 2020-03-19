@@ -1,5 +1,5 @@
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
-const RENDER_EDITOR_AND_GAME_TOGETHER = true; // if false, draw either editor OR game
+const RENDER_EDITOR_AND_GAME_TOGETHER = false; // if false, draw either editor OR game
 
 window.onload = function()
 {
@@ -54,8 +54,8 @@ window.onload = function()
     items.add(840, 420, ENT_GREENKEY, vec2(1, -80));
     items.add(880, 410, ENT_BLUEKEY, vec2(1, -80));
     
-    decorations.scatter(ENT_TECHTORCH, 20,
-        400, 0, 800, 400, vec2(1, -120)); // experimental WIP
+    /*decorations.scatter(ENT_TECHTORCH, 20,
+        400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
 
     playerInit();
 
@@ -70,58 +70,45 @@ window.onload = function()
     var s1_w1 = new Wall();
     s1_w1.set(549.99, 350, 524.99, 275);
     s1_w1.type = 2;
-    //549.99 350 524.99 275 2
     var s1_w2 = new Wall();
     s1_w2.set(599.99, 225, 524.99, 275);
     s1_w2.type = 2;
-    //599.99 225 524.99 275 2
     var s1_w3 = new Wall();
     s1_w3.set(549.99, 350, 674.99, 225);
     s1_w3.type = 2;
-    //549.99 350 674.99 225 2
 
     var s2_w1 = new Wall();
     s2_w1.set(574.99, 150, 599.99, 225);
     s2_w1.type = 1;
-    //574.99 150 599.99 225 1
     var s2_w2 = new Wall();
     s2_w2.set(674.99, 175, 674.99, 225);
     s2_w2.type = 1;
-    //674.99 175 674.99 225 1
     var s2_w3 = new Wall();
     s2_w3.set(674.99, 175, 599.99, 125);
     s2_w3.type = 1;
-    //674.99 175 599.99 125 1
 
     var s3_w1 = new Wall();
     s3_w1.set(499.99, 150, 574.99, 150);
     s3_w1.type = 2;
-    //499.99 150 574.99 150 2
     var s3_w2 = new Wall();
     s3_w2.set(449.99, 100, 499.99, 150);
     s3_w2.type = 2;
-    //449.99 100 499.99 150 2
     var s3_w3 = new Wall();
     s3_w3.set(499.99, 50, 449.99, 100);
     s3_w3.type = 2;
-    //499.99 50 449.99 100 2
     var s3_w4 = new Wall();
     s3_w4.set(599.99, 75, 499.99, 50);
     s3_w4.type = 2;
-    //599.99 75 499.99 50 2
     var s3_w5 = new Wall();
     s3_w5.set(599.99, 125, 599.99, 75);
     s3_w5.type = 2;
-    //599.99 125 599.99 75 2
 
     var s1_s2 = new Wall();
     s1_s2.set(674.99, 225, 599.99, 225);
     s1_s2.type = 0;
-    //674.99 225 599.99 225 0
     var s2_s3 = new Wall();
     s2_s3.set(599.99, 125, 574.99, 150);
     s2_s3.type = 0;
-    //599.99 125 574.99 150 0
 
     wall.push(s1_w1, s1_w2, s1_w3);
     wall.push(s2_w1, s2_w2, s2_w3);
@@ -221,7 +208,7 @@ function draw()
         if(platform != ANDROID)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
                 ray[ray.length/2].angle)
-        renderRaycast3D(renderer, ray, wall);
+        renderRaycast3D(renderer, ray, wall, vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
 
         for(let i = 0; i < area.length; i++)
         {
@@ -265,7 +252,8 @@ function draw()
 
         drawSectorsMap(renderer, wallColors,
             vec2(window.innerWidth/2, window.innerHeight/2),
-            vec2(0,0)/*-(ray[ray.length/2].p.x - (window.innerWidth/2)),
+            vec2(0,0)
+            /*-(ray[ray.length/2].p.x - (window.innerWidth/2)),
             -(ray[ray.length/2].p.y - (window.innerHeight/2)))*/
         );
 

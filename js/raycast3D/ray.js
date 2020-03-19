@@ -1,4 +1,23 @@
 
+class RaycastData
+{
+    constructor(px, py, pdist, index)
+    {
+        this.px = px;
+        this.py = py;
+        this.pdist = pdist;
+        this.index = index;
+    }
+
+    set(px, py, pdist, index)
+    {
+        this.px = px;
+        this.py = py;
+        this.pdist = pdist;
+        this.index = index;
+    }
+}
+
 class Ray
 {
     constructor(vec2, angle)
@@ -8,75 +27,142 @@ class Ray
         this.length = 240.0;
     }
 
+    raycastWall(w, o, raycast)
+    {
+        var x1 = this.p.x;
+        var y1 = this.p.y;
+        var x2 = this.p.x + (this.length * Math.cos(degToRad(this.angle)));
+        var y2 = this.p.y + (this.length * Math.sin(degToRad(this.angle)));
+
+        var x3 = w.p1.x;
+        var y3 = w.p1.y;
+        var x4 = w.p2.x;
+        var y4 = w.p2.y;
+
+        var denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
+
+        if(denominator != 0.0)
+        {
+            var _px = ((((x1 * y2) - (y1 * x2)) * (x3 - x4))
+            - ((x1 - x2) * ((x3 * y4) - (y3 * x4))))
+            / denominator;
+
+            var _py = ((((x1 * y2) - (y1 * x2)) * (y3 - y4))
+            - ((y1 - y2) * ((x3 * y4) - (y3 * x4))))
+            / denominator;
+
+            var _pdist = getDistBtwVec2(vec2(x1, y1), vec2(_px, _py));
+
+            if(isPointOnLine( vec2(x3, y3), vec2(x4, y4), vec2(_px, _py), 0.01 )
+            && isPointOnLine( vec2(x1, y1), vec2(x2, y2), vec2(_px, _py), 0.01 )
+            && Math.abs(_pdist) < Math.abs(raycast.pdist))
+            {
+                raycast.set(_px, _py, _pdist, o);
+            }
+        }
+    }
+
+    raycastSector(w, plPos, sec)
+    {
+        var data = new WallData();
+        var raycast = new RaycastData(this.p.x, this.p.y, this.length, -1);
+        var pangle = this.angle;
+
+        var sector = undefined;
+        if(typeof sec != "undefined") sector = sec;
+        else if(typeof activeSector != "undefined") sector = activeSector
+        
+        if(typeof sector != "undefined")
+        {
+            var Ax = sector.p1.x; var Ay = sector.p1.y;
+            var Bx = sector.p2.x; var By = sector.p2.y;
+            var X = plPos.x; var Y = plPos.y;
+            Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+            var pos = (Bx * Y) - (By * X);
+
+            if(((pos < 0 && sector.sectorData.direction > 0)
+                || (pos > 0 && sector.sectorData.direction < 0))
+            && sector.sectorData.direction != 0)
+            {
+                activeSector = sector;
+            }
+
+            if(pos < 0)
+            {
+                sector.sectorData.direction = -1;
+                if(typeof sector.sectorData.wallsLeft != "undefined")
+                {
+                    for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
+                        this.raycastWall(sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
+                }
+                if(activeSector == sector
+                    && typeof sector.sectorData.sectorsLeft != "undefined")
+                {
+                    console.log(activeSector.index);
+                    for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                        this.raycastSector(w, plPos, sector.sectorData.sectorsLeft[i]);
+                }
+            }
+            else
+            {
+                activeSector.sectorData.direction = 1;
+                if(typeof activeSector.sectorData.wallsRight != "undefined")
+                {
+                    for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
+                        this.raycastWall(sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
+                }
+                if(activeSector == sector
+                    && typeof sector.sectorData.sectorsRight != "undefined")
+                {
+                    for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                        this.raycastSector(w, plPos, sector.sectorData.sectorsRight[i]);
+                }
+            }
+        }
+
+        if(raycast.index > -1)
+        {
+            data.index = w[raycast.index].index;
+            data.depth = raycast.pdist;
+            data.lengthPoint = getDistBtwVec2( w[raycast.index].p1, vec2(raycast.px, raycast.py) );
+            data.length = getDistBtwVec2( w[raycast.index].p1, w[raycast.index].p2 );
+            data.angle = w[raycast.index].angle;
+            data.type = w[raycast.index].type;
+            data.decal = w[raycast.index].decal;
+        }
+
+        return data;
+    }
+
     draw(renderer, w, show)
     {
         var data = new WallData();
-
-        var px = this.p.x;
-        var py = this.p.y;
-        var pdist = this.length;
+        var raycast = new RaycastData(this.p.x, this.p.y, this.length, -1);
         var pangle = this.angle;
-
-        var done = false;
-        var index = -1;
 
         for(let o = 0; o < w.length; o++)
         {
             if(w[o].type == 0) continue;
-
-            var x1 = this.p.x;
-            var y1 = this.p.y;
-            var x2 = this.p.x + (this.length * Math.cos(degToRad(this.angle)));
-            var y2 = this.p.y + (this.length * Math.sin(degToRad(this.angle)));
-
-            var x3 = w[o].p1.x;
-            var y3 = w[o].p1.y;
-            var x4 = w[o].p2.x;
-            var y4 = w[o].p2.y;
-
-            var denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
-
-            if(denominator != 0.0)
-            {
-                var _px = ((((x1 * y2) - (y1 * x2)) * (x3 - x4))
-				- ((x1 - x2) * ((x3 * y4) - (y3 * x4))))
-				/ denominator;
-
-                var _py = ((((x1 * y2) - (y1 * x2)) * (y3 - y4))
-				- ((y1 - y2) * ((x3 * y4) - (y3 * x4))))
-				/ denominator;
-
-                var _pdist = getDistBtwVec2(vec2(x1, y1), vec2(_px, _py));
-
-                if(isPointOnLine( vec2(x3, y3), vec2(x4, y4), vec2(_px, _py), 0.01 )
-                && isPointOnLine( vec2(x1, y1), vec2(x2, y2), vec2(_px, _py), 0.01 )
-                && Math.abs(_pdist) < Math.abs(pdist))
-                {
-                    pdist = _pdist;
-                    px = _px;
-                    py = _py;
-                    index = o;
-                }
-            }
+            this.raycastWall(w[o], o, raycast);
         }
 
         if(show)
         {
             drawLine(renderer, vec2(this.p.x, this.p.y),
-                vec2(this.p.x + (pdist * Math.cos(degToRad(pangle))),
-                this.p.y + (pdist * Math.sin(degToRad(pangle)))),
+                vec2(this.p.x + (raycast.pdist * Math.cos(degToRad(pangle))),
+                this.p.y + (raycast.pdist * Math.sin(degToRad(pangle)))),
                 "blue");
         }
 
-        if(index > -1)
+        if(raycast.index > -1)
         {
-            data.index = w[index].index;
-            data.depth = pdist;
-            data.lengthPoint = getDistBtwVec2( w[index].p1, vec2(px, py) );
-            data.length = getDistBtwVec2( w[index].p1, w[index].p2 );
-            data.angle = w[index].angle;
-            data.type = w[index].type;
-            data.decal = w[index].decal;
+            data.index = w[raycast.index].index;
+            data.depth = raycast.pdist;
+            data.lengthPoint = getDistBtwVec2( w[raycast.index].p1, vec2(raycast.px, raycast.py) );
+            data.length = getDistBtwVec2( w[raycast.index].p1, w[raycast.index].p2 );
+            data.angle = w[raycast.index].angle;
+            data.type = w[raycast.index].type;
+            data.decal = w[raycast.index].decal;
         }
 
         return data;
