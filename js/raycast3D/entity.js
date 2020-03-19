@@ -23,8 +23,7 @@ const ENT_BLUEKEY = 4;
 const ENT_REVOLVERGUN = 5;
 const ENT_REVOLVERAMMO = 6;
 
-const ENT_FIRESKULL_NEW = 7;
-const ENT_FIRESKULL_OLD = 8;
+const ENT_FIRESKULL = 7;
 
 entImg = [
     //DECOR IMAGES START
@@ -42,7 +41,6 @@ entImg = [
 
     //ENEMY IMAGES START
         new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
-        new ImageObject("images/fireSkullOldIdle.png", vec2(1280, 160)),
     //ENEMY IMAGES END
 ];
 

@@ -43,12 +43,8 @@ window.onload = function()
     area = [];
 
     ent = new Entity();
-    ent.set(window.innerWidth/2 + 50, window.innerHeight/2 - 100, ENT_FIRESKULL_NEW);
+    ent.set(window.innerWidth/2 + 50, window.innerHeight/2 - 100, ENT_FIRESKULL);
     entities.push(ent);
-
-    ent2 = new Entity();
-    ent2.set(window.innerWidth/2 + 10, window.innerHeight/2 - 5, ENT_FIRESKULL_OLD);
-    entities.push(ent2);
 
     items.add(800, 400, ENT_REDKEY, vec2(1, -80));
     items.add(840, 420, ENT_GREENKEY, vec2(1, -80));
