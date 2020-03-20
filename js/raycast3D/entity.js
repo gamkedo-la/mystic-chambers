@@ -21,8 +21,10 @@ const ENT_GREENKEY = 3;
 const ENT_BLUEKEY = 4;
 const ENT_REVOLVERGUN = 5;
 const ENT_REVOLVERAMMO = 6;
+const ENT_WINCHESTERGUN = 7;
+const ENT_WINCHESTERAMMO = 8;
 //
-const ENT_FIRESKULL = 7;
+const ENT_FIRESKULL = 9;
 //
 
 entImg = [
@@ -37,6 +39,8 @@ entImg = [
         new ImageObject("images/blueKey.png", vec2(1280, 160)),
         new ImageObject("images/revolverGun.png", vec2(1280, 160)),
         new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
+        new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
+        new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START
@@ -229,7 +233,48 @@ function removeEntity(remEnt)
           entities.splice(i, 1); 
           break;
         }
-     }
+    }
+}
+
+function removeEntityInSector(remEnt)
+{
+    if(typeof activeSector != "undefined")
+    {
+        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
+        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
+        var X = plPos.x; var Y = plPos.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+        if(pos < 0)
+        {
+            if(typeof activeSector.sectorData.entitiesLeft != "undefined")
+            {
+                for( let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
+                { 
+                    if (activeSector.sectorData.entitiesLeft[i] === remEnt)
+                    {
+                        activeSector.sectorData.entitiesLeft.splice(i, 1); 
+                        break;
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(typeof activeSector.sectorData.entitiesRight != "undefined")
+            {
+                for( let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
+                { 
+                    if (activeSector.sectorData.entitiesRight[i] === remEnt)
+                    {
+                        activeSector.sectorData.entitiesRight.splice(i, 1); 
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 function isEntityInsideWalls(ent, walls, otherSectors, sector)
@@ -344,7 +389,6 @@ function setEntitiesInSectors(sec)
             if(isEntityInsideWalls(entities[i], sector.sectorData.wallsLeft,
                 sector.sectorData.sectorsLeft, sector))
             {
-                console.log("entadd");
                 sector.sectorData.entitiesLeft.push(entities[i]);
             }
         }
@@ -353,7 +397,6 @@ function setEntitiesInSectors(sec)
         {
             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
             {
-                console.log("secch");
                 setEntitiesInSectors(sector.sectorData.sectorsLeft[i]);
             }
         }
@@ -363,7 +406,6 @@ function setEntitiesInSectors(sec)
             if(isEntityInsideWalls(entities[i], sector.sectorData.wallsRight,
                 sector.sectorData.sectorsRight, sector))
             {
-                console.log("entadd");
                 sector.sectorData.entitiesRight.push(entities[i]);
             }
         }
@@ -372,7 +414,6 @@ function setEntitiesInSectors(sec)
         {
             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
             {
-                console.log("secch");
                 setEntitiesInSectors(sector.sectorData.sectorsRight[i]);
             }
         }

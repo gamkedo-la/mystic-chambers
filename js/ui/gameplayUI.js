@@ -257,12 +257,12 @@ function setupGameplayUI()
         )
     );
 
+    ammoLabel = new Label(tr(vec2(), vec2(200, 60)), "0/0", (scrSizeFactor * 0.08).toString() + "px Lucida, sans-serif");
     gameplayUI.push(
         new FlexGroup(
             tr(vec2(scrSizeFactor * 0.15, screen.height - 120), vec2(200, 80)),
             new SubState(tr(), [
-                new Label(tr(vec2(), vec2(200, 60)), "6/24", (scrSizeFactor * 0.08).toString() + "px Lucida, sans-serif"),
-                new Label(tr(vec2(), vec2(200, 20)), "Ammo", (scrSizeFactor * 0.04).toString() + "px Lucida, sans-serif")
+                ammoLabel, new Label(tr(vec2(), vec2(200, 20)), "Ammo", (scrSizeFactor * 0.04).toString() + "px Lucida, sans-serif")
             ]),
             true, vec2(0, 0), vec2(1, 2), false
         )
@@ -566,4 +566,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    entXOffset = entRenderObjects[3].knobValue;
    entRenderObjects[3].label.text = "X Off. " + entRenderObjects[3].knobValue;
+
+   if(currentGun >= 0) ammoLabel.text = ammoInGun[currentGun] + "/" + totalAmmo[currentGun];
+   else ammoLabel.text = "0/0";
 }

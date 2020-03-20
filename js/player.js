@@ -14,7 +14,7 @@ var speedThreshold = 0.16;
 var playerAngleMovement = true;
 var playerCalculatedAngleMovement = 0.0;
 
-var jumpKeyPress = 'q';
+var jumpKeyPress = 'f';
 var jumpOffset = 0.0;
 var jumpActive = false;
 var jumpFall = false;
@@ -28,6 +28,33 @@ var jumpSetZero = 2.0;
 var rayAngleDiff = 0;
 var rayRenderFOV = 0;
 
+//GUNS
+const GUN_REVOLVER = 0;
+const GUN_WINCHESTER = 1;
+
+var currentGun = -1;
+var gunSwitchKeyPress = "q";
+var gunReloadKeyPress = "r";
+var availableGuns = [false, false];
+var totalAmmo = [0, 0];
+var ammoInGun = [0, 0];
+var gunAmmoCapacity = [6, 12];
+var ammoItemIncrement = [24, 12];
+var gunReloading = false;
+
+var gunImages = [
+    [
+        new ImageObject("images/revolver.png", vec2(480, 480)),
+        new ImageObject("images/revolverFire.png", vec2(480, 480)),
+        new ImageObject("images/revolverReload.png", vec2(480, 480)),
+    ],
+    [
+        new ImageObject("images/winchester.png", vec2(480, 480)),
+        new ImageObject("images/winchesterFire.png", vec2(480, 480)),
+        new ImageObject("images/winchesterReload.png", vec2(480, 480)),
+    ],
+];
+var gun = new Sprite(tr(vec2(screen.width/2, 0)), undefined);
 var gunMoveCounter = 0;
 
 function playerInit()
@@ -97,7 +124,25 @@ function playerEvents(deltaTime)
 
         jumpOffset = 0;
     }
-    else if(keysDown.indexOf('m') != -1)
+
+    if(keysDown.indexOf(gunSwitchKeyPress) != -1)
+    {
+        if(availableGuns[currentGun + 1] == true) currentGun++;
+        else if(availableGuns[0] == true) currentGun = 0;
+        else currentGun = -1;
+    }
+    if(keysDown.indexOf(gunReloadKeyPress) != -1)
+    {
+        while(ammoInGun[currentGun] < gunAmmoCapacity[currentGun]
+            && totalAmmo[currentGun] > 0)
+        {
+            ammoInGun[currentGun]++;
+            totalAmmo[currentGun]--;
+            gun.imageObject = gunImages[currentGun][2];
+            gunReloading = true;
+        }
+    }
+    if(keysDown.indexOf('m') != -1)
     {
         playerAngleMovement = !playerAngleMovement;
     }
@@ -132,10 +177,41 @@ function playerEvents(deltaTime)
         }
     }
 
-    if(isTouched)
-        revolver.imageObject = revolverImages[1];
-    else
-        revolver.imageObject = revolverImages[0];
+    if(currentGun >= 0)
+    {
+        if(isTouched)
+        {
+            if(gun.imageObject != gunImages[currentGun][1]
+            && gun.imageObject != gunImages[currentGun][2])
+            {
+                if(ammoInGun[currentGun] > 0)
+                {
+                    ammoInGun[currentGun]--;
+
+                    gun.imageObject = gunImages[currentGun][1];
+                }
+                else if(totalAmmo[currentGun] >= gunAmmoCapacity[currentGun])
+                {
+                    ammoInGun[currentGun] = gunAmmoCapacity[currentGun];
+                    totalAmmo[currentGun] -= gunAmmoCapacity[currentGun];
+
+                    gun.imageObject = gunImages[currentGun][2];
+                }
+                else if(totalAmmo[currentGun] > 0)
+                {
+                    ammoInGun[currentGun] = totalAmmo[currentGun];
+                    totalAmmo[currentGun] = 0;
+
+                    gun.imageObject = gunImages[currentGun][0];
+                }
+            }
+        }
+        else if(!gunReloading)
+        {
+            gun.imageObject = gunImages[currentGun][0];
+        }
+        gunReloading = false;
+    }
 
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }

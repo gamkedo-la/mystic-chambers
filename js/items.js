@@ -31,14 +31,42 @@ class ItemManager {
                             playerHealth = playerMaxHealth;
                         break;
 
-                    case 283 /* ENT_SOME_OTHER_ITEM */:
-                        //...
+                    case ENT_REDKEY:
+                        break;
+
+                    case ENT_GREENKEY:
+                        break;
+
+                    case ENT_BLUEKEY:
+                        break;
+
+                    case ENT_REVOLVERGUN:
+                        availableGuns[GUN_REVOLVER] = true;
+                        currentGun = GUN_REVOLVER;
+                        totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
+                        ammoInGun[GUN_REVOLVER] = gunAmmoCapacity[GUN_REVOLVER];
+                        break;
+
+                    case ENT_REVOLVERAMMO:
+                        totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
+                        break;
+
+                    case ENT_WINCHESTERGUN:
+                        availableGuns[GUN_WINCHESTER] = true;
+                        currentGun = GUN_WINCHESTER;
+                        totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_REVOLVER];
+                        ammoInGun[GUN_WINCHESTER] = gunAmmoCapacity[GUN_WINCHESTER];
+                        break;
+
+                    case ENT_WINCHESTERAMMO:
+                        totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_WINCHESTER];
                         break;
 
                     default:
                         //do nothing
                 }
 
+                removeEntityInSector(this.ents[i]);
                 removeEntity(this.ents[i]);
                 this.ents.splice(i, 1);
             }

@@ -15,14 +15,6 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
-    revolverImages = [
-        new ImageObject("images/revolver.png", vec2(480, 480)),
-        new ImageObject("images/revolverFire.png", vec2(480, 480))
-    ]
-
-    revolver = new Sprite(
-        tr(vec2(screen.width/2, 0)), revolverImages[0]);
-
     wallImages = [
         new ImageObject("images/door.png", vec2(160, 160)),
         new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
@@ -46,12 +38,14 @@ window.onload = function()
     ent.set(530, 140, ENT_FIRESKULL);
     entities.push(ent);
 
-    items.add(560, 290, ENT_REDKEY, vec2(1, -80));
-    items.add(630, 240, ENT_GREENKEY, vec2(1, -80));
-    items.add(500, 100, ENT_BLUEKEY, vec2(1, -80));
-    items.add(600, 200, ENT_HEALTHBOX, vec2(1, -80));
-    items.add(640, 220, ENT_REVOLVERGUN, vec2(1, -80));
-    items.add(520, 60, ENT_REVOLVERAMMO, vec2(1, -80));
+    items.add(560, 290, ENT_REDKEY, vec2(1, -100));
+    items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
+    items.add(500, 100, ENT_BLUEKEY, vec2(1, -100));
+    items.add(600, 200, ENT_HEALTHBOX, vec2(1, -100));
+    items.add(640, 220, ENT_REVOLVERGUN, vec2(1, -100));
+    items.add(520, 60, ENT_REVOLVERAMMO, vec2(1, -100));
+    items.add(610, 280, ENT_WINCHESTERGUN, vec2(1, -100));
+    items.add(590, 100, ENT_WINCHESTERAMMO, vec2(1, -100));
     
     /*decorations.scatter(ENT_TECHTORCH, 20,
         400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
@@ -242,12 +236,6 @@ function draw()
             ray[i].p = vec2(plPos.x, plPos.y);
         }
 
-        /*for(let i = 0; i < area.length; i++)
-        {
-            var coll = area[i].getCollValue(plPos, prevPlPos);
-            plPos = plPos.add(coll);
-        }*/
-
         items.check(plPos);
     }
 
@@ -284,10 +272,7 @@ function draw()
 
         drawSectorsMap(renderer,
             vec2(window.innerWidth/2, window.innerHeight/2),
-            vec2(0,0)
-            /*-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-            -(ray[ray.length/2].p.y - (window.innerHeight/2)))*/
-        );
+            vec2(0,0));
 
         for (let i = 0; i < wall.length; i++)
         {
@@ -306,14 +291,17 @@ function draw()
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
     prevPlPos = vec2(plPos.x, plPos.y);
 
-    revolver.transform.position = vec2(
+    gun.transform.position = vec2(
         screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
         screen.height - 240 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
-    if(!mapMode/*|| RENDER_EDITOR_AND_GAME_TOGETHER*/) revolver.drawSc();
+    if(currentGun >= 0)
+        if(!mapMode && typeof gun.imageObject != "undefined") gun.drawSc();
 
     ui.draw();
 
-    drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
+    if(mapMode) drawText(renderer,
+        touchPos[0].x.toString() + ", " + touchPos[0].y.toString(),
+        vec2(10, window.innerHeight - 16));
 }
 
 function frame()
