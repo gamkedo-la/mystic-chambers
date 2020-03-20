@@ -1,9 +1,9 @@
 
 //Requires Vector2
 
-var wallCollisionMinDistance = 0.0;
-var wallCollisionReaction = 1.0;
-var wallCollisionPadding = 5.0;
+var wallCollisionMinDistance = 0.01;
+var wallCollisionReaction = 2.0;
+var wallCollisionPadding = 4.0;
 
 activeSector = undefined;
 class SectorData {
@@ -184,6 +184,13 @@ function drawSectorsMap(renderer, plPos, off, sec)
         var X = plPos.x; var Y = plPos.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var pos = (Bx * Y) - (By * X);
+
+        if(((pos < 0 && sector.sectorData.direction > 0)
+            || (pos > 0 && sector.sectorData.direction < 0))
+        && sector.sectorData.direction != 0)
+        {
+            activeSector = sector;
+        }
 
         if(pos < 0)
         {
