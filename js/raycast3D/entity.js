@@ -69,17 +69,20 @@ class Entity
         this.id = -1;
     }
 
-    set(x, y, id)
+    set(x, y, id, aiFunction)
     {
         this.p.x = x;
         this.p.y = y;
         this.id = id;
+        this.aiFunction = aiFunction;
 
         this.sprite.imageObject = entImg[this.id];
     }
 
     draw(renderer, plRay, line)
     {
+        if (this.aiFunction) this.aiFunction();
+        
         if(line)
         {
             //var plPosT = vec2(window.innerWidth/2, window.innerHeight/2);

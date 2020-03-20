@@ -35,7 +35,7 @@ window.onload = function()
     area = [];
 
     ent = new Entity();
-    ent.set(530, 140, ENT_FIRESKULL);
+    ent.set(530, 140, ENT_FIRESKULL, FireskullAI);
     entities.push(ent);
 
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
