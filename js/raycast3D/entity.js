@@ -13,17 +13,17 @@ var entityAfterCollisionGap = 0.25;
 var entityCollisionAngleDiff = degToRad(-2.5);
 
 //Entity IDs
-
 const ENT_TECHTORCH = 0;
-
+//
 const ENT_HEALTHBOX = 1;
 const ENT_REDKEY = 2;
 const ENT_GREENKEY = 3;
 const ENT_BLUEKEY = 4;
 const ENT_REVOLVERGUN = 5;
 const ENT_REVOLVERAMMO = 6;
-
+//
 const ENT_FIRESKULL = 7;
+//
 
 entImg = [
     //DECOR IMAGES START
@@ -171,6 +171,55 @@ function drawEntities(renderer, plRay, line)
     }
 }
 
+function drawEntitiesInSectors(renderer, plRay, line)
+{
+    if(typeof activeSector != "undefined")
+    {
+        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
+        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
+        var X = plPos.x; var Y = plPos.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+        if(pos < 0)
+        {
+            if(typeof activeSector.sectorData.entitiesLeft != "undefined")
+            {
+                activeSector.sectorData.entitiesLeft.sort(
+                    function(entA, entB) {
+                        return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
+                    }
+                );
+
+                for(let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
+                {
+                    if(line) activeSector.sectorData.entitiesLeft[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
+                    activeSector.sectorData.entitiesLeft[i].draw(renderer, plRay, line);
+                    if(line) activeSector.sectorData.entitiesLeft[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
+                }
+            }
+        }
+        else
+        {
+            if(typeof activeSector.sectorData.entitiesRight != "undefined")
+            {
+                activeSector.sectorData.entitiesRight.sort(
+                    function(entA, entB) {
+                        return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
+                    }
+                );
+
+                for(let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
+                {
+                    if(line) activeSector.sectorData.entitiesRight[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
+                    activeSector.sectorData.entitiesRight[i].draw(renderer, plRay, line);
+                    if(line) activeSector.sectorData.entitiesRight[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
+                }
+            }
+        }
+    }
+}
+
 function removeEntity(remEnt)
 {
     for( let i = 0; i < entities.length; i++)
@@ -181,4 +230,151 @@ function removeEntity(remEnt)
           break;
         }
      }
+}
+
+function isEntityInsideWalls(ent, walls, otherSectors, sector)
+{
+    var wallsDone = [];
+    var totalWallsToBeDone = walls.length + 1;
+    if(typeof otherSectors != "undefined") totalWallsToBeDone += otherSectors.length;
+    var checkerLength = 1000;
+    for(let r = 0; r < 360; r+=2.5)
+    {
+        var x1 = ent.p.x
+        var y1 = ent.p.y;
+        var x2 = x1 + (checkerLength * Math.cos(degToRad(r)));
+        var y2 = y1 + (checkerLength * Math.sin(degToRad(r)));
+
+        var wallIntersectCount = 0;
+
+        for(let i = 0; i < walls.length; i++)
+        {
+            var skipThisOne = false;
+            for(let d = 0; d < wallsDone.length; d++)
+            {
+                if(wallsDone[d] == walls[i])
+                {
+                    skipThisOne = true;
+                    break;
+                }
+            }
+            if(skipThisOne) continue;
+
+            if(isLineOnLine(
+                x1, y1, x2, y2,
+                walls[i].p1.x, walls[i].p1.y, walls[i].p2.x, walls[i].p2.y))
+            {
+                wallsDone.push(walls[i]);
+                wallIntersectCount++;
+            }
+        }
+
+        if(typeof otherSectors != "undefined")
+        {
+            for(let i = 0; i < otherSectors.length; i++)
+            {
+                var skipThisOne = false;
+                for(let d = 0; d < wallsDone.length; d++)
+                {
+                    if(wallsDone[d].x1 == otherSectors[i])
+                    {
+                        skipThisOne = true;
+                        break;
+                    }
+                }
+                if(skipThisOne) continue;
+
+                if(isLineOnLine(
+                    x1, y1, x2, y2,
+                    otherSectors[i].p1.x, otherSectors[i].p1.y,
+                    otherSectors[i].p2.x, otherSectors[i].p2.y))
+                {
+                    wallsDone.push(otherSectors[i]);
+                    wallIntersectCount++;
+                }
+            }
+        }
+
+        var skipThisOne = false;
+        for(let d = 0; d < wallsDone.length; d++)
+        {
+            if(wallsDone[d] == sector)
+            {
+                skipThisOne = true;
+                break;
+            }
+        }
+        if(!skipThisOne)
+        {
+            if(isLineOnLine(
+                x1, y1, x2, y2,
+                sector.p1.x, sector.p1.y,
+                sector.p2.x, sector.p2.y))
+            {
+                wallsDone.push(sector);
+                wallIntersectCount++;
+            }
+        }
+
+        if(wallIntersectCount > 1) return false;
+    }
+    return wallsDone.length >= totalWallsToBeDone;
+}
+
+var entitiesInSectorSet = [];
+function setEntitiesInSectors(sec)
+{
+    var sector = undefined;
+    if(typeof sec != "undefined")
+        sector = sec;
+    else if(typeof activeSector != "undefined")
+        sector = activeSector;
+
+    for(let i = 0; i < entitiesInSectorSet.length; i++)
+        if(sector == entitiesInSectorSet[i]) return;
+    entitiesInSectorSet.push(sector);
+
+    if(typeof sector != "undefined")
+    {
+        sector.sectorData.entitiesLeft = [];
+        sector.sectorData.entitiesRight = [];
+
+        for(let i = 0; i < entities.length; i++)
+        {
+            if(isEntityInsideWalls(entities[i], sector.sectorData.wallsLeft,
+                sector.sectorData.sectorsLeft, sector))
+            {
+                console.log("entadd");
+                sector.sectorData.entitiesLeft.push(entities[i]);
+            }
+        }
+
+        if(typeof sector.sectorData.sectorsLeft != "undefined")
+        {
+            for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+            {
+                console.log("secch");
+                setEntitiesInSectors(sector.sectorData.sectorsLeft[i]);
+            }
+        }
+
+        for(let i = 0; i < entities.length; i++)
+        {
+            if(isEntityInsideWalls(entities[i], sector.sectorData.wallsRight,
+                sector.sectorData.sectorsRight, sector))
+            {
+                console.log("entadd");
+                sector.sectorData.entitiesRight.push(entities[i]);
+            }
+        }
+
+        if(typeof sector.sectorData.sectorsRight != "undefined")
+        {
+            for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+            {
+                console.log("secch");
+                setEntitiesInSectors(sector.sectorData.sectorsRight[i]);
+            }
+        }
+    }
 }

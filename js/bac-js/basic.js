@@ -76,6 +76,38 @@ class Vector2
     }
 }
 
+function isLineOnLine(
+  x1, y1,
+  x2, y2,
+  x3, y3,
+  x4, y4)
+{
+  var denominator = ((x1 - x2) * (y3 - y4)) - ((y1 - y2) * (x3 - x4));
+
+  if(denominator != 0.0)
+  {
+    var t = (((x1 - x3) * (y3 - y4)) - ((y1 - y3) * (x3 - x4))) / denominator;
+    if(t >= 0.0 && t <= 1.0)
+    {
+      var u = (((x1 - x2) * (y1 - y3)) - ((y1 - y2) * (x1 - x3))) / denominator;
+      if(-u >= 0.0 && -u <= 1.0)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+  return false;
+}
+
 function vec2(x, y) { return new Vector2(x, y); }
 
 function getDistBtwVec2(vec2_a, vec2_b)

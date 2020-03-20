@@ -29,9 +29,9 @@ window.onload = function()
         new ImageObject("images/wall_stone.png", vec2(160, 160)),
     ];
     wallColors = [
-        "yellow",
-        "grey",
-        "red"
+        "#ffff0099",
+        "#50505099",
+        "#ff000099"
     ];
     wall = [];
 
@@ -43,15 +43,15 @@ window.onload = function()
     area = [];
 
     ent = new Entity();
-    ent.set(window.innerWidth/2 + 50, window.innerHeight/2 - 100, ENT_FIRESKULL);
+    ent.set(530, 140, ENT_FIRESKULL);
     entities.push(ent);
 
-    items.add(800, 400, ENT_REDKEY, vec2(1, -80));
-    items.add(840, 420, ENT_GREENKEY, vec2(1, -80));
-    items.add(880, 410, ENT_BLUEKEY, vec2(1, -80));
+    items.add(560, 290, ENT_REDKEY, vec2(1, -80));
+    items.add(630, 240, ENT_GREENKEY, vec2(1, -80));
+    items.add(500, 100, ENT_BLUEKEY, vec2(1, -80));
     items.add(600, 200, ENT_HEALTHBOX, vec2(1, -80));
     items.add(640, 220, ENT_REVOLVERGUN, vec2(1, -80));
-    items.add(680, 210, ENT_REVOLVERAMMO, vec2(1, -80));
+    items.add(520, 60, ENT_REVOLVERAMMO, vec2(1, -80));
     
     /*decorations.scatter(ENT_TECHTORCH, 20,
         400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
@@ -108,10 +108,10 @@ window.onload = function()
     s2_s3.set(599.99, 125, 574.99, 150);
     s2_s3.type = 0;
 
+    wall.push(s1_s2, s2_s3);
     wall.push(s1_w1, s1_w2, s1_w3);
     wall.push(s2_w1, s2_w2, s2_w3);
     wall.push(s3_w1, s3_w2, s3_w3, s3_w4, s3_w5);
-    wall.push(s1_s2, s2_s3);
 
     s1_s2.sectorData.wallsLeft = [s1_w1, s1_w2, s1_w3];
     s1_s2.sectorData.wallsRight = [s2_w1, s2_w2, s2_w3];
@@ -124,6 +124,9 @@ window.onload = function()
     s2_s3.sectorData.sectorsRight = undefined;
 
     activeSector = s1_s2;
+
+    entitiesInSectorSet = [];
+    setEntitiesInSectors();
 
     //wall[10].decal = entImg[0][0];
 
@@ -279,7 +282,7 @@ function draw()
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
 
-        drawSectorsMap(renderer, wallColors,
+        drawSectorsMap(renderer,
             vec2(window.innerWidth/2, window.innerHeight/2),
             vec2(0,0)
             /*-(ray[ray.length/2].p.x - (window.innerWidth/2)),
@@ -288,7 +291,7 @@ function draw()
 
         for (let i = 0; i < wall.length; i++)
         {
-            wall[i].draw(renderer, wallColors, 24);
+            wall[i].draw(renderer, wallColors, 12);
 
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
@@ -296,7 +299,8 @@ function draw()
 
     }
 
-    drawEntities(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
+    //drawEntities(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
+    drawEntitiesInSectors(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
@@ -308,6 +312,8 @@ function draw()
     if(!mapMode/*|| RENDER_EDITOR_AND_GAME_TOGETHER*/) revolver.drawSc();
 
     ui.draw();
+
+    drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
 }
 
 function frame()

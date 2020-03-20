@@ -115,6 +115,17 @@ class Wall
         return p;
     }
 
+    flipPoints()
+    {
+        var sx = this.p1.x;
+        var sy = this.p1.y;
+        this.p1.x = this.p2.x;
+        this.p1.y = this.p2.y;
+        this.p2.x = sx;
+        this.p2.y = sy;
+        this.angle = this.p1.angle(this.p2);
+    }
+
     toString()
     {
         if(isNaN(Math.floor(this.p1.x * 100.0)) || isNaN(Math.floor(this.p1.y * 100.0))) return "";
@@ -158,11 +169,11 @@ function generateWallsFromString(walls, str)
     }
 }
 
-function drawSectorsMap(renderer, typeColors, plPos, off, sec)
+function drawSectorsMap(renderer, plPos, off, sec)
 {
     var sector = undefined;
     if(typeof sec != "undefined") sector = sec;
-    else if(typeof activeSector != "undefined") sector = activeSector
+    else if(typeof activeSector != "undefined") sector = activeSector;
 
     sector.addOffset(off);
 
@@ -174,15 +185,6 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var pos = (Bx * Y) - (By * X);
 
-        /*
-        //active sector is selected in the raycast sector function; no need here
-        if(((pos < 0 && sector.sectorData.direction > 0)
-            || (pos > 0 && sector.sectorData.direction < 0))
-        && sector.sectorData.direction != 0)
-        {
-            activeSector = sector;
-        }*/
-
         if(pos < 0)
         {
             sector.sectorData.direction = -1;
@@ -191,7 +193,7 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
                 for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
                 {
                     sector.sectorData.wallsLeft[i].addOffset(off);
-                    sector.sectorData.wallsLeft[i].draw(renderer, typeColors, plPos);
+                    sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
                     sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
                 }
             }
@@ -199,7 +201,7 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
                 && typeof sector.sectorData.sectorsLeft != "undefined")
             {
                 for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
-                    drawSectorsMap(renderer, typeColors, plPos, off, sector.sectorData.sectorsLeft[i]);
+                    drawSectorsMap(renderer, plPos, off, sector.sectorData.sectorsLeft[i]);
             }
         }
         else
@@ -210,7 +212,7 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
                 for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                 {
                     sector.sectorData.wallsRight[i].addOffset(off);
-                    sector.sectorData.wallsRight[i].draw(renderer, typeColors, plPos);
+                    sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
                     sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
                 }
             }
@@ -218,7 +220,7 @@ function drawSectorsMap(renderer, typeColors, plPos, off, sec)
                 && typeof sector.sectorData.sectorsRight != "undefined")
             {
                 for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
-                    drawSectorsMap(renderer, typeColors, plPos, off, sector.sectorData.sectorsRight[i]);
+                    drawSectorsMap(renderer, plPos, off, sector.sectorData.sectorsRight[i]);
             }
         }
     }
