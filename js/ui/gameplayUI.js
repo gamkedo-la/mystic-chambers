@@ -65,11 +65,14 @@ function setupGameplayUI()
         new TextButton(tr(), new Label(tr(), "ENEMIES"),undefined,"Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
-    cpEditObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
+    toggleGridCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
         new Label(tr(), "Grid",undefined,undefined,undefined,"Click to toggle grid\nsnapping ON/OFF for alignment."), new Checkbox(tr(), vec2(48, 10), undefined, showGrid, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true));
-    cpEditObjects.push(new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
-        "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize));
+        ]), false, vec2(5, 0), vec2(2, 1), true)
+    cpEditObjects.push(toggleGridCheckbox);
+    gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
+        "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize)
+    cpEditObjects.push(gridSizeSlider);
+
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpEditTabs[0], cpEditTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
@@ -94,18 +97,25 @@ function setupGameplayUI()
     cpEditPanel.enabled = true;
 
     rayRenderObjects = [];
-    rayRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(10, 90),
-        new Label(tr(), "FOV"), 16, rayRenderFOV, sliderKnobSize));
-    rayRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 2),
-        new Label(tr(), "Diff."), -1, rayAngleDiff, sliderKnobSize));
-    rayRenderObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "Regenerate")));
-    rayRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 1000),
-        new Label(tr(), "Max D."), 1000, maxDepth, sliderKnobSize));
-    rayRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 5.0),
-        new Label(tr(), "Fish Eye"), 50, fishEyeRemoveFactor, sliderKnobSize));
-    rayRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 10.0),
-        new Label(tr(), "Fish Eye Thr."), 40, fishEyeRemoveThreshold, sliderKnobSize));
-    rayRenderObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "RESET"), new Button(tr(), "#992222")));
+    rayFOVSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 90),
+        new Label(tr(), "FOV"), 16, rayRenderFOV, sliderKnobSize);
+    rayRenderObjects.push(rayFOVSlider);
+    rayAngleDiffSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2),
+        new Label(tr(), "Diff."), -1, rayAngleDiff, sliderKnobSize);
+    rayRenderObjects.push(rayAngleDiffSlider);
+    rayRegenerateBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Regenerate"));
+    rayRenderObjects.push(rayRegenerateBtn);
+    rayMaxDepthSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1000),
+        new Label(tr(), "Max D."), 1000, maxDepth, sliderKnobSize);
+    rayRenderObjects.push(rayMaxDepthSlider);
+    rayFishEyeSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 5.0),
+        new Label(tr(), "Fish Eye"), 50, fishEyeRemoveFactor, sliderKnobSize);
+    rayRenderObjects.push(rayFishEyeSlider);
+    rayFishEyeThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 10.0),
+        new Label(tr(), "Fish Eye Thr."), 40, fishEyeRemoveThreshold, sliderKnobSize);
+    rayRenderObjects.push(rayFishEyeThresholdSlider);
+    rayResetBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "RESET"), new Button(tr(), "#992222"));
+    rayRenderObjects.push(rayResetBtn);
 
     roofFloorRenderObjects = [];
     roofFloorRenderObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
@@ -177,8 +187,11 @@ function setupGameplayUI()
         new TextButton(tr(), new Label(tr(), "ENT."),undefined,"Debug stats toggle:\nShow ENTITY stats."), false, "#024050", "#000000"));
 
     cpRenderObjects = [];
-    cpRenderObjects.push(new Label(tr(), "FPS: 0/0/0"));
-    cpRenderObjects.push(new TextButton(tr(), new Label(tr(), "Reset FPS"),undefined,"Click here to reset the\nframerate stats so far."));
+    fpsDisplayLabel = new Label(tr(), "FPS: 0/0/0");
+    cpRenderObjects.push(fpsDisplayLabel);
+    fpsResetBtn = new TextButton(tr(), new Label(tr(), "Reset FPS"),undefined,"Click here to reset the\nframerate stats so far.");
+    cpRenderObjects.push(fpsResetBtn);
+
     cpRenderObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpRenderTabs[0], cpRenderTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
     cpRenderObjects.push(new FlexGroup(tr(vec2(), tabSize),
@@ -423,13 +436,13 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         area = new Array();
         areaDelAllBtn.button.resetOutput();
     }
-    else if(cpRenderObjects[1].button.output == UIOUTPUT_SELECT)
+    else if(fpsResetBtn.button.output == UIOUTPUT_SELECT)
     {
         maxFPS = 0;
         minFPS = 99999;
         cpRenderObjects[1].button.resetOutput();
     }
-    else if(rayRenderObjects[2].button.output == UIOUTPUT_SELECT)
+    else if(rayRegenerateBtn.button.output == UIOUTPUT_SELECT)
     {
         pos = vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y);
 
@@ -437,23 +450,23 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         for (let i = -rayRenderFOV; i < 0.0; i += rayAngleDiff)
             ray.push(new Ray(pos, i));
         
-        rayRenderObjects[2].button.resetOutput();
+            rayRegenerateBtn.button.resetOutput();
     }
-    else if(rayRenderObjects[6].button.output == UIOUTPUT_SELECT)
+    else if(rayResetBtn.button.output == UIOUTPUT_SELECT)
     {
-        rayRenderObjects[0].knobValue = rayRenderFOV = platform == ANDROID ? 30.0 : 45.0;
-        rayRenderObjects[1].knobValue = rayAngleDiff = platform == ANDROID ? 0.5 : 0.25;
-        rayRenderObjects[3].knobValue = maxDepth = 250.0;
-        rayRenderObjects[4].knobValue = fishEyeRemoveFactor = 1.0;
-        rayRenderObjects[5].knobValue = fishEyeRemoveThreshold = 1.0;
+        rayFOVSlider.knobValue = rayRenderFOV = platform == ANDROID ? 30.0 : 45.0;
+        rayAngleDiffSlider.knobValue = rayAngleDiff = platform == ANDROID ? 0.5 : 0.25;
+        rayMaxDepthSlider.knobValue = maxDepth = 250.0;
+        rayFishEyeSlider.knobValue = fishEyeRemoveFactor = 1.0;
+        rayFishEyeThresholdSlider.knobValue = fishEyeRemoveThreshold = 1.0;
 
-        rayRenderObjects[6].button.resetOutput();
+        rayResetBtn.button.resetOutput();
     }
 
-    showGrid = cpEditObjects[0].subState.uiObjects[1].check;
+    showGrid = toggleGridCheckbox.subState.uiObjects[1].check;
 
-   gridCellSize = cpEditObjects[1].knobValue;
-   cpEditObjects[1].label.text = "Grid Size " + cpEditObjects[1].knobValue.toString();
+   gridCellSize = gridSizeSlider.knobValue;
+   gridSizeSlider.label.text = "Grid Size " + gridSizeSlider.knobValue.toString();
 
    currentWallType = wallTypeSlider.knobValue;
    wallTypeSlider.label.text = "Type " + wallTypeSlider.knobValue.toString();
@@ -469,22 +482,22 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    fps = Math.floor(1000.0/deltaTime);
    minFPS = minFPS > fps ? fps : minFPS;
    maxFPS = maxFPS < fps ? fps : maxFPS;
-   cpRenderObjects[0].text = "FPS: " + minFPS.toString() + "/" + fps + "/" + maxFPS.toString();
+   fpsDisplayLabel.text = "FPS: " + minFPS.toString() + "/" + fps + "/" + maxFPS.toString();
 
-   rayRenderFOV = rayRenderObjects[0].knobValue;
-   rayRenderObjects[0].label.text = "FOV " + rayRenderObjects[0].knobValue;
+   rayRenderFOV = rayFOVSlider.knobValue;
+   rayFOVSlider.label.text = "FOV " + rayFOVSlider.knobValue;
 
-   rayAngleDiff = rayRenderObjects[1].knobValue;
-   rayRenderObjects[1].label.text = "Diff. " + Math.floor(rayRenderObjects[1].knobValue*100)/100;
+   rayAngleDiff = rayAngleDiffSlider.knobValue;
+   rayAngleDiffSlider.label.text = "Diff. " + Math.floor(rayAngleDiffSlider.knobValue*100)/100;
 
-   maxDepth = rayRenderObjects[3].knobValue;
-   rayRenderObjects[3].label.text = "Max D. " + rayRenderObjects[3].knobValue;
+   maxDepth = rayMaxDepthSlider.knobValue;
+   rayMaxDepthSlider.label.text = "Max D. " + rayMaxDepthSlider.knobValue;
 
-   fishEyeRemoveFactor = rayRenderObjects[4].knobValue;
-   rayRenderObjects[4].label.text = "Fish Eye " + rayRenderObjects[4].knobValue;
+   fishEyeRemoveFactor = rayFishEyeSlider.knobValue;
+   rayFishEyeSlider.label.text = "Fish Eye " + rayFishEyeSlider.knobValue;
 
-   fishEyeRemoveThreshold = rayRenderObjects[5].knobValue;
-   rayRenderObjects[5].label.text = "Fish Eye Th." + rayRenderObjects[5].knobValue;
+   fishEyeRemoveThreshold = rayFishEyeThresholdSlider.knobValue;
+   rayFishEyeThresholdSlider.label.text = "Fish Eye Th." + rayFishEyeThresholdSlider.knobValue;
 
    wallHeightFactor = wallRenderObjects[0].knobValue;
    wallRenderObjects[0].label.text = "Height " + wallRenderObjects[0].knobValue;
