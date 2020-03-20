@@ -12,6 +12,7 @@ var speedDecrement = 0.006;
 var speedThreshold = 0.16;
 
 var playerAngleMovement = true;
+var playerCalculatedAngleMovement = 0.0;
 
 var jumpKeyPress = 'q';
 var jumpOffset = 0.0;
@@ -32,7 +33,7 @@ var gunMoveCounter = 0;
 function playerInit()
 {
     plPos = vec2(window.innerWidth / 2, window.innerHeight / 2);
-    prevPlPos = plPos;
+    prevPlPos = vec2(plPos.x, plPos.y);
 
     ray = [];
     rayAngleDiff = platform == ANDROID ? 0.5 : 0.25;
@@ -100,8 +101,6 @@ function playerEvents(deltaTime)
     {
         playerAngleMovement = !playerAngleMovement;
     }
-
-    prevPlPos = plPos;
     
     for(let keyI = 0; keyI < 4; keyI++)
     {
@@ -139,4 +138,14 @@ function playerEvents(deltaTime)
         revolver.imageObject = revolverImages[0];
 
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
+}
+
+function haltPlayer()
+{
+    var angleRange = 75.0;
+
+    for(let i = 0; i < 4; i++)
+        if(playerAngleMovement + angleRange > movementAngles[i]
+        && playerAngleMovement - angleRange < movementAngles[i])
+            currentSpeed[i] = 0;
 }

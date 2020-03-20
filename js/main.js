@@ -208,11 +208,42 @@ function draw()
                 ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall, vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
 
-        for(let i = 0; i < area.length; i++)
+        if(typeof activeSector != "undefined")
+        {
+            var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
+            var Bx = activeSector.p2.x; var By = activeSector.p2.y;
+            var X = plPos.x; var Y = plPos.y;
+            Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+            var posSec = (Bx * Y) - (By * X);
+
+            if(posSec < 0 && typeof activeSector.sectorData.wallsLeft != "undefined")
+            {
+                for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
+                {
+                    var coll = activeSector.sectorData.wallsLeft[i].getCollValue(plPos, prevPlPos);
+                    plPos = coll;
+                }
+            }
+            if(posSec > 0 && typeof activeSector.sectorData.wallsRight != "undefined")
+            {
+                for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
+                {
+                    var coll = activeSector.sectorData.wallsRight[i].getCollValue(plPos, prevPlPos);
+                    plPos = coll;
+                }
+            }
+        }
+
+        for (let i = 0; i < ray.length; i++)
+        {
+            ray[i].p = vec2(plPos.x, plPos.y);
+        }
+
+        /*for(let i = 0; i < area.length; i++)
         {
             var coll = area[i].getCollValue(plPos, prevPlPos);
             plPos = plPos.add(coll);
-        }
+        }*/
 
         items.check(plPos);
     }
@@ -257,20 +288,19 @@ function draw()
 
         for (let i = 0; i < wall.length; i++)
         {
-            //wall[i].draw(renderer, wallColors);
+            wall[i].draw(renderer, wallColors, 24);
 
             wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
                 ray[ray.length/2].p.y - (window.innerHeight/2)));
         }
 
-        //var coll = ent.getCollValue(plPos);
-        //if(coll.x != 0.0 && coll.y != 0.0) entCol = true;
-        //plPos = plPos.add(coll);
-
     }
 
-
     drawEntities(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
+
+    if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
+        playerCalculatedAngleMovement = plPos.angle(prevPlPos);
+    prevPlPos = vec2(plPos.x, plPos.y);
 
     revolver.transform.position = vec2(
         screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),

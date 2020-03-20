@@ -1,6 +1,10 @@
 
 //Requires Vector2
 
+var wallCollisionMinDistance = 0.0;
+var wallCollisionReaction = 1.0;
+var wallCollisionPadding = 5.0;
+
 activeSector = undefined;
 class SectorData {
     constructor()
@@ -31,6 +35,8 @@ class Wall
         this.sectorData = new SectorData();
 
         this.index = totalWalls++;
+
+        this.direction = 0;
     }
 
     set(x1, y1, x2, y2)
@@ -71,6 +77,42 @@ class Wall
         this.p1.y += vec2.y;
         this.p2.x += vec2.x;
         this.p2.y += vec2.y;
+    }
+
+    getCollValue(p, prevP)
+    {
+        var a = this.angle;
+
+        var Ax = this.p1.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        var Ay = this.p1.y - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        var Bx = this.p2.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        var By = this.p2.y - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        var X = p.x; var Y = p.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+        Ax = this.p1.x;
+        Ay = this.p1.y;
+        Bx = this.p2.x;
+        By = this.p2.y;
+        X = p.x; Y = p.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var posNoPadd = (Bx * Y) - (By * X);
+
+        if((pos < -wallCollisionMinDistance && this.direction > 0)
+            || (pos > wallCollisionMinDistance && this.direction < 0))
+        {
+            haltPlayer();
+
+            return vec2(p.x - (wallCollisionReaction * this.direction * Math.cos(a + degToRad(90.0))),
+            p.y - (wallCollisionReaction * this.direction * Math.sin(a + degToRad(90.0))));
+        }
+
+        if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
+        else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
+        else this.direction = 0;
+        
+        return p;
     }
 
     toString()

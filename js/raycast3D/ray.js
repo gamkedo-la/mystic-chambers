@@ -98,7 +98,6 @@ class Ray
                 if(activeSector == sector
                     && typeof sector.sectorData.sectorsLeft != "undefined")
                 {
-                    console.log(activeSector.index);
                     for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                         this.raycastSector(w, plPos, sector.sectorData.sectorsLeft[i]);
                 }
