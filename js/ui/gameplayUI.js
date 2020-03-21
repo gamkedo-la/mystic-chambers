@@ -118,28 +118,38 @@ function setupGameplayUI()
     rayRenderObjects.push(rayResetBtn);
 
     roofFloorRenderObjects = [];
-    roofFloorRenderObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
+    roofFloorTextureCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
         new Label(tr(), "Texture"), new Checkbox(tr(), vec2(48, 10), undefined, roofFloorRenderTexture, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 50),
-        new Label(tr(), "Point Size"), 50, roofFloorPointSize, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 180),
-        new Label(tr(), "FOV"), 360, FOV, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 100),
-        new Label(tr(), "Far Dist."), 1000, farDist, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 1),
-        new Label(tr(), "Near Dist."), 1000, nearDist, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 1"), 255, colorDepthYG1, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 2"), 255, colorDepthYG2, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 64),
-        new Label(tr(), "Depth Step"), 64, depthYGStep, sliderKnobSize));
-    roofFloorRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 1),
-        new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize));
-    roofFloorRenderObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
+        ]), false, vec2(5, 0), vec2(2, 1), true);
+    roofFloorRenderObjects.push(roofFloorTextureCheckbox);
+    roofFloorPointSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 50),
+        new Label(tr(), "Point Size"), 50, roofFloorPointSize, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorPointSizeSlider);
+    roofFloorFOVSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 180),
+        new Label(tr(), "FOV"), 360, FOV, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorFOVSlider);
+    roofFloorFarDistSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 100),
+        new Label(tr(), "Far Dist."), 1000, farDist, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorFarDistSlider);
+    roofFloorNearDistSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
+        new Label(tr(), "Near Dist."), 1000, nearDist, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorNearDistSlider);
+    roofFloorColor1Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
+        new Label(tr(), "Color 1"), 255, colorDepthYG1, sliderKnobSize)
+    roofFloorRenderObjects.push(roofFloorColor1Slider);
+    roofFloorColor2Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
+        new Label(tr(), "Color 2"), 255, colorDepthYG2, sliderKnobSize)
+    roofFloorRenderObjects.push(roofFloorColor2Slider);
+    roofFloorDepthStepSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 64),
+        new Label(tr(), "Depth Step"), 64, depthYGStep, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorDepthStepSlider);
+    roofFloorDepthThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
+        new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorDepthThresholdSlider);
+    roofFloorRenderCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
         new Label(tr(), "Render"), new Checkbox(tr(), vec2(48, 10), undefined, renderRoofFloor, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true));
+        ]), false, vec2(5, 0), vec2(2, 1), true)
+    roofFloorRenderObjects.push(roofFloorRenderCheckbox);
 
     wallRenderObjects = [];
     wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(4, 64),
@@ -527,33 +537,33 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    wallDarknessThreshold = wallRenderObjects[9].knobValue;
    wallRenderObjects[9].label.text = "Dark Th. " + wallRenderObjects[9].knobValue;
 
-   roofFloorRenderTexture = roofFloorRenderObjects[0].subState.uiObjects[1].check;
+   roofFloorRenderTexture = roofFloorTextureCheckbox.subState.uiObjects[1].check;
 
-   roofFloorPointSize = roofFloorRenderObjects[1].knobValue;
-   roofFloorRenderObjects[1].label.text = "Point Size " + roofFloorRenderObjects[1].knobValue;
+   roofFloorPointSize = roofFloorPointSizeSlider.knobValue;
+   roofFloorPointSizeSlider.label.text = "Point Size " + roofFloorPointSizeSlider.knobValue;
 
-   FOV = roofFloorRenderObjects[2].knobValue;
-   roofFloorRenderObjects[2].label.text = "FOV " + roofFloorRenderObjects[2].knobValue;
+   FOV = roofFloorFOVSlider.knobValue;
+   roofFloorFOVSlider.label.text = "FOV " + roofFloorFOVSlider.knobValue;
 
-   farDist = roofFloorRenderObjects[3].knobValue;
-   roofFloorRenderObjects[3].label.text = "Far Dist. " + roofFloorRenderObjects[3].knobValue;
+   farDist = roofFloorFarDistSlider.knobValue;
+   roofFloorFarDistSlider.label.text = "Far Dist. " + roofFloorFarDistSlider.knobValue;
 
-   nearDist = roofFloorRenderObjects[4].knobValue;
-   roofFloorRenderObjects[4].label.text = "Near Dist. " + roofFloorRenderObjects[4].knobValue;
+   nearDist = roofFloorNearDistSlider.knobValue;
+   roofFloorNearDistSlider.label.text = "Near Dist. " + roofFloorNearDistSlider.knobValue;
 
-   colorDepthYG1 = roofFloorRenderObjects[5].knobValue;
-   roofFloorRenderObjects[5].label.text = "Color 1 " + roofFloorRenderObjects[5].knobValue;
+   colorDepthYG1 = roofFloorColor1Slider.knobValue;
+   roofFloorColor1Slider.label.text = "Color 1 " + roofFloorColor1Slider.knobValue;
 
-   colorDepthYG2 = roofFloorRenderObjects[6].knobValue;
-   roofFloorRenderObjects[6].label.text = "Color 2 " + roofFloorRenderObjects[6].knobValue;
+   colorDepthYG2 = roofFloorColor2Slider.knobValue;
+   roofFloorColor2Slider.label.text = "Color 2 " + roofFloorColor2Slider.knobValue;
 
-   depthYGStep = roofFloorRenderObjects[7].knobValue;
-   roofFloorRenderObjects[7].label.text = "Depth Step " + roofFloorRenderObjects[7].knobValue;
+   depthYGStep = roofFloorDepthStepSlider.knobValue;
+   roofFloorDepthStepSlider.label.text = "Depth Step " + roofFloorDepthStepSlider.knobValue;
 
-   depthYGThreshold = roofFloorRenderObjects[8].knobValue;
-   roofFloorRenderObjects[8].label.text = "Depth Thr. " + roofFloorRenderObjects[8].knobValue;
+   depthYGThreshold = roofFloorDepthThresholdSlider.knobValue;
+   roofFloorDepthThresholdSlider.label.text = "Depth Thr. " + roofFloorDepthThresholdSlider.knobValue;
 
-   renderRoofFloor = roofFloorRenderObjects[9].subState.uiObjects[1].check;
+   renderRoofFloor = roofFloorRenderCheckbox.subState.uiObjects[1].check;
 
    entPosSegment = entRenderObjects[0].knobValue;
    entRenderObjects[0].label.text = "Pos. Seg. " + entRenderObjects[0].knobValue;
