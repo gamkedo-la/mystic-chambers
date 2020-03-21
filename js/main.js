@@ -110,7 +110,7 @@ window.onload = function()
     s1_s2.sectorData.wallsLeft = [s1_w1, s1_w2, s1_w3];
     s1_s2.sectorData.wallsRight = [s2_w1, s2_w2, s2_w3];
     s1_s2.sectorData.sectorsLeft = undefined;
-    s1_s2.sectorData.sectorsRight = [s2_s3]
+    s1_s2.sectorData.sectorsRight = [s2_s3];
 
     s2_s3.sectorData.wallsLeft = [s2_w1, s2_w2, s2_w3];
     s2_s3.sectorData.wallsRight = [s3_w1, s3_w2, s3_w3, s3_w4, s3_w5];
@@ -203,7 +203,7 @@ function draw()
         if(platform != ANDROID)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
                 ray[ray.length/2].angle)
-        renderRaycast3D(renderer, ray, wall, vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
+        renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
 
         if(typeof activeSector != "undefined")
         {
@@ -286,7 +286,6 @@ function draw()
 
     if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
         drawEntities(renderer, ray[ray.length/2], true);
-    drawEntitiesInSectors(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);

@@ -62,15 +62,17 @@ class Ray
         }
     }
 
-    raycastSector(w, plPos, sec)
+    raycastSector(renderer, w, plRay, plPos, sec)
     {
         var data = new WallData();
         var raycast = new RaycastData(this.p.x, this.p.y, this.length, -1);
+        var sectorcast = new RaycastData(this.p.x, this.p.y, this.length, -1);
+        var castedSector = undefined;
         var pangle = this.angle;
 
         var sector = undefined;
         if(typeof sec != "undefined") sector = sec;
-        else if(typeof activeSector != "undefined") sector = activeSector
+        else if(typeof activeSector != "undefined") sector = activeSector;
         
         if(typeof sector != "undefined")
         {
@@ -90,31 +92,95 @@ class Ray
             if(pos < 0)
             {
                 sector.sectorData.direction = -1;
+                
                 if(typeof sector.sectorData.wallsLeft != "undefined")
                 {
                     for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
                         this.raycastWall(sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
+
+                    if(raycast.index <= -1)
+                    {
+                        if(typeof sector.sectorData.sectorsRight != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                            {
+                                this.raycastWall(sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);
+                                if(raycast.index >= 0) { castedSector = sector.sectorData.sectorsRight[i]; return this.raycastSector(renderer, w, plRay, plPos, castedSector); }
+                            }
+                        }
+                    }
                 }
-                if(activeSector == sector
-                    && typeof sector.sectorData.sectorsLeft != "undefined")
+
+                if(raycast.index <= -1)
                 {
-                    for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
-                        this.raycastSector(w, plPos, sector.sectorData.sectorsLeft[i]);
+                    this.raycastWall(sector, sector.index, sectorcast);
+                    if(sectorcast.index > 0)
+                    {
+                        if(typeof sector.sectorData.wallsRight != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
+                                this.raycastWall(sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
+                        }
+                    }
+                }
+
+                if(raycast.index <= -1)
+                {
+                    if(typeof sector.sectorData.sectorsLeft != "undefined")
+                    {
+                        for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                        {
+                            this.raycastWall(sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
+                            if(raycast.index >= 0) { castedSector = sector.sectorData.sectorsLeft[i]; return this.raycastSector(renderer, w, plRay, plPos, castedSector); }
+                        }
+                    }
                 }
             }
             else
             {
-                activeSector.sectorData.direction = 1;
-                if(typeof activeSector.sectorData.wallsRight != "undefined")
+                sector.sectorData.direction = 1;
+
+                if(typeof sector.sectorData.wallsRight != "undefined")
                 {
                     for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                         this.raycastWall(sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
+
+                    if(raycast.index <= -1)
+                    {
+                        if(typeof sector.sectorData.sectorsLeft != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                            {
+                                this.raycastWall(sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
+                                if(raycast.index >= 0) { castedSector = sector.sectorData.sectorsLeft[i]; return this.raycastSector(renderer, w, plRay, plPos, castedSector); }
+                            }
+                        }
+                    }
                 }
-                if(activeSector == sector
-                    && typeof sector.sectorData.sectorsRight != "undefined")
+
+                if(raycast.index <= -1)
                 {
-                    for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
-                        this.raycastSector(w, plPos, sector.sectorData.sectorsRight[i]);
+                    this.raycastWall(sector, sector.index, sectorcast);
+                    if(sectorcast.index > 0)
+                    {
+                        if(typeof sector.sectorData.wallsLeft != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
+                                this.raycastWall(sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
+                        }
+                    }
+                }
+
+                if(raycast.index <= -1)
+                {
+                    if(typeof sector.sectorData.sectorsRight != "undefined")
+                    {
+                        for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                        {
+                            this.raycastWall(sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);
+                            if(raycast.index >= 0) { castedSector = sector.sectorData.sectorsRight[i]; return this.raycastSector(renderer, w, plRay, plPos, castedSector); }
+                        }
+                    }
                 }
             }
         }
@@ -128,6 +194,10 @@ class Ray
             data.angle = w[raycast.index].angle;
             data.type = w[raycast.index].type;
             data.decal = w[raycast.index].decal;
+        }
+        else
+        {
+            data.index = -1;
         }
 
         return data;

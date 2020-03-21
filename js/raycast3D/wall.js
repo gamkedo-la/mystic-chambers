@@ -3,7 +3,7 @@
 
 var wallCollisionMinDistance = 0.01;
 var wallCollisionReaction = 2.0;
-var wallCollisionPadding = 4.0;
+var wallCollisionPadding = 2.0;
 
 activeSector = undefined;
 class SectorData {
@@ -81,6 +81,12 @@ class Wall
 
     getCollValue(p, prevP)
     {
+        if(this.type == 0
+            || activeSector == this
+            || typeof this.sectorData.wallsLeft != "undefined"
+            || typeof this.sectorData.wallsRight != "undefined")
+                return p;
+
         var a = this.angle;
 
         var Ax = this.p1.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
@@ -102,6 +108,8 @@ class Wall
         if((pos < -wallCollisionMinDistance && this.direction > 0)
             || (pos > wallCollisionMinDistance && this.direction < 0))
         {
+            console.log(this.type);
+
             haltPlayer();
 
             return vec2(p.x - (wallCollisionReaction * this.direction * Math.cos(a + degToRad(90.0))),

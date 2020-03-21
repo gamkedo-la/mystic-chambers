@@ -177,49 +177,43 @@ function drawEntities(renderer, plRay, line)
     }
 }
 
-function drawEntitiesInSectors(renderer, plRay, line)
+function drawEntitiesInSector(sector, pos, renderer, plRay)
 {
-    if(typeof activeSector != "undefined")
+    if(typeof sector != "undefined")
     {
-        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
-        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
-        var X = plPos.x; var Y = plPos.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
-
         if(pos < 0)
         {
-            if(typeof activeSector.sectorData.entitiesLeft != "undefined")
+            if(typeof sector.sectorData.entitiesLeft != "undefined")
             {
-                activeSector.sectorData.entitiesLeft.sort(
+                sector.sectorData.entitiesLeft.sort(
                     function(entA, entB) {
                         return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
                     }
                 );
 
-                for(let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
+                for(let i = 0; i < sector.sectorData.entitiesLeft.length; i++)
                 {
-                    if(line) activeSector.sectorData.entitiesLeft[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
-                    activeSector.sectorData.entitiesLeft[i].draw(renderer, plRay, line);
-                    if(line) activeSector.sectorData.entitiesLeft[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
+                    //if(line) sector.sectorData.entitiesLeft[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
+                    sector.sectorData.entitiesLeft[i].draw(renderer, plRay, false);
+                    //if(line) sector.sectorData.entitiesLeft[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
                 }
             }
         }
         else
         {
-            if(typeof activeSector.sectorData.entitiesRight != "undefined")
+            if(typeof sector.sectorData.entitiesRight != "undefined")
             {
-                activeSector.sectorData.entitiesRight.sort(
+                sector.sectorData.entitiesRight.sort(
                     function(entA, entB) {
                         return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
                     }
                 );
 
-                for(let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
+                for(let i = 0; i < sector.sectorData.entitiesRight.length; i++)
                 {
-                    if(line) activeSector.sectorData.entitiesRight[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
-                    activeSector.sectorData.entitiesRight[i].draw(renderer, plRay, line);
-                    if(line) activeSector.sectorData.entitiesRight[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
+                    //if(line) sector.sectorData.entitiesRight[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
+                    sector.sectorData.entitiesRight[i].draw(renderer, plRay, false);
+                    //if(line) sector.sectorData.entitiesRight[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
                 }
             }
         }
