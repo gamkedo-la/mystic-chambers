@@ -82,12 +82,7 @@ function renderRaycast3D(renderer, ray, w, plPos)
                 totalTextureRepeats = (data.length / textureSize) * wallStretchFactor;
                 wallX = (data.lengthPoint / data.length) * totalTextureRepeats;
 
-                while(wallX >= textureSize - 10) 
-                    wallX -= (textureSize - 10);
-                // FIXME - the above runs many times per wall per frame
-                // and could infinite hang or glitch.. not sure, but can 
-                // this be done in one step with something like this?
-                // wallX = wallX % (textureSize - 10);
+                wallX = wallX % (textureSize - 10);
 
                 wallInClipWidth = 1;
 
