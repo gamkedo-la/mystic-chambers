@@ -8,9 +8,9 @@ var entMaxRenderAngle = 205.0;
 
 var maxEntityVisibilityDistance = 250.0;
 
-var entityCollisionSize = 4.0;
-var entityAfterCollisionGap = 0.25;
-var entityCollisionAngleDiff = degToRad(-2.5);
+var entCollisionSize = 4.0;
+var entAfterCollisionGap = 0.25;
+var entCollisionAngleDiff = degToRad(-2.5);
 
 //Entity IDs
 const ENT_TECHTORCH = 0;
@@ -26,6 +26,21 @@ const ENT_WINCHESTERAMMO = 8;
 //
 const ENT_FIRESKULL = 9;
 //
+
+entColor = [
+    "#cccc0090",
+
+    "#ee555590",
+    "#ff000090",
+    "#00ff0090",
+    "#0000ff90",
+    "#B7410E90",
+    "#A6300D90",
+    "#96987990",
+    "#85876890",
+
+    "#ee440090",
+];
 
 entImg = [
     //DECOR IMAGES START
@@ -87,9 +102,9 @@ class Entity
                 vec2(this.p.x - (Math.cos(degToRad(this.angle)) * this.size),
                 this.p.y - (Math.sin(degToRad(this.angle)) * this.size)),
                 vec2(this.p.x + (Math.cos(degToRad(this.angle)) * this.size),
-                this.p.y + (Math.sin(degToRad(this.angle)) * this.size)), "white");
+                this.p.y + (Math.sin(degToRad(this.angle)) * this.size)), entColor[this.id]);
 
-            drawCircle(renderer, this.p, entityCollisionSize, false, "white");
+            drawCircle(renderer, this.p, entCollisionSize, false, entColor[this.id]);
         }
         else
         {
@@ -140,10 +155,10 @@ class Entity
     {
         var dist = plP.distance(this.p);
 
-        if(dist < entityCollisionSize)
+        if(dist < entCollisionSize)
         {
-            return vec2((entityCollisionSize + entityAfterCollisionGap - dist) * Math.cos(this.angle + entityCollisionAngleDiff),
-                (entityCollisionSize + entityAfterCollisionGap - dist) * Math.sin(this.angle + entityCollisionAngleDiff));
+            return vec2((entCollisionSize + entAfterCollisionGap - dist) * Math.cos(this.angle + entCollisionAngleDiff),
+                (entCollisionSize + entAfterCollisionGap - dist) * Math.sin(this.angle + entCollisionAngleDiff));
         }
         
         return vec2(0, 0);
@@ -283,7 +298,7 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
     var totalWallsToBeDone = walls.length + 1;
     if(typeof otherSectors != "undefined") totalWallsToBeDone += otherSectors.length;
     var checkerLength = 1000;
-    for(let r = 0; r < 360; r+=2.5)
+    for(let r = 0; r < 360; r+=5)
     {
         var x1 = ent.p.x
         var y1 = ent.p.y;

@@ -284,7 +284,8 @@ function draw()
 
     }
 
-    //drawEntities(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
+    if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
+        drawEntities(renderer, ray[ray.length/2], true);
     drawEntitiesInSectors(renderer, ray[ray.length/2], mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER);
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
