@@ -354,6 +354,7 @@ class Checkbox extends UIObject
         this.enableColor = typeof enableColor == "undefined" ? uiContext.fgSecondaryColor : enableColor;
         this.disableColor = typeof disableColor == "undefined" ? uiContext.bgPrimaryColor : disableColor;
 
+        this.touchId = -1;
         this.prevTouchId = -1;
 
         this.event = function()
@@ -893,7 +894,7 @@ class Tab extends UIObject
         super(transform);
 
         this.uiObjectsToToggle = uiObjectsToToggle;
-        for(let i = 0; i < this.uiObjectsToToggle; i++) this.uiObjectsToToggle.enabled = false;
+        //for(let i = 0; i < this.uiObjectsToToggle; i++) this.uiObjectsToToggle.enabled = false;
 
         this.textButton = typeof textButton == "undefined" ? new TextButton(this.transform) : textButton;
         this.textButton.transform = this.transform;

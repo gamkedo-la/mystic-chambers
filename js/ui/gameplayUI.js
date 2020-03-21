@@ -94,7 +94,6 @@ function setupGameplayUI()
     cpEditPanel = new Panel(
         tr(vec2(5, 60), panelSize), new SubState(tr(), [cpEditGrid]
         ), vec2(0, -100), vec2(0, 100));
-    cpEditPanel.enabled = true;
 
     rayRenderObjects = [];
     rayFOVSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 90),
@@ -220,11 +219,10 @@ function setupGameplayUI()
                 false, vec2(5, 5), vec2(1, 10))
         ]
         ), vec2(0, -100), vec2(0, 100));
-    cpRenderPanel.enabled = false;
     
     cpStartObjects = [];
-    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu."), true));
-    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display.")));
+    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu.")));
+    cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display."), true));
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults."),
         new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved."),
