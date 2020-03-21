@@ -42,7 +42,7 @@ window.onload = function()
     items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
     items.add(500, 100, ENT_BLUEKEY, vec2(1, -100));
     items.add(600, 200, ENT_HEALTHBOX, vec2(1, -100));
-    items.add(640, 220, ENT_REVOLVERGUN, vec2(1, -100));
+    items.add(640, 170, ENT_REVOLVERGUN, vec2(1, -100));
     items.add(520, 60, ENT_REVOLVERAMMO, vec2(1, -100));
     items.add(610, 280, ENT_WINCHESTERGUN, vec2(1, -100));
     items.add(590, 100, ENT_WINCHESTERAMMO, vec2(1, -100));

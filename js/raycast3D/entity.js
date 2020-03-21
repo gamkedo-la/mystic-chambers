@@ -97,7 +97,6 @@ class Entity
     {
         if(line)
         {
-            //var plPosT = vec2(window.innerWidth/2, window.innerHeight/2);
             drawLine(renderer,
                 vec2(this.p.x - (Math.cos(degToRad(this.angle)) * this.size),
                 this.p.y - (Math.sin(degToRad(this.angle)) * this.size)),
@@ -109,9 +108,6 @@ class Entity
         else
         {
             var plRayAngle = plRay.angle;
-
-            //if(Math.random() < 0.1) console.log(plRayAngle);
-
             var dist = plRay.p.distance(this.p);
             var ang = plRay.p.angle(this.p);
             var angDiff = radToDeg(plRay.p.angle(this.p)) - plRayAngle;
@@ -138,15 +134,6 @@ class Entity
                 this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), vec2(160, 160));
 
                 renderer.globalAlpha = 1.0;
-
-                /*
-                renderer.globalCompositeOperation = "source-atop";
-                var computedSize = vec2(160, 160).multiply(this.sprite.transform.scale)
-                drawRect(renderer, this.sprite.transform.position.subtract(vec2(computedSize.x/2, computedSize.y/2)),
-                    computedSize,
-                    true, "#FFFFFFFF");
-                renderer.globalCompositeOperation = "source-over";
-                */
             }
         }
     }
@@ -270,7 +257,7 @@ function removeEntityInSector(remEnt)
                     if (activeSector.sectorData.entitiesLeft[i] === remEnt)
                     {
                         activeSector.sectorData.entitiesLeft.splice(i, 1); 
-                        break;
+                        //break;
                     }
                 }
             }
@@ -284,7 +271,7 @@ function removeEntityInSector(remEnt)
                     if (activeSector.sectorData.entitiesRight[i] === remEnt)
                     {
                         activeSector.sectorData.entitiesRight.splice(i, 1); 
-                        break;
+                        //break;
                     }
                 }
             }
