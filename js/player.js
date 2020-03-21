@@ -31,10 +31,6 @@ var rayRenderFOV = 0;
 //GUNS
 const GUN_REVOLVER = 0;
 const GUN_WINCHESTER = 1;
-
-var currentGun = -1;
-var gunSwitchKeyPress = "q";
-var gunReloadKeyPress = "r";
 var totalGuns = 2;
 var availableGuns = [false, false];
 var totalAmmo = [0, 0];
@@ -42,6 +38,9 @@ var ammoInGun = [0, 0];
 var gunAmmoCapacity = [6, 12];
 var ammoItemIncrement = [24, 12];
 var gunReloading = false;
+var currentGun = -1;
+var gunSwitchKeyPress = "q";
+var gunReloadKeyPress = "r";
 
 var gunsDisplayUI = new Sprite(tr(vec2(), vec2(0.5, 0.5)), undefined);
 var gunDisplayUIOffset = vec2(60.0, 40.0);
@@ -64,6 +63,16 @@ var gunImages = [
 ];
 var gun = new Sprite(tr(vec2(screen.width/2, 0)), undefined);
 var gunMoveCounter = 0;
+
+//KEYS
+var KEY_RED = 0;
+var KEY_GREEN = 1;
+var KEY_BLUE = 2;
+var totalKeys = 3;
+var availableKeys = [false, false, false];
+var keysDisplayUI = new Sprite(tr(vec2(), vec2(0.5, 0.5)), undefined);
+var keyDisplayUIOffset = vec2(screen.width * 0.2, screen.height - (screen.height/8.6));
+var keyDisplayXIncrement = 40.0;
 
 function playerInit()
 {
@@ -234,6 +243,13 @@ function haltPlayer()
             currentSpeed[i] = 0;
 }
 
+function drawAllGunsDisplay(renderer)
+{
+    var gunXImg = 0;
+    gunXImg = drawGunDisplay(renderer, GUN_REVOLVER, ENT_REVOLVERGUN, gunXImg);
+    gunXImg = drawGunDisplay(renderer, GUN_WINCHESTER, ENT_WINCHESTERGUN, gunXImg);
+}
+
 function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
 {
     if(availableGuns[gunIndex])
@@ -254,4 +270,34 @@ function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
         return gunXImg;
     }
     return gunXImg;
+}
+
+function getEntKey(i)
+{
+    switch(i)
+    {
+        case KEY_RED:
+            return ENT_REDKEY;
+        case KEY_GREEN:
+            return ENT_GREENKEY;
+        case KEY_BLUE:
+            return ENT_BLUEKEY;
+        default:
+            return 0;
+    }
+}
+
+function drawKeysDisplay(renderer)
+{
+    var keyXImg = 0;
+    for(let i = 0; i < totalKeys; i++)
+    {
+        if(availableKeys[i])
+        {
+            keysDisplayUI.transform.position = keyDisplayUIOffset.add(vec2(keyXImg, 0));
+            keysDisplayUI.imageObject = entImg[getEntKey(i)];
+            keysDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
+            keyXImg += keyDisplayXIncrement;
+        }
+    }
 }

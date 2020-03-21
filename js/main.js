@@ -298,11 +298,10 @@ function draw()
     if(currentGun >= 0)
         if(!mapMode && typeof gun.imageObject != "undefined") gun.drawSc();
 
-    if(!mapMode)
+    if(!mapMode) 
     {
-        var gunXImg = 0;
-        gunXImg = drawGunDisplay(renderer, GUN_REVOLVER, ENT_REVOLVERGUN, gunXImg);
-        gunXImg = drawGunDisplay(renderer, GUN_WINCHESTER, ENT_WINCHESTERGUN, gunXImg);
+        drawAllGunsDisplay(renderer);
+        drawKeysDisplay(renderer);
     }
 
     ui.draw();

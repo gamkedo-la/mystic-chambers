@@ -32,12 +32,15 @@ class ItemManager {
                         break;
 
                     case ENT_REDKEY:
+                        availableKeys[KEY_RED] = true;
                         break;
 
                     case ENT_GREENKEY:
+                        availableKeys[KEY_GREEN] = true;
                         break;
 
                     case ENT_BLUEKEY:
+                        availableKeys[KEY_BLUE] = true;
                         break;
 
                     case ENT_REVOLVERGUN:
