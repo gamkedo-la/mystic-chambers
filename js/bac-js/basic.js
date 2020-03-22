@@ -436,7 +436,6 @@ function downloadString(text, fileType, fileName)
     document.body.removeChild(a);
     setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
 }
-  
 
 function writeFile(file, str)
 {
