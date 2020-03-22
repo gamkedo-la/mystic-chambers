@@ -1,6 +1,8 @@
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
 const RENDER_EDITOR_AND_GAME_TOGETHER = false; // if false, draw either editor OR game
 
+noOfWallsCheckedForRendering = 0;
+
 function play3DSound(buffer, vec2_a, vec2_b)
 {
     var dist = vec2_a.dist(vec2_b); //for volume
@@ -21,7 +23,7 @@ function play3DSound(buffer, vec2_a, vec2_b)
 //- when picking item (in item.js, in the switch cases, after line 26)
 //- when firing or reloading gun (in player.js, after line 199)
 //
-//Note To Bilal: Line no. 313
+//Note To Bilal: Line no. 313 of main.js, Line no. 126 of render.js
 
 window.onload = function()
 {
@@ -75,6 +77,8 @@ window.onload = function()
     playerInit();
 
     //editorInit(wall, area);
+    //when using editor init, remove resetWallIndexes from below
+    //because it is already in editor init (load level)
 
     setupGameplayUI();
     setupMainMenuUI();
@@ -140,6 +144,8 @@ window.onload = function()
     s2_s3.sectorData.sectorsRight = undefined;
 
     activeSector = s1_s2;
+
+    resetWallIndexes();
 
     entitiesInSectorSet = [];
     setEntitiesInSectors();
@@ -219,6 +225,8 @@ function draw()
 
     //drawSprites();
 
+    plPos = collisionWithWallsInSector(plPos, prevPlPos);
+
     // draw all the floors and walls in 3d
     if(!mapMode || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
@@ -226,40 +234,12 @@ function draw()
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
                 ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
-
-        if(typeof activeSector != "undefined")
-        {
-            var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
-            var Bx = activeSector.p2.x; var By = activeSector.p2.y;
-            var X = plPos.x; var Y = plPos.y;
-            Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-            var posSec = (Bx * Y) - (By * X);
-
-            if(posSec < 0 && typeof activeSector.sectorData.wallsLeft != "undefined")
-            {
-                for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
-                {
-                    var coll = activeSector.sectorData.wallsLeft[i].getCollValue(plPos, prevPlPos);
-                    plPos = coll;
-                }
-            }
-            if(posSec > 0 && typeof activeSector.sectorData.wallsRight != "undefined")
-            {
-                for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
-                {
-                    var coll = activeSector.sectorData.wallsRight[i].getCollValue(plPos, prevPlPos);
-                    plPos = coll;
-                }
-            }
-        }
-
+        calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)
-        {
             ray[i].p = vec2(plPos.x, plPos.y);
-        }
-
         items.check(plPos);
     }
+    
 
     if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
@@ -309,8 +289,8 @@ function draw()
     if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
         drawEntities(renderer, ray[ray.length/2], true);
 
-    //For Audio Testing
-    drawEntities(renderer, ray[ray.length/2], mapMode);
+    //Old Entities Rendering
+    //drawEntities(renderer, ray[ray.length/2], mapMode);
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
@@ -330,8 +310,9 @@ function draw()
 
     ui.draw();
 
-    if(mapMode) drawText(renderer,
-        touchPos[0].x.toString() + ", " + touchPos[0].y.toString(),
+    //if(mapMode)
+        drawText(renderer,
+        touchPos[0].x.toString() + ", " + touchPos[0].y.toString() + ", " + noOfWallsCheckedForRendering + "/" + (180 * (wall.length - 2)),
         vec2(10, window.innerHeight - 16));
 }
 

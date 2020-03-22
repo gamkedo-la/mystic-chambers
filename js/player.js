@@ -235,12 +235,8 @@ function playerEvents(deltaTime)
 
 function haltPlayer()
 {
-    var angleRange = 75.0;
-
     for(let i = 0; i < 4; i++)
-        if(playerAngleMovement + angleRange > movementAngles[i]
-        && playerAngleMovement - angleRange < movementAngles[i])
-            currentSpeed[i] = 0;
+        currentSpeed[i] = 0;
 }
 
 function drawAllGunsDisplay(renderer)

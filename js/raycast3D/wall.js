@@ -81,12 +81,9 @@ class Wall
 
     getCollValue(p, prevP)
     {
-        if(this.type == 0
-            || activeSector == this
-            || typeof this.sectorData.wallsLeft != "undefined"
-            || typeof this.sectorData.wallsRight != "undefined")
-                return p;
-
+        if(this.type == 0)
+            return p;
+        
         var a = this.angle;
 
         var Ax = this.p1.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
@@ -108,12 +105,11 @@ class Wall
         if((pos < -wallCollisionMinDistance && this.direction > 0)
             || (pos > wallCollisionMinDistance && this.direction < 0))
         {
-            console.log(this.type);
-
             haltPlayer();
 
-            return vec2(p.x - (wallCollisionReaction * this.direction * Math.cos(a + degToRad(90.0))),
-            p.y - (wallCollisionReaction * this.direction * Math.sin(a + degToRad(90.0))));
+            return prevP;
+            //vec2(p.x - (wallCollisionReaction * this.direction * Math.cos(a + degToRad(90.0))),
+            //p.y - (wallCollisionReaction * this.direction * Math.sin(a + degToRad(90.0))));
         }
 
         if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
@@ -177,6 +173,50 @@ function generateWallsFromString(walls, str)
     }
 }
 
+function calculateActiveSector(plPos, sec)
+{
+    var sector = undefined;
+    if(typeof sec != "undefined") sector = sec;
+    else if(typeof activeSector != "undefined") sector = activeSector;
+
+    if(typeof sector != "undefined")
+    {
+        var Ax = sector.p1.x; var Ay = sector.p1.y;
+        var Bx = sector.p2.x; var By = sector.p2.y;
+        var X = plPos.x; var Y = plPos.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+        if(((pos < 0 && sector.sectorData.direction > 0)
+            || (pos > 0 && sector.sectorData.direction < 0))
+        && sector.sectorData.direction != 0)
+        {
+            activeSector = sector;
+        }
+
+        if(pos < 0)
+        {
+            sector.sectorData.direction = -1;
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsLeft != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                    calculateActiveSector(plPos, sector.sectorData.sectorsLeft[i]);
+            }
+        }
+        else
+        {
+            sector.sectorData.direction = 1;
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsRight != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                    calculateActiveSector(plPos, sector.sectorData.sectorsRight[i]);
+            }
+        }
+    }
+}
+
 function drawSectorsMap(renderer, plPos, off, sec)
 {
     var sector = undefined;
@@ -221,8 +261,8 @@ function drawSectorsMap(renderer, plPos, off, sec)
         }
         else
         {
-            activeSector.sectorData.direction = 1;
-            if(typeof activeSector.sectorData.wallsRight != "undefined")
+            sector.sectorData.direction = 1;
+            if(typeof sector.sectorData.wallsRight != "undefined")
             {
                 for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                 {
@@ -257,4 +297,33 @@ function resetWallIndexes()
     {
         wall[i].index = i;
     }
+}
+
+function collisionWithWallsInSector(plPos, prevPlPos)
+{
+    if(typeof activeSector != "undefined")
+    {
+        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
+        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
+        var X = plPos.x; var Y = plPos.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var pos = (Bx * Y) - (By * X);
+
+        if(pos < 0 && typeof activeSector.sectorData.wallsLeft != "undefined")
+        {
+            for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
+            {
+                plPos = activeSector.sectorData.wallsLeft[i].getCollValue(plPos, prevPlPos);
+            }
+        }
+        if(pos > 0 && typeof activeSector.sectorData.wallsRight != "undefined")
+        {
+            for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
+            {
+                plPos = activeSector.sectorData.wallsRight[i].getCollValue(plPos, prevPlPos);
+            }
+        }
+    }
+
+    return plPos;
 }

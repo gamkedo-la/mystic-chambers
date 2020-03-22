@@ -9,11 +9,11 @@ var wallStretchFactor = 5000.0;
 var wallHeightFactor = 12.0;
 
 var wallDarkening = true;
-var wallDarkeningFactor = 6.0;
-var wallDarkeningLayers = 24.0;
+var wallDarkeningFactor = 4.0;
+var wallDarkeningLayers = 10.0;
 var wallDarkeningSteps = 3.0;
 var wallBrightnessThreshold = 0.1;
-var wallDarknessThreshold = 0.9;
+var wallDarknessThreshold = 0.7;
 
 var fishEyeRemoveFactor = 1.0;
 var fishEyeRemoveThreshold = 1.0;
@@ -44,6 +44,7 @@ function renderRaycast3D(renderer, ray, w, plRay, plPos)
 {
     prevDepth = -1.0;
 
+    noOfWallsCheckedForRendering = 0;
     for (let i = 0; i < ray.length; i++)
     {
         var data = ray[i].raycastSector(renderer, w, plRay, plPos);
@@ -122,6 +123,8 @@ function renderRaycast3D(renderer, ray, w, plRay, plPos)
             prevDepth = data.depth;
         }
     }
+
+    drawEntitiesInSector(activeSector, ePos, renderer, plRay);
 }
 
 function loadRoofAndFloorTextureDataOnce()
