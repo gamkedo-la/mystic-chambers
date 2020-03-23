@@ -63,9 +63,9 @@ function aiAvoid(plRay) {
 function aiSpinning(p1Ray) {
     var speed = 0.1;
     this.aimAngleRadians = this.aimAngleRadians + speed;
-    // max -180..+180? FIXME or is this 0..360? (2pi)
-    if (this.aimAngleRadians>Math.PI) this.aimAngleRadians = -Math.PI;
-    if (this.aimAngleRadians<-Math.PI) this.aimAngleRadians = Math.PI;
+    // max 0..360
+    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
+    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
     // up and down like a doom weapon
     // this.z += Math.cos() etc
 }

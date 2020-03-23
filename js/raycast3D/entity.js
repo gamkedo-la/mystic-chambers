@@ -125,7 +125,12 @@ class Entity
 
                 // added this.angle to account for entity look angle
                 // to draw sprites with a rotational offset from player
-                var imageSide = radToDeg(ang + this.aimAngleRadians + Math.PI) / (360.0 /
+                var spriteAngle = ang + this.aimAngleRadians + Math.PI;
+                // cap to 0..360
+                if (spriteAngle>Math.PI*2) spriteAngle -= Math.PI*2;
+                if (spriteAngle<0) spriteAngle += Math.PI*2;
+            
+                var imageSide = radToDeg(spriteAngle) / (360.0 /
                     (entImg[this.id].size.x / 160.0));
 
                 this.sprite.imageObject = entImg[this.id];
