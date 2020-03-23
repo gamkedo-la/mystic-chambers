@@ -82,6 +82,7 @@ class Entity
         this.sprite = new Sprite(tr());
         this.renderOffset = vec2(0.0, 0.0);
         this.id = -1;
+        this.ai = undefined; // an optional function
     }
 
     set(x, y, id)
@@ -95,6 +96,8 @@ class Entity
 
     draw(renderer, plRay, line)
     {
+        if (this.ai) this.ai(plRay);
+        
         if(line)
         {
             drawLine(renderer,

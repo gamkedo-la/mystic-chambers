@@ -60,6 +60,8 @@ window.onload = function()
 
     fireSkullEnt = new Entity();
     fireSkullEnt.set(530, 140, ENT_FIRESKULL);
+    fireSkullEnt.name = "Fire Skull Enemy 01"; // just for debug
+    fireSkullEnt.ai = aiWander;
     entities.push(fireSkullEnt);
 
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
