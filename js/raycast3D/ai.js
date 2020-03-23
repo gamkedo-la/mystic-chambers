@@ -8,6 +8,7 @@
 
 const DEBUGAI = false;
 
+// move back and forth
 function aiWander(plRay) {
     var speed = 5000;
     var size = 0.1;
@@ -15,10 +16,10 @@ function aiWander(plRay) {
     if (DEBUGAI) console.log("aiWander for entity id " + this.id + " named " + this.name);
     if (DEBUGAI) console.log("pos: " + this.p.x+","+this.p.y+" angle: "+this.angle);
     
-    // simply oscillate back and forth
     this.p.x += Math.cos(performance.now()/speed)*size;
 }
 
+// move toward the player
 function aiSeek(plRay, backwards) {
     
     if (DEBUGAI) console.log("aiSeek"+(backwards?" (AVOID)":"")+" for entity id " + this.id + " named " + this.name);
@@ -40,7 +41,7 @@ function aiSeek(plRay, backwards) {
             // determine target direction
             var rad = plRay.p.angle(this.p);
             // actually face the direction of travel
-            this.angle = rad; 
+            this.aimAngleRadians = rad; 
             // move toward target
             this.p.x += speed * Math.cos(rad);
             this.p.y += speed * Math.sin(rad);
@@ -51,12 +52,20 @@ function aiSeek(plRay, backwards) {
         if (DEBUGAI) console.log("too close to player: seek paused")
     }
 
-
-
 }
 
+// move away from the player
 function aiAvoid(plRay) {
-    
     aiSeek.call(this,plRay,true);
+}
 
+// spin around and bob up and down
+function aiSpinning(p1Ray) {
+    var speed = 0.1;
+    this.aimAngleRadians = this.aimAngleRadians + speed;
+    // max -180..+180? FIXME or is this 0..360? (2pi)
+    if (this.aimAngleRadians>Math.PI) this.aimAngleRadians = -Math.PI;
+    if (this.aimAngleRadians<-Math.PI) this.aimAngleRadians = Math.PI;
+    // up and down like a doom weapon
+    // this.z += Math.cos() etc
 }

@@ -76,6 +76,13 @@ window.onload = function()
     cowardly_fireSkullEnt.ai = aiAvoid;
     entities.push(cowardly_fireSkullEnt);
     
+    spinningPickup = new Entity();
+    spinningPickup.set(520, 130, ENT_HEALTHBOX);
+    spinningPickup.name = "Spinning Healthbox";
+    spinningPickup.ai = aiSpinning;
+    entities.push(spinningPickup);
+
+
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
     items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
     items.add(500, 100, ENT_BLUEKEY, vec2(1, -100));

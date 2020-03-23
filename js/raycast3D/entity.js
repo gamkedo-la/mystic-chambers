@@ -83,6 +83,7 @@ class Entity
         this.renderOffset = vec2(0.0, 0.0);
         this.id = -1;
         this.ai = undefined; // an optional function
+        this.aimAngleRadians = 0; // the angle an entity is looking
     }
 
     set(x, y, id)
@@ -122,7 +123,9 @@ class Entity
                 var posRatio = radToDeg(ang + (Math.PI/2.0))
                     - (plRayAngle + entAngleOffset);
 
-                var imageSide = radToDeg(ang + Math.PI) / (360.0 /
+                // added this.angle to account for entity look angle
+                // to draw sprites with a rotational offset from player
+                var imageSide = radToDeg(ang + this.aimAngleRadians + Math.PI) / (360.0 /
                     (entImg[this.id].size.x / 160.0));
 
                 this.sprite.imageObject = entImg[this.id];
