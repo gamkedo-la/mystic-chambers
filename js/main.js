@@ -60,10 +60,22 @@ window.onload = function()
 
     fireSkullEnt = new Entity();
     fireSkullEnt.set(530, 140, ENT_FIRESKULL);
-    fireSkullEnt.name = "Fire Skull Enemy 01"; // just for debug
+    fireSkullEnt.name = "[Wander] Fire Skull";
     fireSkullEnt.ai = aiWander;
     entities.push(fireSkullEnt);
 
+    seeker_fireSkullEnt = new Entity();
+    seeker_fireSkullEnt.set(540, 130, ENT_FIRESKULL);
+    seeker_fireSkullEnt.name = "[Seek] Fire Skull";
+    seeker_fireSkullEnt.ai = aiSeek;
+    entities.push(seeker_fireSkullEnt);
+
+    cowardly_fireSkullEnt = new Entity();
+    cowardly_fireSkullEnt.set(550, 120, ENT_FIRESKULL);
+    cowardly_fireSkullEnt.name = "[Avoid] Fire Skull";
+    cowardly_fireSkullEnt.ai = aiAvoid;
+    entities.push(cowardly_fireSkullEnt);
+    
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
     items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
     items.add(500, 100, ENT_BLUEKEY, vec2(1, -100));
