@@ -485,7 +485,3 @@ function vec2V(x, y)
 {
   return viewportToScreen(new Vector2(x, y));
 }
-
-// vector constants - an optimization to avoid gc in tight loops
-const TEXTURESIZEVEC2 = vec2(160, 160); // re-used hundreds of times per frame
-

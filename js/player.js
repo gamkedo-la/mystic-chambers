@@ -253,7 +253,7 @@ function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
         if(currentGun != gunIndex) renderer.globalAlpha = gunDisplayInactiveAlpha;
         gunsDisplayUI.transform.position = gunDisplayUIOffset.add(vec2(gunXImg, 0));
         gunsDisplayUI.imageObject = entImg[entIndex];
-        gunsDisplayUI.drawScIn(vec2(0, 0), TEXTURESIZEVEC2);
+        gunsDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
         if(currentGun != gunIndex) renderer.globalAlpha = 1;
         gunXImg += gunDisplayXIncrement;
         renderer.font = (scrSizeFactor * gunDisplayTextSize).toString() + "px Lucida, sans-serif";
@@ -292,7 +292,7 @@ function drawKeysDisplay(renderer)
         {
             keysDisplayUI.transform.position = keyDisplayUIOffset.add(vec2(keyXImg, 0));
             keysDisplayUI.imageObject = entImg[getEntKey(i)];
-            keysDisplayUI.drawScIn(vec2(0, 0), TEXTURESIZEVEC2);
+            keysDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
             keyXImg += keyDisplayXIncrement;
         }
     }

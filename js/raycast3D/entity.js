@@ -44,7 +44,7 @@ entColor = [
 
 entImg = [
     //DECOR IMAGES START
-        new ImageObject("images/tech_torch_x10.png", TEXTURESIZEVEC2),
+        new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
     //DECOR IMAGES END
 
     //ITEM IMAGES START
@@ -131,7 +131,7 @@ class Entity
                     (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
                     + posRatio * (window.innerWidth/entPosSegment)) + entXOffset,
                     (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
-                this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), TEXTURESIZEVEC2);
+                this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), vec2(160, 160));
 
                 renderer.globalAlpha = 1.0;
             }

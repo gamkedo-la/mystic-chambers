@@ -40,9 +40,9 @@ window.onload = function()
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
     wallImages = [
-        new ImageObject("images/door.png", TEXTURESIZEVEC2),
-        new ImageObject("images/wall_stone_moss.png", TEXTURESIZEVEC2),
-        new ImageObject("images/wall_stone.png", TEXTURESIZEVEC2),
+        new ImageObject("images/door.png", vec2(160, 160)),
+        new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
+        new ImageObject("images/wall_stone.png", vec2(160, 160)),
     ];
     wallColors = [
         "#ffff0099",
