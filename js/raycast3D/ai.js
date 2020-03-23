@@ -27,8 +27,8 @@ function aiSeek(plRay, backwards) {
     var speed = 0.25;
     if (backwards) speed *= -1;
 
-    var mindist = 5; // don't get too close
-    var maxdist = 200; // player is ignored beyond this distance
+    var mindist = 8; // don't get too close
+    var maxdist = 250; // player is ignored beyond this distance
 
     var dist = plRay.p.distance(this.p);
 
@@ -37,7 +37,11 @@ function aiSeek(plRay, backwards) {
     // move if not too close
     if (dist>mindist) {
         if (dist<maxdist) {
+            // determine target direction
             var rad = plRay.p.angle(this.p);
+            // actually face the direction of travel
+            this.angle = rad; 
+            // move toward target
             this.p.x += speed * Math.cos(rad);
             this.p.y += speed * Math.sin(rad);
         } else {
