@@ -1,5 +1,7 @@
 // AI routines
 
+// FIXME: these are using a fixed framerate, not delta time
+
 // to make an entity use one, assign a callback like this:
 // myEntity.ai = aiFunctionNameBelow;
 
@@ -7,6 +9,10 @@
 // assume that this.p may be updated elsewhere as well as here
 
 const DEBUGAI = false;
+
+function randomAngleRadians() {
+    return Math.random()*Math.PI*2;
+}
 
 // move back and forth
 function aiWander(plRay) {
@@ -31,7 +37,7 @@ function aiExplore(p1Ray) {
     this.ExploreTimer--;
     if (this.ExploreTimer<0) {
         if (DEBUGAI) console.log("aiExplore: time to change directions!");
-        this.ExploreAngle = Math.random()*Math.PI*2;
+        this.ExploreAngle = randomAngleRadians();
         this.ExploreTimer = 20 + Math.random()*120;
     }
 
@@ -98,8 +104,6 @@ function aiSpinning(p1Ray) {
     // max 0..360
     if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
     if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
-    // up and down like a doom weapon
-    // this.z += Math.cos() etc
 }
 
 // spin around and bob up and down
