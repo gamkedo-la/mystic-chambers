@@ -8,10 +8,30 @@
 // note: entity position (this.p) is changed by camera movement!
 // assume that this.p may be updated elsewhere as well as here
 
-const DEBUGAI = false;
+const DEBUGAI = false; // output to debug.log?
 
+// random from 0..360 deg (0..2pi)
 function randomAngleRadians() {
     return Math.random()*Math.PI*2;
+}
+
+// check for wall collisions and warp back to prev pos if needed
+function validatePosition() {
+    return; // the collisionWithWallsInSector is buggy
+    
+    if (this.prev_p==undefined) this.prev_p = vec2(this.p.x, this.p.y);
+    
+    // FIXME: this routine seems to edit PLAYER position!?!
+    this.p = collisionWithWallsInSector(this.p, this.prev_p);
+    
+    this.prev_p.x = this.p.x;
+    this.prev_p.y = this.p.y;
+}
+
+// ensure it is in the range 0..360 in radians, wrapping around
+function validateRotation() {
+    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
+    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
 }
 
 // move back and forth
@@ -46,15 +66,14 @@ function aiExplore(p1Ray) {
     if (this.aimAngleRadians>this.ExploreAngle) this.aimAngleRadians -= turnspeed;
     if (this.aimAngleRadians<this.ExploreAngle) this.aimAngleRadians += turnspeed;
 
-    // max 0..360
-    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
-    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
-    // up and down like a doom weapon
-    // this.z += Math.cos() etc
+    validateRotation.call(this); // stay in 0..360 deg
 
     // move in the direction we are facing
     this.p.x += speed * Math.cos(this.aimAngleRadians);
     this.p.y += speed * Math.sin(this.aimAngleRadians);
+
+    validatePosition.call(this); // collide with walls
+
 }
 
 // move toward the player
@@ -76,13 +95,20 @@ function aiSeek(plRay, backwards) {
     // move if not too close
     if (dist>mindist) {
         if (dist<maxdist) {
+
             // determine target direction
             var rad = plRay.p.angle(this.p);
             // actually face the direction of travel
             this.aimAngleRadians = rad; 
+
+            validateRotation.call(this); // stay in 0..360 deg
+
             // move toward target
             this.p.x += speed * Math.cos(rad);
             this.p.y += speed * Math.sin(rad);
+
+            validatePosition.call(this); // collide with walls
+
         } else {
             if (DEBUGAI) console.log("too far from player. not seeking.");
         }
@@ -101,9 +127,7 @@ function aiAvoid(plRay) {
 function aiSpinning(p1Ray) {
     var speed = 0.1;
     this.aimAngleRadians = this.aimAngleRadians + speed;
-    // max 0..360
-    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
-    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
+    validateRotation.call(this); // stay in 0..360 deg
 }
 
 // spin around and bob up and down
@@ -112,9 +136,7 @@ function aiSpinningBobbing(p1Ray) {
     var bobspeed = 350;
     var bobsize = 100;
     this.aimAngleRadians = this.aimAngleRadians + speed;
-    // max 0..360
-    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
-    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
+    validateRotation.call(this); // stay in 0..360 deg
     // up and down like a doom weapon
     this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
 }
