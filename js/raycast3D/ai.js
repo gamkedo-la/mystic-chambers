@@ -101,3 +101,16 @@ function aiSpinning(p1Ray) {
     // up and down like a doom weapon
     // this.z += Math.cos() etc
 }
+
+// spin around and bob up and down
+function aiSpinningBobbing(p1Ray) {
+    var speed = 0.05;
+    var bobspeed = 350;
+    var bobsize = 100;
+    this.aimAngleRadians = this.aimAngleRadians + speed;
+    // max 0..360
+    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
+    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
+    // up and down like a doom weapon
+    this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
+}

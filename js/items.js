@@ -12,6 +12,8 @@ class ItemManager {
         ent.set(x, y, id);
         if(typeof offset != "undefined") ent.renderOffset = offset;
 
+        ent.ai = aiSpinningBobbing;
+
         this.ents.push(ent);
         entities.push(ent);
     }
