@@ -19,6 +19,38 @@ function aiWander(plRay) {
     this.p.x += Math.cos(performance.now()/speed)*size;
 }
 
+// move randomly using car-like turns!
+function aiExplore(p1Ray) {
+    var speed = 0.25;
+    var turnspeed = 0.05;
+    
+    // choose a random direction to travel from time to time
+    if (this.ExploreTimer==undefined) this.ExploreTimer = 30;
+    if (this.ExploreAngle==undefined) this.ExploreAngle = this.aimAngleRadians;
+
+    this.ExploreTimer--;
+    if (this.ExploreTimer<0) {
+        if (DEBUGAI) console.log("aiExplore: time to change directions!");
+        this.ExploreAngle = Math.random()*Math.PI*2;
+        this.ExploreTimer = 20 + Math.random()*120;
+    }
+
+    // FIXME: doesn't necessarily choose the shortest direction to turn 
+    // (eg goes the long way around from 10 to 350)
+    if (this.aimAngleRadians>this.ExploreAngle) this.aimAngleRadians -= turnspeed;
+    if (this.aimAngleRadians<this.ExploreAngle) this.aimAngleRadians += turnspeed;
+
+    // max 0..360
+    if (this.aimAngleRadians>Math.PI*2) this.aimAngleRadians -= Math.PI*2;
+    if (this.aimAngleRadians<0) this.aimAngleRadians += Math.PI*2;
+    // up and down like a doom weapon
+    // this.z += Math.cos() etc
+
+    // move in the direction we are facing
+    this.p.x += speed * Math.cos(this.aimAngleRadians);
+    this.p.y += speed * Math.sin(this.aimAngleRadians);
+}
+
 // move toward the player
 function aiSeek(plRay, backwards) {
     

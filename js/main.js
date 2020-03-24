@@ -75,6 +75,12 @@ window.onload = function()
     cowardly_fireSkullEnt.name = "[Avoid] Fire Skull";
     cowardly_fireSkullEnt.ai = aiAvoid;
     entities.push(cowardly_fireSkullEnt);
+
+    explorer_fireSkullEnt = new Entity();
+    explorer_fireSkullEnt.set(560, 120, ENT_FIRESKULL);
+    explorer_fireSkullEnt.name = "[Explore] Fire Skull";
+    explorer_fireSkullEnt.ai = aiExplore;
+    entities.push(explorer_fireSkullEnt);
     
     spinningPickup = new Entity();
     spinningPickup.set(520, 130, ENT_HEALTHBOX);
