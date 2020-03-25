@@ -299,13 +299,13 @@ function resetWallIndexes()
     }
 }
 
-function collisionWithWallsInSector(plPos, prevPlPos)
+function collisionWithWallsInSector(plP, prevPlPos)
 {
     if(typeof activeSector != "undefined")
     {
         var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
         var Bx = activeSector.p2.x; var By = activeSector.p2.y;
-        var X = plPos.x; var Y = plPos.y;
+        var X = plP.x; var Y = plP.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var pos = (Bx * Y) - (By * X);
 
@@ -313,17 +313,17 @@ function collisionWithWallsInSector(plPos, prevPlPos)
         {
             for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
             {
-                plPos = activeSector.sectorData.wallsLeft[i].getCollValue(plPos, prevPlPos);
+                plP = activeSector.sectorData.wallsLeft[i].getCollValue(plP, prevPlPos);
             }
         }
         if(pos > 0 && typeof activeSector.sectorData.wallsRight != "undefined")
         {
             for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
             {
-                plPos = activeSector.sectorData.wallsRight[i].getCollValue(plPos, prevPlPos);
+                plP = activeSector.sectorData.wallsRight[i].getCollValue(plP, prevPlPos);
             }
         }
     }
 
-    return plPos;
+    return plP;
 }
