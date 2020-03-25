@@ -91,6 +91,13 @@ window.onload = function()
     items.add(610, 280, ENT_WINCHESTERGUN, vec2(1, -100));
     items.add(590, 100, ENT_WINCHESTERAMMO, vec2(1, -100));
     
+    items.add(572, 290, ENT_BARREL_RED, vec2(1, -100));
+    items.add(574, 302, ENT_BARREL_RED, vec2(1, -100));
+    items.add(576, 298, ENT_BARREL_STEEL, vec2(1, -100));
+    items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
+    items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
+
+
     /*decorations.scatter(ENT_TECHTORCH, 20,
         400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
 

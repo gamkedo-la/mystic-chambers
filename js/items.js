@@ -12,7 +12,9 @@ class ItemManager {
         ent.set(x, y, id);
         if(typeof offset != "undefined") ent.renderOffset = offset;
 
-        ent.ai = aiSpinningBobbing;
+        if (id!=ENT_BARREL_RED && id!=ENT_BARREL_STEEL) {
+            ent.ai = aiSpinningBobbing;
+        }
 
         this.ents.push(ent);
         entities.push(ent);
@@ -25,6 +27,7 @@ class ItemManager {
             var coll = this.ents[i].getCollValue(plPos);
             if(coll.x != 0.0 && coll.y != 0.0)
             {
+                var shouldDestroy = true;
                 switch(this.ents[i].id)
                 {
                     case ENT_HEALTHBOX:
@@ -67,13 +70,29 @@ class ItemManager {
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_WINCHESTER];
                         break;
 
+                    case ENT_BARREL_STEEL:
+                        // FIXME play metal clang sound, but otherwise do nothing
+                        console.log("steel barrel hit!");
+                        shouldDestroy = false;
+                        break;
+
+                    case ENT_BARREL_RED:
+                        // FIXME explode!
+                        console.log("red barrel hit!");
+                        shouldDestroy = false; // TODO: BOOM!!!!
+                        break;
+
                     default:
                         //do nothing
                 }
 
-                removeEntityInSector(this.ents[i]);
-                removeEntity(this.ents[i]);
-                this.ents.splice(i, 1);
+                if (shouldDestroy) {
+                    removeEntityInSector(this.ents[i]);
+                    removeEntity(this.ents[i]);
+                    this.ents.splice(i, 1); // FIXME: this may cause an error?
+                    // if we change the array DURING this loop which iterates it,
+                    // could we miss the next or prev entity in the array?
+                }
             }
         }
     }

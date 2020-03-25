@@ -23,9 +23,12 @@ const ENT_REVOLVERGUN = 5;
 const ENT_REVOLVERAMMO = 6;
 const ENT_WINCHESTERGUN = 7;
 const ENT_WINCHESTERAMMO = 8;
+const ENT_BARREL_RED = 9;
+const ENT_BARREL_STEEL = 10;
 //
-const ENT_FIRESKULL = 9;
+const ENT_FIRESKULL = 11; // remember to update this if adding new items above
 //
+
 
 entColor = [
     "#cccc0090",
@@ -56,11 +59,14 @@ entImg = [
         new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
         new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
         new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
+        new ImageObject("images/barrel_red.png", vec2(160, 160)),
+        new ImageObject("images/barrel_steel.png", vec2(160, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START
         new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
     //ENEMY IMAGES END
+
 ];
 
 entAttackImg = [
