@@ -117,40 +117,48 @@ function drawRenderDataPiece(renderer, i, data, ray)
     }
 }
 
-var renderData = [];
 function renderRaycast3D(renderer, ray, w, plRay, plPos)
 {
     prevDepth = -1.0;
     noOfWallsCheckedForRendering = 0;
 
     renderDataGroup = [];
+    entitySectors = [];
     do
     {
         var rSec = nextRenderSector;
         nextRenderSector = undefined;
+        
         renderData = [];
         for (let i = 0; i < ray.length; i++)
         {
-            renderData.push(ray[i].raycastSector(w, plPos, rSec));
+            renderData.push(ray[i].raycastSector(w, plPos, rSec, false, entitySectors));
         }
+        if(typeof rSec == "undefined") entitySectors.push(activeSector);
+        else entitySectors.push(rSec);
         renderDataGroup.push(renderData);
     }
     while(typeof nextRenderSector != "undefined");
 
+    //if(entitySectors.length > 1)
+    {
+        renderData = [];
+        for (let i = 0; i < ray.length; i++)
+        {
+            renderData.push(ray[i].raycastSector(w, plPos,
+                entitySectors[entitySectors.length - 1], true, undefined));
+        }
+        entitySectors.push(entitySectors[entitySectors.length - 1]);
+        renderDataGroup.push(renderData);
+    }
+
     for(let g = renderDataGroup.length - 1; g >= 0; g--)
     {
-        for(let i = 0; i < renderDataGroup[g].length; i++)
+        for(let i = 0; i < (renderDataGroup[g]).length; i++)
             drawRenderDataPiece(renderer, i, (renderDataGroup[g])[i], ray);
-
-        if((g == renderDataGroup.length - 2 && renderDataGroup.length >= 2)
-        || (g == renderDataGroup.length - 1 && renderDataGroup.length < 2))
-            drawEntitiesInSector(activeSector,
-            detectActiveSector(activeSector, plPos),
-            renderer, plRay);
-        else if(g == renderDataGroup.length - 1 && renderDataGroup.length >= 1)
-            drawEntitiesInSector(activeSector,
-            -detectActiveSector(activeSector, plPos),
-            renderer, plRay);
+        drawEntitiesInSector(entitySectors[g],
+        (g >= entitySectors.length - 1 ? -1 : 1) * detectActiveSector(entitySectors[g], plPos),
+        renderer, plRay);
     }
 }
 

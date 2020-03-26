@@ -98,8 +98,8 @@ window.onload = function()
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
 
 
-    /*decorations.scatter(ENT_TECHTORCH, 20,
-        400, 0, 800, 400, vec2(1, -120));*/ // experimental WIP
+    decorations.scatter(ENT_TECHTORCH, 200,
+        400, 0, 800, 400, vec2(1, -120)); // experimental WIP
 
     playerInit();
 

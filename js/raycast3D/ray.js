@@ -63,13 +63,12 @@ class Ray
         }
     }
 
-    raycastSector(w, plPos, sec)
+    raycastSector(w, plPos, sec, last, entitySectors)
     {
+        if(typeof last == "undefined") last = false;
+
         var data = new WallData();
         var raycast = new RaycastData(this.p.x, this.p.y, this.length, -1);
-        var sectorcast = new RaycastData(this.p.x, this.p.y, this.length, -1);
-        var castedSector = undefined;
-        var pangle = this.angle;
 
         var sector = undefined;
         if(typeof sec != "undefined") sector = sec;
@@ -81,7 +80,7 @@ class Ray
 
             if(pos < 0)
             {
-                if(typeof sector.sectorData.wallsLeft != "undefined")
+                if(!last && typeof sector.sectorData.wallsLeft != "undefined")
                 {
                     for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
                         this.raycastWall(sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
@@ -92,13 +91,35 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
-                                nextRenderSector = sector.sectorData.sectorsRight[i];
+                                var sectorPresent = false;
+                                if(typeof entitySectors != "undefined")
+                                    for(let e = 0; e < entitySectors.length; e++)
+                                    {
+                                        if(entitySectors[e] == sector.sectorData.sectorsRight[i])
+                                            sectorPresent = true;
+                                    }
+                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
+                            }
+                        }
+
+                        if(typeof sector.sectorData.sectorsLeft != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                            {
+                                var sectorPresent = false;
+                                if(typeof entitySectors != "undefined")
+                                    for(let e = 0; e < entitySectors.length; e++)
+                                    {
+                                        if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
+                                            sectorPresent = true;
+                                    }
+                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
                             }
                         }
                     }
                 }
 
-                if(raycast.index <= -1)
+                if(last)// && raycast.index <= -1)
                 {
                     if(typeof sector.sectorData.wallsRight != "undefined")
                     {
@@ -109,7 +130,7 @@ class Ray
             }
             else if(pos > 0)
             {
-                if(typeof sector.sectorData.wallsRight != "undefined")
+                if(!last && typeof sector.sectorData.wallsRight != "undefined")
                 {
                     for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                         this.raycastWall(sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
@@ -120,13 +141,35 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
-                                nextRenderSector = sector.sectorData.sectorsLeft[i];
+                                var sectorPresent = false;
+                                if(typeof entitySectors != "undefined")
+                                    for(let e = 0; e < entitySectors.length; e++)
+                                    {
+                                        if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
+                                            sectorPresent = true;
+                                    }
+                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
+                            }
+                        }
+
+                        if(typeof sector.sectorData.sectorsRight != "undefined")
+                        {
+                            for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                            {
+                                var sectorPresent = false;
+                                if(typeof entitySectors != "undefined")
+                                    for(let e = 0; e < entitySectors.length; e++)
+                                    {
+                                        if(entitySectors[e] == sector.sectorData.sectorsRight[i])
+                                            sectorPresent = true;
+                                    }
+                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
                             }
                         }
                     }
                 }
 
-                if(raycast.index <= -1)
+                if(last)// && raycast.index <= -1)
                 {
                     if(typeof sector.sectorData.wallsLeft != "undefined")
                     {
