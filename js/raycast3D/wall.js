@@ -150,6 +150,9 @@ class WallData
         this.angle = -1.0;
         this.type = -1;
         this.decal = undefined;
+
+        this.sector = undefined;
+        this.sectorPos = 0;
     }
 };
 
@@ -217,6 +220,50 @@ function calculateActiveSector(plPos, sec)
     }
 }
 
+function detectActiveSector(sector, plPos)
+{
+    var Ax = sector.p1.x; var Ay = sector.p1.y;
+    var Bx = sector.p2.x; var By = sector.p2.y;
+    var X = plPos.x; var Y = plPos.y;
+    Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+    var pos = (Bx * Y) - (By * X);
+
+    if(((pos < 0 && sector.sectorData.direction > 0)
+        || (pos > 0 && sector.sectorData.direction < 0))
+    && sector.sectorData.direction != 0)
+    {
+        activeSector = sector;
+    }
+
+    return pos;
+}
+
+function drawSectorMapWallsLeft(sector, off)
+{
+    if(typeof sector.sectorData.wallsLeft != "undefined")
+    {
+        for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
+        {
+            sector.sectorData.wallsLeft[i].addOffset(off);
+            sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
+            sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
+        }
+    }
+}
+
+function drawSectorMapWallsRight(sector, off)
+{
+    if(typeof sector.sectorData.wallsRight != "undefined")
+    {
+        for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
+        {
+            sector.sectorData.wallsRight[i].addOffset(off);
+            sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
+            sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
+        }
+    }
+}
+
 function drawSectorsMap(renderer, plPos, off, sec)
 {
     var sector = undefined;
@@ -224,34 +271,13 @@ function drawSectorsMap(renderer, plPos, off, sec)
     else if(typeof activeSector != "undefined") sector = activeSector;
 
     sector.addOffset(off);
-
     if(typeof sector != "undefined")
     {
-        var Ax = sector.p1.x; var Ay = sector.p1.y;
-        var Bx = sector.p2.x; var By = sector.p2.y;
-        var X = plPos.x; var Y = plPos.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
-
-        if(((pos < 0 && sector.sectorData.direction > 0)
-            || (pos > 0 && sector.sectorData.direction < 0))
-        && sector.sectorData.direction != 0)
-        {
-            activeSector = sector;
-        }
-
+        pos = detectActiveSector(sector, plPos);
         if(pos < 0)
         {
             sector.sectorData.direction = -1;
-            if(typeof sector.sectorData.wallsLeft != "undefined")
-            {
-                for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
-                {
-                    sector.sectorData.wallsLeft[i].addOffset(off);
-                    sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
-                    sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
-                }
-            }
+            drawSectorMapWallsLeft(sector, off);
             if(activeSector == sector
                 && typeof sector.sectorData.sectorsLeft != "undefined")
             {
@@ -262,15 +288,7 @@ function drawSectorsMap(renderer, plPos, off, sec)
         else
         {
             sector.sectorData.direction = 1;
-            if(typeof sector.sectorData.wallsRight != "undefined")
-            {
-                for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
-                {
-                    sector.sectorData.wallsRight[i].addOffset(off);
-                    sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
-                    sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
-                }
-            }
+            drawSectorMapWallsRight(sector, off);
             if(activeSector == sector
                 && typeof sector.sectorData.sectorsRight != "undefined")
             {
@@ -279,7 +297,6 @@ function drawSectorsMap(renderer, plPos, off, sec)
             }
         }
     }
-
     sector.addOffset(vec2(-off.x, -off.y));
 }
 

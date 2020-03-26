@@ -40,91 +40,109 @@ var floorImageData = null;
 var roofImageData = null;
 var imgDataDone = false;
 
+var renderData = [];
+
+function drawRenderDataPiece(renderer, i, data, ray)
+{
+    if (data.depth < maxDepth && data.depth > 0.1)
+    {
+        if (data.depth >= maxDepth)
+            return;
+
+        if(prevDepth > -0.999 && Math.abs(data.depth - prevDepth) < fishEyeRemoveThreshold)
+            data.depth = lerp(data.depth, prevDepth, fishEyeRemoveFactor);
+
+        //data.depth = Math.sqrt(data.depth * 25);
+        //data.depth = data.depth * Math.cos(degToRad(ray[ray.length/2].angle) - degToRad(ray[i].angle));
+
+        segmentSize = vec2(
+            (window.innerWidth / ray.length) + 2,
+            (wallHeightFactor * window.innerHeight) * (1.0 / data.depth)
+        );
+        segmentPos = vec2(
+            ((segmentSize.x - 2) * i),
+            (window.innerHeight / 2.0) - (segmentSize.y / 2.0)
+        );
+
+        // Old - Plain Rectangle Draw Render Method
+        if(!wallRenderTexture)
+        {
+            var color = Math.floor((segmentSize.y / window.innerHeight) * 20) * 20;
+            if(color > 255) color = 255;
+            drawRect( renderer, segmentPos, segmentSize, true, rgb(color, 0, Math.floor(color/10)) );
+        }
+        else
+        {
+            // New Texture Render Method
+            totalTextureRepeats = (data.length / textureSize) * wallStretchFactor;
+            wallX = (data.lengthPoint / data.length) * totalTextureRepeats;
+
+            wallX = wallX % (textureSize - 10);
+
+            wallInClipWidth = 1;
+
+            sw = wallInClipWidth;
+            sx = wallX;
+
+            renderer.drawImage(
+                wallImages[data.type > 0 && data.type < wallImages.length ? data.type : 0].image,
+                sx, 0, sw, textureSize,
+                segmentPos.x - 1, segmentPos.y + jumpOffset,
+                segmentSize.x, segmentSize.y);
+
+            if(typeof data.decal != "undefined")
+            {
+                renderer.drawImage(
+                    data.decal.image,
+                    sx, 0, sw, textureSize,
+                    segmentPos.x - 1, segmentPos.y + jumpOffset,
+                    segmentSize.x, segmentSize.y);
+            }
+
+            if(wallDarkening && segmentSize.y - (segmentSize.y/wallDarkeningFactor) < window.innerHeight)
+            {
+                renderer.globalAlpha = 1.0 - ((segmentSize.y - (segmentSize.y/wallDarkeningFactor)) / window.innerHeight);
+                renderer.globalAlpha = round(Math.floor(renderer.globalAlpha * wallDarkeningLayers), wallDarkeningSteps, 0) / Math.floor(wallDarkeningLayers);
+                renderer.globalAlpha = clamp(renderer.globalAlpha, wallBrightnessThreshold, wallDarknessThreshold);
+                renderer.fillStyle= 'black';
+                renderer.fillRect(
+                    segmentPos.x - 2, segmentPos.y - 1  + jumpOffset,
+                    segmentSize.x + 1, segmentSize.y + 2);
+            }
+
+            renderer.globalAlpha = 1.0;
+
+            renderer.globalCompositeOperation = "source-over";
+        }
+
+        prevDepth = data.depth;
+    }
+}
+
 function renderRaycast3D(renderer, ray, w, plRay, plPos)
 {
     prevDepth = -1.0;
 
     noOfWallsCheckedForRendering = 0;
+    renderData = [];
     for (let i = 0; i < ray.length; i++)
     {
         var data = ray[i].raycastSector(renderer, w, plRay, plPos);
-
-        if (data.depth < maxDepth && data.depth > 0.1)
-        {
-            if (data.depth >= maxDepth)
-                continue;
-
-            if(prevDepth > -0.999 && Math.abs(data.depth - prevDepth) < fishEyeRemoveThreshold)
-                data.depth = lerp(data.depth, prevDepth, fishEyeRemoveFactor);
-
-            //data.depth = Math.sqrt(data.depth * 25);
-            //data.depth = data.depth * Math.cos(degToRad(ray[ray.length/2].angle) - degToRad(ray[i].angle));
-
-            segmentSize = vec2(
-                (window.innerWidth / ray.length) + 2,
-                (wallHeightFactor * window.innerHeight) * (1.0 / data.depth)
-            );
-            segmentPos = vec2(
-                ((segmentSize.x - 2) * i),
-                (window.innerHeight / 2.0) - (segmentSize.y / 2.0)
-            );
-
-            // Old - Plain Rectangle Draw Render Method
-            if(!wallRenderTexture)
-            {
-                var color = Math.floor((segmentSize.y / window.innerHeight) * 20) * 20;
-                if(color > 255) color = 255;
-                drawRect( renderer, segmentPos, segmentSize, true, rgb(color, 0, Math.floor(color/10)) );
-            }
-            else
-            {
-                // New Texture Render Method
-                totalTextureRepeats = (data.length / textureSize) * wallStretchFactor;
-                wallX = (data.lengthPoint / data.length) * totalTextureRepeats;
-
-                wallX = wallX % (textureSize - 10);
-
-                wallInClipWidth = 1;
-
-                sw = wallInClipWidth;
-                sx = wallX;
-
-                renderer.drawImage(
-                    wallImages[data.type > 0 && data.type < wallImages.length ? data.type : 0].image,
-                    sx, 0, sw, textureSize,
-                    segmentPos.x - 1, segmentPos.y + jumpOffset,
-                    segmentSize.x, segmentSize.y);
-
-                if(typeof data.decal != "undefined")
-                {
-                    renderer.drawImage(
-                        data.decal.image,
-                        sx, 0, sw, textureSize,
-                        segmentPos.x - 1, segmentPos.y + jumpOffset,
-                        segmentSize.x, segmentSize.y);
-                }
-
-                if(wallDarkening && segmentSize.y - (segmentSize.y/wallDarkeningFactor) < window.innerHeight)
-                {
-                    renderer.globalAlpha = 1.0 - ((segmentSize.y - (segmentSize.y/wallDarkeningFactor)) / window.innerHeight);
-                    renderer.globalAlpha = round(Math.floor(renderer.globalAlpha * wallDarkeningLayers), wallDarkeningSteps, 0) / Math.floor(wallDarkeningLayers);
-                    renderer.globalAlpha = clamp(renderer.globalAlpha, wallBrightnessThreshold, wallDarknessThreshold);
-                    renderer.fillStyle= 'black';
-                    renderer.fillRect(
-                        segmentPos.x - 2, segmentPos.y - 1  + jumpOffset,
-                        segmentSize.x + 1, segmentSize.y + 2);
-                }
-
-                renderer.globalAlpha = 1.0;
-
-                renderer.globalCompositeOperation = "source-over";
-            }
-
-            prevDepth = data.depth;
-        }
+        renderData.push(data);
     }
 
-    drawEntitiesInSector(activeSector, ePos, renderer, plRay);
+    prevSector = undefined;
+    for(let i = 0; i < renderData.length; i++)
+    {
+        drawRenderDataPiece(renderer, i, renderData[i], ray);
+
+        if(typeof prevSector == "undefined"
+        || prevSector != renderData[i].sector)
+        {
+            drawEntitiesInSector(renderData[i].sector, ePos, renderer, plRay);
+            prevSector = renderData[i].sector;
+        }
+    }
 }
 
 function loadRoofAndFloorTextureDataOnce()
