@@ -10,10 +10,10 @@ var wallHeightFactor = 12.0;
 
 var wallDarkening = true;
 var wallDarkeningFactor = 4.0;
-var wallDarkeningLayers = 10.0;
-var wallDarkeningSteps = 3.0;
-var wallBrightnessThreshold = 0.1;
-var wallDarknessThreshold = 0.7;
+var wallDarkeningLayers = 5.0;
+var wallDarkeningSteps = 2.0;
+var wallBrightnessThreshold = 0.2;
+var wallDarknessThreshold = 0.6;
 
 var fishEyeRemoveFactor = 1.0;
 var fishEyeRemoveThreshold = 1.0;
@@ -140,17 +140,14 @@ function renderRaycast3D(renderer, ray, w, plRay, plPos)
     }
     while(typeof nextRenderSector != "undefined");
 
-    //if(entitySectors.length > 1)
+    renderData = [];
+    for (let i = 0; i < ray.length; i++)
     {
-        renderData = [];
-        for (let i = 0; i < ray.length; i++)
-        {
-            renderData.push(ray[i].raycastSector(w, plPos,
-                entitySectors[entitySectors.length - 1], true, undefined));
-        }
-        entitySectors.push(entitySectors[entitySectors.length - 1]);
-        renderDataGroup.push(renderData);
+        renderData.push(ray[i].raycastSector(w, plPos,
+            entitySectors[entitySectors.length - 1], true, undefined));
     }
+    entitySectors.push(entitySectors[entitySectors.length - 1]);
+    renderDataGroup.push(renderData);
 
     for(let g = renderDataGroup.length - 1; g >= 0; g--)
     {

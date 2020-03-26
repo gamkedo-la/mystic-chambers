@@ -1,8 +1,6 @@
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
 const RENDER_EDITOR_AND_GAME_TOGETHER = false; // if false, draw either editor OR game
 
-noOfWallsCheckedForRendering = 0;
-
 function play3DSound(buffer, vec2_a, vec2_b)
 {
     var dist = vec2_a.dist(vec2_b); //for volume
@@ -22,8 +20,6 @@ function play3DSound(buffer, vec2_a, vec2_b)
 //- fire skull making noise after some time (in main.js, update or event method)
 //- when picking item (in item.js, in the switch cases, after line 26)
 //- when firing or reloading gun (in player.js, after line 199)
-//
-//Note To Bilal: Line no. 313 of main.js, Line no. 126 of render.js
 
 window.onload = function()
 {
@@ -316,9 +312,6 @@ function draw()
     if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
         drawEntities(renderer, ray[ray.length/2], true);
 
-    //Old Entities Rendering
-    //drawEntities(renderer, ray[ray.length/2], mapMode);
-
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
     prevPlPos = vec2(plPos.x, plPos.y);
@@ -337,10 +330,9 @@ function draw()
 
     ui.draw();
 
-    //if(mapMode)
+    if(mapMode)
         drawText(renderer,
-        touchPos[0].x.toString() + ", " + touchPos[0].y.toString() + ", " + noOfWallsCheckedForRendering + "/" + (180 * (wall.length - 2)),
-        vec2(10, window.innerHeight - 16));
+        touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
 }
 
 function frame()

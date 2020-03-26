@@ -119,7 +119,7 @@ class Ray
                     }
                 }
 
-                if(last)// && raycast.index <= -1)
+                if(last)
                 {
                     if(typeof sector.sectorData.wallsRight != "undefined")
                     {
@@ -169,7 +169,7 @@ class Ray
                     }
                 }
 
-                if(last)// && raycast.index <= -1)
+                if(last)
                 {
                     if(typeof sector.sectorData.wallsLeft != "undefined")
                     {
@@ -188,7 +188,6 @@ class Ray
             {
                 if(typeof sector.sectorData.wallsLeft != "undefined")
                 {
-                    noOfWallsCheckedForRendering += sector.sectorData.wallsLeft.length;
                     for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
                         this.raycastWall(sector, pos, sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
 
@@ -196,7 +195,6 @@ class Ray
                     {
                         if(typeof sector.sectorData.sectorsRight != "undefined")
                         {
-                            noOfWallsCheckedForRendering += sector.sectorData.sectorsRight.length;
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
                                 this.raycastWall(sector, pos, sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);
@@ -213,7 +211,6 @@ class Ray
                     {
                         if(typeof sector.sectorData.wallsRight != "undefined")
                         {
-                            noOfWallsCheckedForRendering += sector.sectorData.wallsRight.length;
                             for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                                 this.raycastWall(sector, pos, sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
                         }
@@ -224,7 +221,6 @@ class Ray
                 {
                     if(typeof sector.sectorData.sectorsLeft != "undefined")
                     {
-                        noOfWallsCheckedForRendering += sector.sectorData.sectorsLeft.length;
                         for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                         {
                             this.raycastWall(sector, pos, sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
@@ -237,7 +233,6 @@ class Ray
             {
                 if(typeof sector.sectorData.wallsRight != "undefined")
                 {
-                    noOfWallsCheckedForRendering += sector.sectorData.wallsRight.length;
                     for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
                     {
                         this.raycastWall(sector, pos, sector.sectorData.wallsRight[i], sector.sectorData.wallsRight[i].index, raycast);
@@ -247,7 +242,6 @@ class Ray
                     {
                         if(typeof sector.sectorData.sectorsLeft != "undefined")
                         {
-                            noOfWallsCheckedForRendering += sector.sectorData.sectorsLeft.length;
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
                                 this.raycastWall(sector, pos, sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
@@ -264,7 +258,6 @@ class Ray
                     {
                         if(typeof sector.sectorData.wallsLeft != "undefined")
                         {
-                            noOfWallsCheckedForRendering += sector.sectorData.wallsLeft.length;
                             for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
                                 this.raycastWall(sector, pos, sector.sectorData.wallsLeft[i], sector.sectorData.wallsLeft[i].index, raycast);
                         }
@@ -275,7 +268,6 @@ class Ray
                 {
                     if(typeof sector.sectorData.sectorsRight != "undefined")
                     {
-                        noOfWallsCheckedForRendering += sector.sectorData.sectorsRight.length;
                         for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                         {
                             this.raycastWall(sector, pos, sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);

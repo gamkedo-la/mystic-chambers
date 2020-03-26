@@ -256,37 +256,25 @@ function removeEntityInSector(remEnt)
 {
     if(typeof activeSector != "undefined")
     {
-        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
-        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
-        var X = plPos.x; var Y = plPos.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
-
-        if(pos < 0)
+        if(typeof activeSector.sectorData.entitiesLeft != "undefined")
         {
-            if(typeof activeSector.sectorData.entitiesLeft != "undefined")
-            {
-                for( let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
-                { 
-                    if (activeSector.sectorData.entitiesLeft[i] === remEnt)
-                    {
-                        activeSector.sectorData.entitiesLeft.splice(i, 1); 
-                        //break;
-                    }
+            for( let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
+            { 
+                if (activeSector.sectorData.entitiesLeft[i] === remEnt)
+                {
+                    activeSector.sectorData.entitiesLeft.splice(i, 1); 
+                    //break;
                 }
             }
         }
-        else
+        if(typeof activeSector.sectorData.entitiesRight != "undefined")
         {
-            if(typeof activeSector.sectorData.entitiesRight != "undefined")
-            {
-                for( let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
-                { 
-                    if (activeSector.sectorData.entitiesRight[i] === remEnt)
-                    {
-                        activeSector.sectorData.entitiesRight.splice(i, 1); 
-                        //break;
-                    }
+            for( let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
+            { 
+                if (activeSector.sectorData.entitiesRight[i] === remEnt)
+                {
+                    activeSector.sectorData.entitiesRight.splice(i, 1); 
+                    //break;
                 }
             }
         }
