@@ -150,9 +150,6 @@ class WallData
         this.angle = -1.0;
         this.type = -1;
         this.decal = undefined;
-
-        this.sector = undefined;
-        this.sectorPos = 0;
     }
 };
 

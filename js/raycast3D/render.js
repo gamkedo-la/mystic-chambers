@@ -40,8 +40,6 @@ var floorImageData = null;
 var roofImageData = null;
 var imgDataDone = false;
 
-var renderData = [];
-
 function drawRenderDataPiece(renderer, i, data, ray)
 {
     if (data.depth < maxDepth && data.depth > 0.1)
@@ -119,29 +117,40 @@ function drawRenderDataPiece(renderer, i, data, ray)
     }
 }
 
+var renderData = [];
 function renderRaycast3D(renderer, ray, w, plRay, plPos)
 {
     prevDepth = -1.0;
-
     noOfWallsCheckedForRendering = 0;
-    renderData = [];
-    for (let i = 0; i < ray.length; i++)
-    {
-        var data = ray[i].raycastSector(renderer, w, plRay, plPos);
-        renderData.push(data);
-    }
 
-    prevSector = undefined;
-    for(let i = 0; i < renderData.length; i++)
+    renderDataGroup = [];
+    do
     {
-        drawRenderDataPiece(renderer, i, renderData[i], ray);
-
-        if(typeof prevSector == "undefined"
-        || prevSector != renderData[i].sector)
+        var rSec = nextRenderSector;
+        nextRenderSector = undefined;
+        renderData = [];
+        for (let i = 0; i < ray.length; i++)
         {
-            drawEntitiesInSector(renderData[i].sector, ePos, renderer, plRay);
-            prevSector = renderData[i].sector;
+            renderData.push(ray[i].raycastSector(w, plPos, rSec));
         }
+        renderDataGroup.push(renderData);
+    }
+    while(typeof nextRenderSector != "undefined");
+
+    for(let g = renderDataGroup.length - 1; g >= 0; g--)
+    {
+        for(let i = 0; i < renderDataGroup[g].length; i++)
+            drawRenderDataPiece(renderer, i, (renderDataGroup[g])[i], ray);
+
+        if((g == renderDataGroup.length - 2 && renderDataGroup.length >= 2)
+        || (g == renderDataGroup.length - 1 && renderDataGroup.length < 2))
+            drawEntitiesInSector(activeSector,
+            detectActiveSector(activeSector, plPos),
+            renderer, plRay);
+        else if(g == renderDataGroup.length - 1 && renderDataGroup.length >= 1)
+            drawEntitiesInSector(activeSector,
+            -detectActiveSector(activeSector, plPos),
+            renderer, plRay);
     }
 }
 
