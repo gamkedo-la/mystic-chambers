@@ -35,18 +35,6 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
-    wallImages = [
-        new ImageObject("images/door.png", vec2(160, 160)),
-        new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
-        new ImageObject("images/wall_stone.png", vec2(160, 160)),
-    ];
-    wallColors = [
-        "#ffff0099",
-        "#50505099",
-        "#ff000099"
-    ];
-    wall = [];
-
     areaColors = [
         "#00ff0020",
         "#0000ff20",
@@ -92,7 +80,6 @@ window.onload = function()
     items.add(576, 298, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
-
 
     decorations.scatter(ENT_TECHTORCH, 200,
         400, 0, 800, 400, vec2(1, -120)); // experimental WIP
@@ -195,7 +182,7 @@ function events(deltaTime)
     if( (screen.availHeight || screen.height - 30) <= window.innerHeight)
         canvas.requestPointerLock();
     else if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas)
-        try{canvas.exitPointerLock();} catch(e) {console.log(e.toString());}
+        try{canvas.exitPointerLock();} catch(e) {}
             
 
     if(platform == WINDOWS)
@@ -205,26 +192,20 @@ function events(deltaTime)
 
     if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
-        for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-                -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-
-        for(let i = 0; i < area.length; i++)
-            area[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-                -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-
-                editorEvents(deltaTime,
-                    vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-                    ray[ray.length/2].p.y - (window.innerHeight/2)),
-                    wall, area);
+        var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+            ray[ray.length/2].p.y - (window.innerHeight/2));
 
         for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-                ray[ray.length/2].p.y - (window.innerHeight/2)));
-
+            wall[i].addOffset(off.negative());
         for(let i = 0; i < area.length; i++)
-            area[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-                ray[ray.length/2].p.y - (window.innerHeight/2)));
+            area[i].addOffset(off.negative());
+
+        editorEvents(deltaTime, off, wall, area);
+
+        for(let i = 0; i < wall.length; i++)
+            wall[i].addOffset(off);
+        for(let i = 0; i < area.length; i++)
+            area[i].addOffset(off);
     }
 
     ui.event();
@@ -330,6 +311,12 @@ function draw()
         drawText(renderer,
         touchPos[0].x.toString() + ", " + touchPos[0].y.toString()
         + ", " + keysDown.toString());
+
+    if(itemPickupFlash > 0)
+    {
+        drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, itemPickupFlashColor);
+        itemPickupFlash--;
+    }
 }
 
 function frame()

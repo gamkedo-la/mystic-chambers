@@ -1,4 +1,8 @@
 
+var itemPickupFlashFrames = 5;
+var itemPickupFlash = 0;
+var itemPickupFlashColor = "#FFFFFF15";
+
 class ItemManager {
 
     constructor()
@@ -86,12 +90,14 @@ class ItemManager {
                         //do nothing
                 }
 
-                if (shouldDestroy) {
+                if (shouldDestroy)
+                {
                     removeEntityInSector(this.ents[i]);
                     removeEntity(this.ents[i]);
-                    this.ents.splice(i, 1); // FIXME: this may cause an error?
-                    // if we change the array DURING this loop which iterates it,
-                    // could we miss the next or prev entity in the array?
+                    this.ents.splice(i, 1);
+                    i--;
+
+                    itemPickupFlash += itemPickupFlashFrames;
                 }
             }
         }

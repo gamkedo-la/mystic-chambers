@@ -30,6 +30,11 @@ class Vector2
         this.y = typeof y == "undefined" ? 0 : y;
     }
 
+    negative()
+    {
+        return new Vector2(-this.x, -this.y);
+    }
+
     add(vec2)
     {
         return new Vector2(this.x + vec2.x, this.y + vec2.y);

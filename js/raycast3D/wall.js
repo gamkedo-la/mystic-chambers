@@ -1,5 +1,15 @@
 
-//Requires Vector2
+wallImages = [
+    new ImageObject("images/door.png", vec2(160, 160)),
+    new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
+    new ImageObject("images/wall_stone.png", vec2(160, 160)),
+];
+wallColors = [
+    "#ffff0099",
+    "#50505099",
+    "#ff000099"
+];
+wall = [];
 
 var wallCollisionMinDistance = 0.01;
 var wallCollisionReaction = 2.0;
@@ -313,31 +323,33 @@ function resetWallIndexes()
     }
 }
 
-function collisionWithWallsInSector(plP, prevPlPos)
+function collisionWithWallsInSector(currentPos, previousPos, sec)
 {
-    if(typeof activeSector != "undefined")
+    if(typeof sec == "undefined") sec = activeSector;
+
+    if(typeof sec != "undefined")
     {
-        var Ax = activeSector.p1.x; var Ay = activeSector.p1.y;
-        var Bx = activeSector.p2.x; var By = activeSector.p2.y;
-        var X = plP.x; var Y = plP.y;
+        var Ax = sec.p1.x; var Ay = sec.p1.y;
+        var Bx = sec.p2.x; var By = sec.p2.y;
+        var X = currentPos.x; var Y = currentPos.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var pos = (Bx * Y) - (By * X);
 
-        if(pos < 0 && typeof activeSector.sectorData.wallsLeft != "undefined")
+        if(pos < 0 && typeof sec.sectorData.wallsLeft != "undefined")
         {
-            for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
+            for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
             {
-                plP = activeSector.sectorData.wallsLeft[i].getCollValue(plP, prevPlPos);
+                currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
             }
         }
-        if(pos > 0 && typeof activeSector.sectorData.wallsRight != "undefined")
+        if(pos > 0 && typeof sec.sectorData.wallsRight != "undefined")
         {
-            for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
+            for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
             {
-                plP = activeSector.sectorData.wallsRight[i].getCollValue(plP, prevPlPos);
+                currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
             }
         }
     }
 
-    return plP;
+    return currentPos;
 }
