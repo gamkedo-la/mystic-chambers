@@ -10,7 +10,7 @@ class DecorationManager {
 
     scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
-        console.log("scattering " + quantity + " entities...")
+        //console.log("scattering " + quantity + " entities...")
 
         for (var num=0; num<quantity; num++)
         {

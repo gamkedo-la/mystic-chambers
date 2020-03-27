@@ -76,13 +76,13 @@ class ItemManager {
 
                     case ENT_BARREL_STEEL:
                         // FIXME play metal clang sound, but otherwise do nothing
-                        console.log("steel barrel hit!");
+                        // console.log("steel barrel hit!");
                         shouldDestroy = false;
                         break;
 
                     case ENT_BARREL_RED:
                         // FIXME explode!
-                        console.log("red barrel hit!");
+                        // console.log("red barrel hit!");
                         shouldDestroy = false; // TODO: BOOM!!!!
                         break;
 
