@@ -14,6 +14,7 @@ class ImageObject
         
         this.image.onload = function()
         {
+            me.loaded = true;
             if (AUTOSCALE_SPRITES) {
                 // optionally scale up if it is tiny, note: this won't be "this"
                 // FIXME: outputs blank, is the loop wrong?

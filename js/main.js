@@ -303,6 +303,7 @@ function draw()
     {
         drawAllGunsDisplay(renderer);
         drawKeysDisplay(renderer);
+        drawCrosshair(renderer);
     }
 
     ui.draw();

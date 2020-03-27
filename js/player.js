@@ -181,3 +181,14 @@ function drawKeysDisplay(renderer)
         }
     }
 }
+
+var drawCrosshairIMG;
+function drawCrosshair(renderer) {
+    if (!drawCrosshairIMG) {
+        console.log("Downloading crosshair...");
+        drawCrosshairIMG = new ImageObject("images/crosshair.png", vec2(32, 32));
+    }
+    if (drawCrosshairIMG.loaded) {
+        renderer.drawImage(drawCrosshairIMG.image,Math.round(screen.width/2)-16,Math.round(screen.height/2)-16);
+    }
+}
