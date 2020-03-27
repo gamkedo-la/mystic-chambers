@@ -41,6 +41,8 @@ entColor = [
     "#A6300D90",
     "#96987990",
     "#85876890",
+    "#85876890",
+    "#85876890",
 
     "#ee440090",
 ];
@@ -90,6 +92,7 @@ class Entity
         this.id = -1;
         this.ai = undefined; // an optional function
         this.aimAngleRadians = 0; // the angle an entity is looking
+        this.sector = undefined; //the sector in which this entity is present
     }
 
     set(x, y, id)
@@ -213,9 +216,7 @@ function drawEntitiesInSector(sector, pos, renderer, plRay)
 
                 for(let i = 0; i < sector.sectorData.entitiesLeft.length; i++)
                 {
-                    //if(line) sector.sectorData.entitiesLeft[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
                     sector.sectorData.entitiesLeft[i].draw(renderer, plRay, false);
-                    //if(line) sector.sectorData.entitiesLeft[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
                 }
             }
         }
@@ -231,9 +232,7 @@ function drawEntitiesInSector(sector, pos, renderer, plRay)
 
                 for(let i = 0; i < sector.sectorData.entitiesRight.length; i++)
                 {
-                    //if(line) sector.sectorData.entitiesRight[i].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
                     sector.sectorData.entitiesRight[i].draw(renderer, plRay, false);
-                    //if(line) sector.sectorData.entitiesRight[i].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
                 }
             }
         }
@@ -404,10 +403,12 @@ function setEntitiesInSectors(sec)
 
         for(let i = 0; i < entities.length; i++)
         {
-            if(isEntityInsideWalls(entities[i], sector.sectorData.wallsLeft,
+            if(typeof sector.sectorData.wallsLeft != "undefined"
+            && isEntityInsideWalls(entities[i], sector.sectorData.wallsLeft,
                 sector.sectorData.sectorsLeft, sector))
             {
                 sector.sectorData.entitiesLeft.push(entities[i]);
+                entities[i].sector = sector;
             }
         }
 
@@ -421,10 +422,12 @@ function setEntitiesInSectors(sec)
 
         for(let i = 0; i < entities.length; i++)
         {
-            if(isEntityInsideWalls(entities[i], sector.sectorData.wallsRight,
+            if(typeof sector.sectorData.wallsRight != "undefined"
+            && isEntityInsideWalls(entities[i], sector.sectorData.wallsRight,
                 sector.sectorData.sectorsRight, sector))
             {
                 sector.sectorData.entitiesRight.push(entities[i]);
+                entities[i].sector = sector;
             }
         }
 
@@ -434,6 +437,18 @@ function setEntitiesInSectors(sec)
             {
                 setEntitiesInSectors(sector.sectorData.sectorsRight[i]);
             }
+        }
+    }
+}
+
+function deleteEntitiesOutsideSector()
+{
+    for(let i = 0; i < entities.length; i++)
+    {
+        if(typeof entities[i].sector == "undefined")
+        {
+            entities.splice(i, 1);
+            i--;
         }
     }
 }

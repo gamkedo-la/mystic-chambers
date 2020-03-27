@@ -16,16 +16,10 @@ function randomAngleRadians() {
 }
 
 // check for wall collisions and warp back to prev pos if needed
-function validatePosition() {
-    return; // the collisionWithWallsInSector is buggy
-    
-    if (this.prev_p==undefined) this.prev_p = vec2(this.p.x, this.p.y);
-    
-    // FIXME: this routine seems to edit PLAYER position!?!
-    this.p = collisionWithWallsInSector(this.p, this.prev_p);
-    
-    this.prev_p.x = this.p.x;
-    this.prev_p.y = this.p.y;
+function validatePosition()
+{
+    this.p = collisionWithWallsInSector(this.p, this.prev_p, this.sector);
+    this.p = collisionWithSectorsInSector(this.p, this.prev_p, this.sector);
 }
 
 // ensure it is in the range 0..360 in radians, wrapping around
@@ -68,12 +62,14 @@ function aiExplore(p1Ray) {
 
     validateRotation.call(this); // stay in 0..360 deg
 
+    if(typeof this.prev_p == "undefined") this.prev_p = vec2(0, 0);
+    this.prev_p = vec2(this.p.x, this.p.y);
+
     // move in the direction we are facing
     this.p.x += speed * Math.cos(this.aimAngleRadians);
     this.p.y += speed * Math.sin(this.aimAngleRadians);
 
     validatePosition.call(this); // collide with walls
-
 }
 
 // move toward the player
@@ -102,6 +98,9 @@ function aiSeek(plRay, backwards) {
             this.aimAngleRadians = rad; 
 
             validateRotation.call(this); // stay in 0..360 deg
+
+            if(typeof this.prev_p == "undefined") this.prev_p = vec2(0, 0);
+            this.prev_p = vec2(this.p.x, this.p.y);
 
             // move toward target
             this.p.x += speed * Math.cos(rad);

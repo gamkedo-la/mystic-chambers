@@ -81,7 +81,7 @@ window.onload = function()
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
 
-    decorations.scatter(ENT_TECHTORCH, 200,
+    decorations.scatter(ENT_TECHTORCH, 800,
         400, 0, 800, 400, vec2(1, -120)); // experimental WIP
 
     playerInit();
@@ -159,6 +159,7 @@ window.onload = function()
 
     entitiesInSectorSet = [];
     setEntitiesInSectors();
+    deleteEntitiesOutsideSector();
 
     //wall[10].decal = entImg[0][0];
 
@@ -226,8 +227,6 @@ function draw()
     renderer.clearRect(0, 0, canvas.width, canvas.height);
 
     drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, EDITOR_BG_COLOUR);
-
-    //drawSprites();
 
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 

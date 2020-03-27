@@ -89,10 +89,14 @@ class Wall
         this.p2.y += vec2.y;
     }
 
-    getCollValue(p, prevP)
+    getCollValue(p, prevP, allowSectors)
     {
-        if(this.type == 0)
-            return p;
+        if(typeof allowSectors == "undefined" || allowSectors == false)
+        {
+            if(this.type <= 0) return p;
+            if(typeof this.sectorData.wallsLeft != "undefined"
+            || typeof this.sectorData.wallsRight != "undefined") return p;
+        }
         
         var a = this.angle;
 
@@ -102,7 +106,7 @@ class Wall
         var By = this.p2.y - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
         var X = p.x; var Y = p.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
+        var posPadd = (Bx * Y) - (By * X);
 
         Ax = this.p1.x;
         Ay = this.p1.y;
@@ -112,19 +116,16 @@ class Wall
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var posNoPadd = (Bx * Y) - (By * X);
 
-        if((pos < -wallCollisionMinDistance && this.direction > 0)
-            || (pos > wallCollisionMinDistance && this.direction < 0))
+        if((posPadd < -wallCollisionMinDistance && this.direction > 0)
+        || (posPadd > wallCollisionMinDistance && this.direction < 0))
+            //return prevP;
+            p = prevP;
+        //else
         {
-            haltPlayer();
-
-            return prevP;
-            //vec2(p.x - (wallCollisionReaction * this.direction * Math.cos(a + degToRad(90.0))),
-            //p.y - (wallCollisionReaction * this.direction * Math.sin(a + degToRad(90.0))));
+            if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
+            else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
+            else this.direction = 0;
         }
-
-        if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
-        else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
-        else this.direction = 0;
         
         return p;
     }
@@ -251,9 +252,12 @@ function drawSectorMapWallsLeft(sector, off)
     {
         for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
         {
+            if(sector.sectorData.wallsLeft[i].type == 0)
+            {
             sector.sectorData.wallsLeft[i].addOffset(off);
             sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
             sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
+            }
         }
     }
 }
@@ -264,9 +268,12 @@ function drawSectorMapWallsRight(sector, off)
     {
         for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
         {
+            if(sector.sectorData.wallsRight[i].type == 0)
+            {
             sector.sectorData.wallsRight[i].addOffset(off);
             sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
             sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
+            }
         }
     }
 }
@@ -325,6 +332,8 @@ function resetWallIndexes()
 
 function collisionWithWallsInSector(currentPos, previousPos, sec)
 {
+    if(currentPos == previousPos) return currentPos;
+
     if(typeof sec == "undefined") sec = activeSector;
 
     if(typeof sec != "undefined")
@@ -339,15 +348,55 @@ function collisionWithWallsInSector(currentPos, previousPos, sec)
         {
             for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
             {
-                currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
+                if(typeof sec.sectorData.wallsLeft[i].sectorData.wallsLeft == "undefined"
+                && typeof sec.sectorData.wallsLeft[i].sectorData.wallsRight == "undefined"
+                && sec.sectorData.wallsLeft[i].type > 0)
+                {
+                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
+                    if(currentPos == previousPos) return currentPos;
+                }
             }
         }
         if(pos > 0 && typeof sec.sectorData.wallsRight != "undefined")
         {
             for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
             {
-                currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
+                if(typeof sec.sectorData.wallsRight[i].sectorData.wallsLeft == "undefined"
+                && typeof sec.sectorData.wallsRight[i].sectorData.wallsRight == "undefined"
+                && sec.sectorData.wallsRight[i].type > 0)
+                {
+                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
+                    if(currentPos == previousPos) return currentPos;
+                }
             }
+        }
+    }
+
+    return currentPos;
+}
+
+//For moving entities; to keep them inside the sectors
+function collisionWithSectorsInSector(currentPos, previousPos, sec)
+{
+    if(currentPos == previousPos) return currentPos;
+
+    currentPos = sec.getCollValue(currentPos, previousPos);
+    if(currentPos == previousPos) return currentPos;
+
+    if(typeof sec.sectorData.sectorsLeft != "undefined")
+    {
+        for(let i = 0; i < sec.sectorData.sectorsLeft.length; i++)
+        {
+            currentPos = sec.sectorData.sectorsLeft[i].getCollValue(currentPos, previousPos, true);
+            if(currentPos == previousPos) return currentPos;
+        }
+    }
+    else if(typeof sec.sectorData.sectorsRight != "undefined")
+    {
+        for(let i = 0; i < sec.sectorData.sectorsRight.length; i++)
+        {
+            currentPos = sec.sectorData.sectorsRight[i].getCollValue(currentPos, previousPos, true);
+            if(currentPos == previousPos) return currentPos;
         }
     }
 
