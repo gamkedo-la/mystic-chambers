@@ -8,7 +8,7 @@ function play3DSound(buffer, vec2_a, vec2_b)
 
     //calculating volume and panning from above variables here
 
-    //audio.playOneshot(buffer);
+    audio.playOneshot(buffer, vec2_b, dist); //!?
 }
 //...then use it like this
 //play3DSound(plPos, fireSkullEnt.p)
@@ -34,6 +34,7 @@ window.onload = function()
     uiSettings();
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
+    audio.loadSounds(0);
 
     areaColors = [
         "#00ff0020",

@@ -148,6 +148,10 @@ function gunEvent()
 
                     gun.imageObject = gunImages[currentGun][0];
                 }
+                else
+                {
+                    audio.playOneshot(sounds[SOUND_NOAMMO], plPos);
+                }
             }
         }
         else if(!gunReloading)

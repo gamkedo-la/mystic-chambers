@@ -1,3 +1,14 @@
+
+//Sound IDs
+const SOUND_NOAMMO = 0;
+
+var soundsList = [
+    "audio/noAmmo.wav",
+];
+
+var totalSounds = 1;
+var sounds = [];
+
 //Constants-------------------------------------------------------------------
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
@@ -104,20 +115,23 @@ function AudioGlobal() {
 	}
 
 //--//Audio playback classes--------------------------------------------------
-	this.playOneshot = function(buffer, object, mixVolume = 1, rate = 1) {
-		if (!initialized) return;
+	this.playOneshot = function(buffer, vec2, mixVolume = 1, rate = 1)
+	{
+		if (!initialized || buffer.playing) return;
 
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
 		var panNode = audioCtx.createPanner();
 
 		panNode.panningModel = panningModel;
+		panNode.distanceModel = 'inverse';
 		panNode.coneInnerAngle = 360;
 		panNode.coneOuterAngle  = 0;
-		panNode.coneOuterAngle  = 1;
-		panNode.rolloffFactor  = 0.5;// will need to be fixed to use what ever get implemented for objects
-		panNode.refDistance = 10;// will need to be fixed to use what ever get implemented for objects
-		panNode.setPosition(object.x, object.y, 0);// will need to be fixed to use what ever get implemented for objects
+		panNode.coneOuterGain  = 0;
+		panNode.rolloffFactor  = 1;// will need to be fixed to use what ever get implemented for objects
+		panNode.maxDistance = 1000;
+		panNode.refDistance = 1;// will need to be fixed to use what ever get implemented for objects
+		panNode.setPosition(vec2.x, vec2.y, 0);
 
 		source.connect(gainNode);
 		gainNode.connect(panNode);
@@ -126,7 +140,7 @@ function AudioGlobal() {
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
 		gainNode.gain.value = mixVolume;
-		panNode.pan.value = calculatePan(referance);
+		//panNode.pan.value = calculatePan(referance);
 		source.start();
 
 		return {source: source, volume: gainNode, pan: panNode};
@@ -168,6 +182,19 @@ function AudioGlobal() {
 		request.onload = function() {
 			audio.context.decodeAudioData(request.response, function(buffer) {
 				audio.playMusic(buffer);
+			});
+		}
+		request.send();
+	}
+
+	this.loadSounds = function(id) {
+		var request = new XMLHttpRequest();
+		request.open('GET', soundsList[id], true);
+		request.responseType = 'arraybuffer';
+		request.onload = function() {
+			audio.context.decodeAudioData(request.response, function(buffer) {
+				sounds.push(buffer);
+				if(id + 1 < totalSounds) audio.loadSounds(id + 1);
 			});
 		}
 		request.send();
