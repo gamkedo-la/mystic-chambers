@@ -87,23 +87,8 @@ function playerInit()
         ray.push(new Ray(plPos, i));
 }
 
-function playerEvents(deltaTime)
+function playerJumpEvent()
 {
-    if(playerAngleMovement)
-    {
-        for (let i = 0; i < ray.length; i++)
-        {
-            if(isTouchMoved)
-                ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x, 0.5 );
-
-            if (ray[i].angle >= 0.0)
-                ray[i].angle -= 360.0;
-            else if (ray[i].angle <= -360.0)
-                ray[i].angle += 360.0;
-        }
-        relTouchPos[0] = vec2(0.0, 0.0);
-    }
-
     if(jumpActive)
     {
         jumpOffset = lerp(jumpOffset, jumpMaxOffset + 1, jumpSpeed);
@@ -141,7 +126,10 @@ function playerEvents(deltaTime)
 
         jumpOffset = 0;
     }
+}
 
+function playerGunEvent()
+{
     if(keysDown.indexOf(gunSwitchKeyPress) != -1)
     {
         if(availableGuns[currentGun + 1] && currentGun + 1 < totalGuns) currentGun++;
@@ -157,40 +145,6 @@ function playerEvents(deltaTime)
             totalAmmo[currentGun]--;
             gun.imageObject = gunImages[currentGun][2];
             gunReloading = true;
-        }
-    }
-    if(keysDown.indexOf('m') != -1)
-    {
-        playerAngleMovement = !playerAngleMovement;
-    }
-    
-    for(let keyI = 0; keyI < 4; keyI++)
-    {
-        plPos.x += currentSpeed[keyI] * Math.cos(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
-        plPos.y += currentSpeed[keyI] * Math.sin(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
-
-        gunMoveCounter += (currentSpeed[keyI] * deltaTime) / 300.0;
-
-        if(keysDown.indexOf(keyPresses[keyI]) != -1
-        || (platform == ANDROID && gameplayUI[gameplayUI.length - 1 - keyI].button.output == UIOUTPUT_SELECT))
-        {
-            if(currentSpeed[keyI] >= 0.0)
-                currentSpeed[keyI] += speedIncrement * deltaTime;
-            else
-                currentSpeed[keyI] += (speedIncrement + speedDecrement) * deltaTime;
-
-            if(currentSpeed[keyI] > maxSpeed[keyI]) currentSpeed[keyI] = maxSpeed[keyI];
-        }
-        else
-        {
-            if(currentSpeed[keyI] > speedThreshold) currentSpeed[keyI] -= speedDecrement * deltaTime;
-            else if(currentSpeed[keyI] < -speedThreshold) currentSpeed[keyI] += speedDecrement * deltaTime;
-            else currentSpeed[keyI] = 0;
-        }
-
-        for (let i = 0; i < ray.length; i++)
-        {
-            ray[i].p = plPos;
         }
     }
 
@@ -229,6 +183,57 @@ function playerEvents(deltaTime)
         }
         gunReloading = false;
     }
+}
+
+function playerEvents(deltaTime)
+{
+    if(playerAngleMovement)
+    {
+        for (let i = 0; i < ray.length; i++)
+        {
+            if(isTouchMoved)
+                ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x, 0.5 );
+
+            if (ray[i].angle >= 0.0)
+                ray[i].angle -= 360.0;
+            else if (ray[i].angle <= -360.0)
+                ray[i].angle += 360.0;
+        }
+        relTouchPos[0] = vec2(0.0, 0.0);
+    }
+
+    playerJumpEvent();
+    playerGunEvent();
+    
+    for(let keyI = 0; keyI < 4; keyI++)
+    {
+        plPos.x += currentSpeed[keyI] * Math.cos(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
+        plPos.y += currentSpeed[keyI] * Math.sin(degToRad(ray[ray.length / 2].angle + movementAngles[keyI]));
+
+        gunMoveCounter += (currentSpeed[keyI] * deltaTime) / 300.0;
+
+        if(keysDown.indexOf(keyPresses[keyI]) != -1
+        || (platform == ANDROID && gameplayUI[gameplayUI.length - 1 - keyI].button.output == UIOUTPUT_SELECT))
+        {
+            if(currentSpeed[keyI] >= 0.0)
+                currentSpeed[keyI] += speedIncrement * deltaTime;
+            else
+                currentSpeed[keyI] += (speedIncrement + speedDecrement) * deltaTime;
+
+            if(currentSpeed[keyI] > maxSpeed[keyI]) currentSpeed[keyI] = maxSpeed[keyI];
+        }
+        else
+        {
+            if(currentSpeed[keyI] > speedThreshold) currentSpeed[keyI] -= speedDecrement * deltaTime;
+            else if(currentSpeed[keyI] < -speedThreshold) currentSpeed[keyI] += speedDecrement * deltaTime;
+            else currentSpeed[keyI] = 0;
+        }
+
+        for (let i = 0; i < ray.length; i++)
+        {
+            ray[i].p = plPos;
+        }
+    }
 
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }
@@ -251,11 +256,15 @@ function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
     if(availableGuns[gunIndex])
     {
         if(currentGun != gunIndex) renderer.globalAlpha = gunDisplayInactiveAlpha;
+
         gunsDisplayUI.transform.position = gunDisplayUIOffset.add(vec2(gunXImg, 0));
         gunsDisplayUI.imageObject = entImg[entIndex];
         gunsDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
+
         if(currentGun != gunIndex) renderer.globalAlpha = 1;
+
         gunXImg += gunDisplayXIncrement;
+
         renderer.font = (scrSizeFactor * gunDisplayTextSize).toString() + "px Lucida, sans-serif";
         renderer.fillStyle = "#fff5f5";
         renderer.fillText(

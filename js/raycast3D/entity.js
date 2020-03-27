@@ -263,7 +263,6 @@ function removeEntityInSector(remEnt)
                 if (activeSector.sectorData.entitiesLeft[i] === remEnt)
                 {
                     activeSector.sectorData.entitiesLeft.splice(i, 1); 
-                    //break;
                 }
             }
         }
@@ -274,7 +273,6 @@ function removeEntityInSector(remEnt)
                 if (activeSector.sectorData.entitiesRight[i] === remEnt)
                 {
                     activeSector.sectorData.entitiesRight.splice(i, 1); 
-                    //break;
                 }
             }
         }
