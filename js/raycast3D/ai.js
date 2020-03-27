@@ -9,6 +9,7 @@
 // assume that this.p may be updated elsewhere as well as here
 
 const DEBUGAI = false; // output to debug.log?
+const DO_NOT_UPDATE_WALL_DIR = true; // read-only collision detection
 
 // random from 0..360 deg (0..2pi)
 function randomAngleRadians() {
@@ -18,8 +19,8 @@ function randomAngleRadians() {
 // check for wall collisions and warp back to prev pos if needed
 function validatePosition()
 {
-    this.p = collisionWithWallsInSector(this.p, this.prev_p, this.sector);
-    this.p = collisionWithSectorsInSector(this.p, this.prev_p, this.sector);
+    this.p = collisionWithWallsInSector(this.p, this.prev_p, this.sector, DO_NOT_UPDATE_WALL_DIR);
+    this.p = collisionWithSectorsInSector(this.p, this.prev_p, this.sector, DO_NOT_UPDATE_WALL_DIR);
 }
 
 // ensure it is in the range 0..360 in radians, wrapping around

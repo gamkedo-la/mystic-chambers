@@ -89,7 +89,7 @@ class Wall
         this.p2.y += vec2.y;
     }
 
-    getCollValue(p, prevP, allowSectors)
+    getCollValue(p, prevP, allowSectors, readOnlyMode)
     {
         if(typeof allowSectors == "undefined" || allowSectors == false)
         {
@@ -122,9 +122,11 @@ class Wall
             p = prevP;
         //else
         {
-            if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
-            else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
-            else this.direction = 0;
+            if (!readOnlyMode) {
+                if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
+                else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
+                else this.direction = 0;
+            }
         }
         
         return p;
@@ -330,7 +332,7 @@ function resetWallIndexes()
     }
 }
 
-function collisionWithWallsInSector(currentPos, previousPos, sec)
+function collisionWithWallsInSector(currentPos, previousPos, sec, readOnlyMode)
 {
     if(currentPos == previousPos) return currentPos;
 
@@ -352,7 +354,7 @@ function collisionWithWallsInSector(currentPos, previousPos, sec)
                 && typeof sec.sectorData.wallsLeft[i].sectorData.wallsRight == "undefined"
                 && sec.sectorData.wallsLeft[i].type > 0)
                 {
-                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
+                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos, readOnlyMode);
                     if(currentPos == previousPos) return currentPos;
                 }
             }
@@ -365,7 +367,7 @@ function collisionWithWallsInSector(currentPos, previousPos, sec)
                 && typeof sec.sectorData.wallsRight[i].sectorData.wallsRight == "undefined"
                 && sec.sectorData.wallsRight[i].type > 0)
                 {
-                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
+                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos, readOnlyMode);
                     if(currentPos == previousPos) return currentPos;
                 }
             }
