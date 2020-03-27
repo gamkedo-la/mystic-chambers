@@ -7,68 +7,86 @@ var maxFPS = 0;
 
 var gameplayUI = [];
 
-var toolTipTitle,tooltipLabel;
+var toolTipTitle, tooltipLabel;
 
 function setupGameplayUI()
 {
-    gameplayUI.push(new TextButton(
+    toggleMapMode = new TextButton(
         tr(vec2AV(0.025, 0.025, squareBtnSize, 1), squareBtnSize),
         new Label(tr(), "X"),
-        new Button(),"Click here to exit the level editor\nand play the game fullscreen."));
+        new Button(),"Click here to exit the level editor\nand play the game fullscreen.");
+    gameplayUI.push(toggleMapMode);
 
     wallEditorObjects = [];
-    wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to insert another\nof the selected type.");
+    wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),
+        undefined,"Click to insert another\nof the selected type.");
     wallEditorObjects.push(wallAddBtn);
-    wallDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously added entity.");
+    wallDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),
+        undefined,"Click this button to delete\nthe previously added entity.");
     wallEditorObjects.push(wallDelBtn);
-    wallTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"), 4, currentWallType, sliderKnobSize, undefined, undefined, undefined, undefined, undefined, "This slider\nselects a wall type");
+    wallTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"),
+        4, currentWallType, sliderKnobSize, undefined, undefined, undefined, undefined, undefined, "This slider\nselects a wall type");
     wallEditorObjects.push(wallTypeSlider);
-    wallSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),undefined,"Toggle grid snap\non or off, for alignment.");
+    wallSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),
+        undefined,"Toggle grid snap\non or off, for alignment.");
     wallEditorObjects.push(wallSnapBtn);
-    wallDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"),"Delete all entities\nof the current type.");
+    wallDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
+        new Button(tr(), "#992222"),"Delete all entities\nof the current type.");
     wallEditorObjects.push(wallDelAllBtn);
 
     areasEditorObjects = [];
-    areaPaddingSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1), 40, areaPadding, sliderKnobSize);
+    areaPaddingSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1),
+        40, areaPadding, sliderKnobSize);
     areasEditorObjects.push(areaPaddingSlider);
-    areaAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),undefined,"Click to spawn a new entity\nof the current type.");
+    areaAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),
+        undefined,"Click to spawn a new entity\nof the current type.");
     areasEditorObjects.push(areaAddBtn);
-    areaDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),undefined,"Click this button to delete\nthe previously selected entity.");
+    areaDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),
+        undefined,"Click this button to delete\nthe previously selected entity.");
     areasEditorObjects.push(areaDelBtn);
-    areaTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1), 4, 0, sliderKnobSize);
+    areaTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1),
+        4, 0, sliderKnobSize);
     areasEditorObjects.push(areaTypeSlider);
     areaSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"));
     areasEditorObjects.push(areaSnapBtn);
-    areaDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"), new Button(tr(), "#992222"));
+    areaDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
+        new Button(tr(), "#992222"));
     areasEditorObjects.push(areaDelAllBtn);
 
     decorEditorObjects = [];
-    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\ndecorations you can place."));
+    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
+        undefined,"This area will contain\ndecorations you can place."));
 
     itemsEditorObjects = [];
-    itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\nitems you can place."));
+    itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
+        undefined,"This area will contain\nitems you can place."));
 
     enemiesEditorObjects = [];
-    enemiesEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),undefined,"This area will contain\nenemies you can place."));
+    enemiesEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
+        undefined,"This area will contain\nenemies you can place."));
 
     cpEditTabs = [];
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), wallEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,"Click to switch into\nWALL EDITING MODE"), true, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,
+        "Click to switch into\nWALL EDITING MODE"), true, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), areasEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "AREAS"),undefined,"Click to switch into\nAREA EDITING MODE"), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "AREAS"),undefined,
+        "Click to switch into\nAREA EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), decorEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "DECOR."),undefined,"Click to switch into\nDECORATION EDITING MODE"), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "DECOR."),undefined,
+        "Click to switch into\nDECORATION EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), itemsEditorObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "ITEMS"),undefined,"Click to switch into\nITEM EDITING MODE"), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ITEMS"),undefined,
+        "Click to switch into\nITEM EDITING MODE"), false, "#024050", "#000000"));
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), enemiesEditorObjects,
         [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2], cpEditTabs[3]],
-        new TextButton(tr(), new Label(tr(), "ENEMIES"),undefined,"Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ENEMIES"),undefined,
+        "Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
-    toggleGridCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Grid",undefined,undefined,undefined,"Click to toggle grid\nsnapping ON/OFF for alignment."), new Checkbox(tr(), vec2(48, 10), undefined, showGrid, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true)
-    cpEditObjects.push(toggleGridCheckbox);
+    toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + showGrid ? "ON" : "OFF", undefined, showGrid ? "green" : "red"),
+        undefined,"Click to toggle\neditor grid.");
+    cpEditObjects.push(toggleGridBtn);
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
         "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize)
     cpEditObjects.push(gridSizeSlider);
@@ -113,14 +131,14 @@ function setupGameplayUI()
     rayFishEyeThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 10.0),
         new Label(tr(), "Fish Eye Thr."), 40, fishEyeRemoveThreshold, sliderKnobSize);
     rayRenderObjects.push(rayFishEyeThresholdSlider);
-    rayResetBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "RESET"), new Button(tr(), "#992222"));
+    rayResetBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "RESET"),
+        new Button(tr(), "#992222"));
     rayRenderObjects.push(rayResetBtn);
 
     roofFloorRenderObjects = [];
-    roofFloorTextureCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Texture"), new Checkbox(tr(), vec2(48, 10), undefined, roofFloorRenderTexture, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true);
-    roofFloorRenderObjects.push(roofFloorTextureCheckbox);
+    roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + roofFloorRenderTexture ? "ON" : "OFF", undefined, roofFloorRenderTexture ? "green" : "red"),
+        undefined,"Click to toggle\nroof/floor textures.");
+    roofFloorRenderObjects.push(roofFloorToggleTextureBtn);
     roofFloorPointSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 50),
         new Label(tr(), "Point Size"), 50, roofFloorPointSize, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorPointSizeSlider);
@@ -145,55 +163,70 @@ function setupGameplayUI()
     roofFloorDepthThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
         new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorDepthThresholdSlider);
-    roofFloorRenderCheckbox = new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Render"), new Checkbox(tr(), vec2(48, 10), undefined, renderRoofFloor, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true)
-    roofFloorRenderObjects.push(roofFloorRenderCheckbox);
+    roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + renderRoofFloor ? "ON" : "OFF", undefined, renderRoofFloor ? "green" : "red"),
+        undefined,"Click to toggle\nroof/floor rendering.");
+    roofFloorRenderObjects.push(roofFloorToggleRenderBtn);
 
     wallRenderObjects = [];
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(4, 64),
-        new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize));
-    wallRenderObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Texture"), new Checkbox(tr(), vec2(48, 10), undefined, wallRenderTexture, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(10, 1000),
-        new Label(tr(), "Inclip"), 99, textureSize, sliderKnobSize));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(100, 50000),
-        new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize));
-    wallRenderObjects.push(new FlexGroup( tr(vec2(), btnSize), new SubState(tr(), [
-        new Label(tr(), "Darkening"), new Checkbox(tr(), vec2(48, 10), undefined, wallDarkening, "#44bb44", "#bb4444")
-        ]), false, vec2(5, 0), vec2(2, 1), true));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 30.0),
-        new Label(tr(), "Dark Factor"), 30.0, wallDarkeningFactor, sliderKnobSize));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 80.0),
-        new Label(tr(), "Dark Layers"), 80.0, wallDarkeningLayers, sliderKnobSize));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(1.0, 10.0),
-        new Label(tr(), "Dark Steps"), 18.0, wallDarkeningSteps, sliderKnobSize));
-    wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
-        new Label(tr(), "Bright Thres."), 20.0, wallBrightnessThreshold, sliderKnobSize));
-        wallRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
-        new Label(tr(), "Dark Thres."), 20.0, wallDarknessThreshold, sliderKnobSize));
+    wallHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(4, 64),
+        new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize)
+    wallRenderObjects.push(wallHeightSlider);
+    wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + wallRenderTexture ? "ON" : "OFF", undefined, wallRenderTexture ? "green" : "red"),
+        undefined,"Click to toggle\nwall textures.");
+    wallRenderObjects.push(wallToggleTextureBtn);
+    wallInclipSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 1000),
+        new Label(tr(), "Inclip"), 99, textureSize, sliderKnobSize);
+    wallRenderObjects.push(wallInclipSlider);
+    wallStretchSlider = new Slider(tr(vec2(), sliderSize), vec2(100, 50000),
+        new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize)
+    wallRenderObjects.push(wallStretchSlider);
+    wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + wallDarkening ? "ON" : "OFF", undefined, wallDarkening ? "green" : "red"),
+        undefined,"Click to toggle\nwall darkening effect.");
+    wallRenderObjects.push(wallToggleDarkenBtn);
+    wallDarkFactorSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 30.0),
+        new Label(tr(), "Dark Factor"), 30.0, wallDarkeningFactor, sliderKnobSize);
+    wallRenderObjects.push(wallDarkFactorSlider);
+    wallDarkLayersSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 80.0),
+        new Label(tr(), "Dark Layers"), 80.0, wallDarkeningLayers, sliderKnobSize);
+    wallRenderObjects.push(wallDarkLayersSlider);
+    wallDarkStepsSlider = new Slider(tr(vec2(), sliderSize), vec2(1.0, 10.0),
+        new Label(tr(), "Dark Steps"), 18.0, wallDarkeningSteps, sliderKnobSize);
+    wallRenderObjects.push(wallDarkStepsSlider);
+    wallBrightThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
+        new Label(tr(), "Bright Thres."), 20.0, wallBrightnessThreshold, sliderKnobSize);
+    wallRenderObjects.push(wallBrightThresholdSlider);
+    wallDarkThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
+        new Label(tr(), "Dark Thres."), 20.0, wallDarknessThreshold, sliderKnobSize);
+    wallRenderObjects.push(wallDarkThresholdSlider);
 
     entRenderObjects = [];
-    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 500),
-        new Label(tr(), "Pos. Seg."), 100, entPosSegment, sliderKnobSize));
-    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 500),
-        new Label(tr(), "Scale F."), 100, entScaleFactor, sliderKnobSize));
-    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 360),
-        new Label(tr(), "Ang. Off."), 72, entAngleOffset, sliderKnobSize));
-    entRenderObjects.push(new Slider(tr(vec2(), sliderSize), vec2(0, 10000),
-        new Label(tr(), "X Off."), 10000, entXOffset, sliderKnobSize));
+    entPosSegmentSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 500),
+        new Label(tr(), "Pos. Seg."), 100, entPosSegment, sliderKnobSize);
+    entRenderObjects.push(entPosSegmentSlider);
+    entScaleFactorSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 500),
+        new Label(tr(), "Scale F."), 100, entScaleFactor, sliderKnobSize);
+    entRenderObjects.push(entScaleFactorSlider);
+    entAngleOffsetSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 360),
+        new Label(tr(), "Ang. Off."), 72, entAngleOffset, sliderKnobSize);
+    entRenderObjects.push(entAngleOffsetSlider);
+    entXOffsetSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 10000),
+        new Label(tr(), "X Off."), 10000, entXOffset, sliderKnobSize);
+    entRenderObjects.push(entXOffsetSlider);
 
     cpRenderTabs = [];
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), rayRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "RAYS"),undefined,"Debug stats toggle:\nShow RAYCASTING stats."), true, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "RAYS"),undefined,"Debug stats toggle:\nShow RAYCASTING stats."),
+        true, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), roofFloorRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "RF./FL."),undefined,"Debug stats toggle:\nShow camera and rendering stats"), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "RF./FL."),undefined,"Debug stats toggle:\nShow camera and rendering stats"),
+        false, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), wallRenderObjects, undefined,
-        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,"Debug stats toggle:\nShow WALL stats."), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "WALLS"),undefined,"Debug stats toggle:\nShow WALL stats."),
+        false, "#024050", "#000000"));
     cpRenderTabs.push(new Tab(tr(vec2(), tabSize), entRenderObjects,
         [cpRenderTabs[0], cpRenderTabs[1], cpRenderTabs[2]],
-        new TextButton(tr(), new Label(tr(), "ENT."),undefined,"Debug stats toggle:\nShow ENTITY stats."), false, "#024050", "#000000"));
+        new TextButton(tr(), new Label(tr(), "ENT."),undefined,"Debug stats toggle:\nShow ENTITY stats."),
+        false, "#024050", "#000000"));
 
     cpRenderObjects = [];
     fpsDisplayLabel = new Label(tr(), "FPS: 0/0/0");
@@ -219,19 +252,20 @@ function setupGameplayUI()
                 false, vec2(5, 5), vec2(1, 10))
         ]
         ), vec2(0, -100), vec2(0, 100));
+
+    resetPosBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults.");
+    reloadLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved.");
+    saveLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level"),undefined,"Click here to download the\nlevel data to save locally.");
+    hideUIBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Hide UI"),undefined,"Toggle the level editor\nGUI on or off.");
+    prevLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv."),undefined,"Discard any recent changes\nand load the previous level.");
+    lvLabel = new Label(tr(vec2(), btnSize), getLevelName());
+    nextLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"),undefined,"Discard any recent changes\nand load the next level.");
     
     cpStartObjects = [];
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu.")));
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display."), true));
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults."),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved."),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level"),undefined,"Click here to download the\nlevel data to save locally."),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Hide UI"),undefined,"Toggle the level editor\nGUI on or off."),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv."),undefined,"Discard any recent changes\nand load the previous level."),
-        new Label(tr(vec2(), btnSize), getLevelName()),
-        new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Next Lv. >"),undefined,"Discard any recent changes\nand load the next level.")
-    ]), false, vec2(5, 5), vec2(4, 2), false));
+        resetPosBtn, reloadLvBtn, saveLvBtn, hideUIBtn, prevLvBtn, lvLabel, nextLvBtn ]), false, vec2(5, 5), vec2(4, 2), false));
 
     var tooltipSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.08);
     var tooltipLabelSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.05);
@@ -293,46 +327,44 @@ function setupGameplayUI()
     }
 }
 
-function showTooltip(txt) { // abstract tooltip called by ui.js
-    if (!txt) {
+function showTooltip(txt)
+{ // abstract tooltip called by ui.js
+    if (!txt)
+    {
         txt="FIXME: Missing tooltip!";
     }
 
     var parts = txt.split("\n");
-    if (parts.length>1) {
+    if (parts.length>1)
+    {
         toolTipTitle.text = parts[0];
         parts.splice(0,1); // remove 1st line
         toolTipLabel.text = parts.join(""); // ALL the rest
-    } else {
+    }
+    else
+    {
         toolTipTitle.text = "Click this button to";
         toolTipLabel.text = txt;
     }
 }
 
-function handleToolTips() {
-    
-    // FIXME these hardcoded array references are hard to maintain!
-    // we have no idea what each control is... yuck...
-    
-
-    // temporary hack: find hardcoded references, TODO: put into the inits
-
-    if (gameplayUI[0].button.output == UIOUTPUT_HOVER) {
+function handleToolTips()
+{
+    if (toggleMapMode.button.output == UIOUTPUT_HOVER)
+    {
         toolTipTitle.text = "Click this button to";
         toolTipLabel.text = "Toggle Map Mode ON/OFF";
     }
-
-    if (cpStartObjects[2].subState.uiObjects[0].button.output == UIOUTPUT_HOVER) {
+    else if (resetPosBtn.button.output == UIOUTPUT_HOVER)
+    {
         toolTipTitle.text = "Click this button to";
         toolTipLabel.text = "Reset layer Start Position";
     }
-
-    if (cpStartObjects[2].subState.uiObjects[1].button.output == UIOUTPUT_HOVER) {
+    else if (reloadLvBtn.button.output == UIOUTPUT_HOVER)
+    {
         toolTipTitle.text = "Click this button to";
         toolTipLabel.text = "Reload the level data";
     }
-
-    // no way to know what each does without trial and error
 }
 
 function gameplayUICustomEvents(deltaTime, wall, area)
@@ -343,57 +375,65 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
     controlPanel.enabled = mapMode;
 
-    if (gameplayUI[0].button.output == UIOUTPUT_SELECT)
+    if (toggleMapMode.button.output == UIOUTPUT_SELECT)
     {
         mapMode = !mapMode;
         if(platform != ANDROID) enableFullScreen(canvas);
-        gameplayUI[0].button.resetOutput();
+        toggleMapMode.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[0].button.output == UIOUTPUT_SELECT)
+    else if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
+    {
+        showGrid = !showGrid;
+        if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = "green"; }
+        else { toggleGridBtn.label.text = "Grid OFF"; toggleGridBtn.label.textColor = "red"; }
+        toggleGridBtn.button.resetOutput();
+    }
+    else if (resetPosBtn.button.output == UIOUTPUT_SELECT)
     {
         for(let i = 0; i < ray.length; i++) ray[i].p = vec2(window.innerWidth/2, window.innerHeight/2);
-        cpStartObjects[2].subState.uiObjects[0].button.resetOutput();
+        resetPosBtn.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[1].button.output == UIOUTPUT_SELECT)
+    else if (reloadLvBtn.button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
         while(area.length > 0) area.pop();
         loadLevel(wall, area);
-        cpStartObjects[2].subState.uiObjects[1].button.resetOutput();
+        reloadLvBtn.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[2].button.output == UIOUTPUT_SELECT)
+    else if (saveLvBtn.button.output == UIOUTPUT_SELECT)
     {
         writeFile(getLevelName(), convertWallsToString(wall) + convertAreasToString(area));
-        cpStartObjects[2].subState.uiObjects[2].button.resetOutput();
+        saveLvBtn.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[3].button.output == UIOUTPUT_SELECT)
+    else if (hideUIBtn.button.output == UIOUTPUT_SELECT)
     {
         showControlPanel = !showControlPanel;
-        cpStartObjects[0].enabled = cpStartObjects[1].enabled = cpEditPanel.enabled = cpRenderPanel.enabled = showControlPanel;
+        cpStartObjects[0].enabled = cpStartObjects[1].enabled
+        = cpEditPanel.enabled = cpRenderPanel.enabled = showControlPanel;
         for(let i = 0; i < 7; i++) { if(i==3) continue; cpStartObjects[2].subState.uiObjects[i].enabled = showControlPanel; }
-        cpStartObjects[2].subState.uiObjects[3].label.text = showControlPanel ? "Hide UI" : "Show UI";
+        hideUIBtn.label.text = showControlPanel ? "Hide UI" : "Show UI";
 
-        cpStartObjects[2].subState.uiObjects[3].button.resetOutput();
+        hideUIBtn.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[4].button.output == UIOUTPUT_SELECT)
+    else if (prevLvBtn.button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
         while(area.length > 0) area.pop();
         currentLevel--;
         if(currentLevel <= 0) currentLevel = totalLevels;
         loadLevel(wall, area);
-        cpStartObjects[2].subState.uiObjects[5].text = getLevelName();
-        cpStartObjects[2].subState.uiObjects[4].button.resetOutput();
+        lvLabel.text = getLevelName();
+        prevLvBtn.button.resetOutput();
     }
-    else if (cpStartObjects[2].subState.uiObjects[6].button.output == UIOUTPUT_SELECT)
+    else if (nextLvBtn.button.output == UIOUTPUT_SELECT)
     {
         while(wall.length > 0) wall.pop();
         while(area.length > 0) area.pop();
         currentLevel++;
         if(currentLevel >= totalLevels + 1) currentLevel = 1;
         loadLevel(wall, area);
-        cpStartObjects[2].subState.uiObjects[5].text = getLevelName();
-        cpStartObjects[2].subState.uiObjects[6].button.resetOutput();
+        lvLabel.text = getLevelName();
+        nextLvBtn.button.resetOutput();
     }
     else if (wallAddBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -470,8 +510,42 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
         rayResetBtn.button.resetOutput();
     }
+    else if(roofFloorToggleTextureBtn.button.output == UIOUTPUT_SELECT)
+    {
+        roofFloorRenderTexture = !roofFloorRenderTexture;
 
-    showGrid = toggleGridCheckbox.subState.uiObjects[1].check;
+        if(roofFloorRenderTexture) { roofFloorToggleTextureBtn.label.text = "Texture ON"; roofFloorToggleTextureBtn.label.textColor = "green"; }
+        else { roofFloorToggleTextureBtn.label.text = "Texture OFF"; roofFloorToggleTextureBtn.label.textColor = "red"; }
+
+        roofFloorToggleTextureBtn.button.resetOutput();
+    }
+    else if(roofFloorToggleRenderBtn.button.output == UIOUTPUT_SELECT)
+    {
+        renderRoofFloor = !renderRoofFloor;
+
+        if(renderRoofFloor) { roofFloorToggleRenderBtn.label.text = "Render ON"; roofFloorToggleRenderBtn.label.textColor = "green"; }
+        else { roofFloorToggleRenderBtn.label.text = "Render OFF"; roofFloorToggleRenderBtn.label.textColor = "red"; }
+
+        roofFloorToggleRenderBtn.button.resetOutput();
+    }
+   else if(wallToggleTextureBtn.button.output == UIOUTPUT_SELECT)
+   {
+        wallRenderTexture = !wallRenderTexture;
+
+        if(wallRenderTexture) { wallToggleTextureBtn.label.text = "Texture ON"; wallToggleTextureBtn.label.textColor = "green"; }
+        else { wallToggleTextureBtn.label.text = "Texture OFF"; wallToggleTextureBtn.label.textColor = "red"; }
+
+        wallToggleTextureBtn.button.resetOutput();
+   }
+   else if(wallToggleDarkenBtn.button.output == UIOUTPUT_SELECT)
+   {
+        wallDarkening = !wallDarkening;
+
+        if(wallDarkening) { wallToggleDarkenBtn.label.text = "Darken ON"; wallToggleDarkenBtn.label.textColor = "green"; }
+        else { wallToggleDarkenBtn.label.text = "Darken OFF"; wallToggleDarkenBtn.label.textColor = "red"; }
+
+        wallToggleDarkenBtn.button.resetOutput();
+   }
 
    gridCellSize = gridSizeSlider.knobValue;
    gridSizeSlider.label.text = "Grid Size " + gridSizeSlider.knobValue.toString();
@@ -507,35 +581,29 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    fishEyeRemoveThreshold = rayFishEyeThresholdSlider.knobValue;
    rayFishEyeThresholdSlider.label.text = "Fish Eye Th." + rayFishEyeThresholdSlider.knobValue;
 
-   wallHeightFactor = wallRenderObjects[0].knobValue;
-   wallRenderObjects[0].label.text = "Height " + wallRenderObjects[0].knobValue;
+   wallHeightFactor = wallHeightSlider.knobValue;
+   wallHeightSlider.label.text = "Height " + wallHeightSlider.knobValue;
 
-   wallRenderTexture = wallRenderObjects[1].subState.uiObjects[1].check;
+   textureSize = wallInclipSlider.knobValue;
+   wallInclipSlider.label.text = "Inclip " + wallInclipSlider.knobValue;
 
-   textureSize = wallRenderObjects[2].knobValue;
-   wallRenderObjects[2].label.text = "Inclip " + wallRenderObjects[2].knobValue;
+   wallStretchFactor = wallStretchSlider.knobValue;
+   wallStretchSlider.label.text = "Stretch " + wallStretchSlider.knobValue;
 
-   wallStretchFactor = wallRenderObjects[3].knobValue;
-   wallRenderObjects[3].label.text = "Stretch " + wallRenderObjects[3].knobValue;
+   wallDarkeningFactor = wallDarkFactorSlider.knobValue;
+   wallDarkFactorSlider.label.text = "Dark Factor " + wallDarkFactorSlider.knobValue;
 
-   wallDarkening = wallRenderObjects[4].subState.uiObjects[1].check;
+   wallDarkeningLayers = wallDarkLayersSlider.knobValue;
+   wallDarkLayersSlider.label.text = "Dark Layers " + wallDarkLayersSlider.knobValue;
 
-   wallDarkeningFactor = wallRenderObjects[5].knobValue;
-   wallRenderObjects[5].label.text = "Dark Factor " + wallRenderObjects[5].knobValue;
+   wallDarkeningSteps = wallDarkStepsSlider.knobValue;
+   wallDarkStepsSlider.label.text = "Dark Steps " + wallDarkStepsSlider.knobValue;
 
-   wallDarkeningLayers = wallRenderObjects[6].knobValue;
-   wallRenderObjects[6].label.text = "Dark Layers " + wallRenderObjects[6].knobValue;
+   wallBrightnessThreshold = wallBrightThresholdSlider.knobValue;
+   wallBrightThresholdSlider.label.text = "Bright Th. " + wallBrightThresholdSlider.knobValue;
 
-   wallDarkeningSteps = wallRenderObjects[7].knobValue;
-   wallRenderObjects[7].label.text = "Dark Steps " + wallRenderObjects[7].knobValue;
-
-   wallBrightnessThreshold = wallRenderObjects[8].knobValue;
-   wallRenderObjects[8].label.text = "Bright Th. " + wallRenderObjects[8].knobValue;
-
-   wallDarknessThreshold = wallRenderObjects[9].knobValue;
-   wallRenderObjects[9].label.text = "Dark Th. " + wallRenderObjects[9].knobValue;
-
-   roofFloorRenderTexture = roofFloorTextureCheckbox.subState.uiObjects[1].check;
+   wallDarknessThreshold = wallDarkThresholdSlider.knobValue;
+   wallDarkThresholdSlider.label.text = "Dark Th. " + wallDarkThresholdSlider.knobValue;
 
    roofFloorPointSize = roofFloorPointSizeSlider.knobValue;
    roofFloorPointSizeSlider.label.text = "Point Size " + roofFloorPointSizeSlider.knobValue;
@@ -561,19 +629,17 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    depthYGThreshold = roofFloorDepthThresholdSlider.knobValue;
    roofFloorDepthThresholdSlider.label.text = "Depth Thr. " + roofFloorDepthThresholdSlider.knobValue;
 
-   renderRoofFloor = roofFloorRenderCheckbox.subState.uiObjects[1].check;
+   entPosSegment = entPosSegmentSlider.knobValue;
+   entPosSegmentSlider.label.text = "Pos. Seg. " + entPosSegmentSlider.knobValue;
 
-   entPosSegment = entRenderObjects[0].knobValue;
-   entRenderObjects[0].label.text = "Pos. Seg. " + entRenderObjects[0].knobValue;
+   entScaleFactor = entScaleFactorSlider.knobValue;
+   entScaleFactorSlider.label.text = "Scale F. " + entScaleFactorSlider.knobValue;
 
-   entScaleFactor = entRenderObjects[1].knobValue;
-   entRenderObjects[1].label.text = "Scale F. " + entRenderObjects[1].knobValue;
+   entAngleOffset = entAngleOffsetSlider.knobValue;
+   entAngleOffsetSlider.label.text = "Ang. Off. " + entAngleOffsetSlider.knobValue;
 
-   entAngleOffset = entRenderObjects[2].knobValue;
-   entRenderObjects[2].label.text = "Ang. Off. " + entRenderObjects[2].knobValue;
-
-   entXOffset = entRenderObjects[3].knobValue;
-   entRenderObjects[3].label.text = "X Off. " + entRenderObjects[3].knobValue;
+   entXOffset = entXOffsetSlider.knobValue;
+   entXOffsetSlider.label.text = "X Off. " + entXOffsetSlider.knobValue;
 
    if(currentGun >= 0) ammoLabel.text = ammoInGun[currentGun] + "/" + totalAmmo[currentGun];
    else ammoLabel.text = "0/0";

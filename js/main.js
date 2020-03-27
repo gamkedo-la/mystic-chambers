@@ -1,26 +1,6 @@
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
 const RENDER_EDITOR_AND_GAME_TOGETHER = false; // if false, draw either editor OR game
 
-function play3DSound(buffer, vec2_a, vec2_b)
-{
-    var dist = vec2_a.dist(vec2_b); //for volume
-    var angle = vec2_a.angle(vec2_b); //for panning
-
-    //calculating volume and panning from above variables here
-
-    audio.playOneshot(buffer, vec2_b, dist); //!?
-}
-//...then use it like this
-//play3DSound(plPos, fireSkullEnt.p)
-//-OR-
-//play3DSound(ray[ray.length/2].p, fireSkullEnt.p)
-//anywhere after window.onload
-//
-//Some practical uses as of now:
-//- fire skull making noise after some time (in main.js, update or event method)
-//- when picking item (in item.js, in the switch cases, after line 26)
-//- when firing or reloading gun (in player.js, after line 199)
-
 window.onload = function()
 {
     canvas = document.getElementById("gameCanvas");

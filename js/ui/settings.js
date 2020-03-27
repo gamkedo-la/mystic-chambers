@@ -13,6 +13,6 @@ function uiSettings()
 
     uiContext.set(
         renderer, 2, "Lucida, sans-serif", scrSizeFactor * 0.024,
-        "#404080", "#353570", "#252550", "#121225", "#000001", "#ccccee"
+        "#202040", "#252550", "#252550", "#060612", "#000001", "#ccccee"
         );
 }

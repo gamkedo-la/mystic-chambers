@@ -338,64 +338,6 @@ class Button extends UIObject
     }
 }
 
-class Checkbox extends UIObject
-{
-    constructor(transform, enableSize, boxColor, check, enableColor, disableColor)
-    {
-        super(transform);
-
-        this.enableSize = typeof enableSize == "undefined" ?
-            vec2(this.transform.scale.x - 4, this.transform.scale.y - 4) : enableSize;
-
-        this.boxColor = typeof boxColor == "undefined" ? uiContext.bgSecondaryColor : boxColor;
-
-        this.check = typeof check == "undefined" ? false : !check;
-
-        this.enableColor = typeof enableColor == "undefined" ? uiContext.fgSecondaryColor : enableColor;
-        this.disableColor = typeof disableColor == "undefined" ? uiContext.bgPrimaryColor : disableColor;
-
-        this.touchId = -1;
-        this.prevTouchId = -1;
-
-        this.event = function()
-        {
-            if(this.enabled)
-            {
-                this.touchId = touched(this.transform);
-                if (this.touchId != -1 && this.prevTouchId == -1)
-                {
-                    this.check = !this.check;
-                    this.output = UIOUTPUT_SELECT;
-                }
-
-                this.prevTouchId = this.touchId;
-            }
-        }
-    }
-
-    resetOutput()
-    {
-        this.btnColor = this.defColor;
-        this.output = UIOUTPUT_RUNNING;
-    }
-
-    draw()
-    {
-        if(this.enabled)
-        {
-            if(this.visible)
-            {
-                drawRect(uiContext.renderer, this.transform.position, this.transform.scale, true, this.boxColor,
-                    uiContext.roundness);
-                drawRect(uiContext.renderer, this.transform.position.add(
-                    (this.transform.scale.subtract(this.enableSize)).divide(vec2(2,2))),
-                    this.enableSize, true, this.check ? this.enableColor : this.disableColor,
-                    uiContext.roundness);
-            }
-        }
-    }
-}
-
 class Selector
 {
     constructor(object, selected, possibleSelections, deselectable)

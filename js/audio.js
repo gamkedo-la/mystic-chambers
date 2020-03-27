@@ -129,7 +129,7 @@ function AudioGlobal() {
 		panNode.coneOuterAngle  = 0;
 		panNode.coneOuterGain  = 0;
 		panNode.rolloffFactor  = 1;// will need to be fixed to use what ever get implemented for objects
-		panNode.maxDistance = 1000;
+		panNode.maxDistance = screen.width;
 		panNode.refDistance = 1;// will need to be fixed to use what ever get implemented for objects
 		panNode.setPosition(vec2.x, vec2.y, 0);
 
