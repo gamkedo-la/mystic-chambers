@@ -1,6 +1,7 @@
 
 var playerMaxHealth = 100;
 var playerHealth = playerMaxHealth;
+const PLAYER_ROTATION_SPEED = 0.11; // scale the raw mouse deltas to rotate a normal speed
 
 //[forward, backward, left, right]
 var keyPresses = ['w', 's', 'a', 'd'];
@@ -99,7 +100,7 @@ function playerEvents(deltaTime)
         for (let i = 0; i < ray.length; i++)
         {
             if(isTouchMoved)
-                ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x, 0.5 );
+                ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x * PLAYER_ROTATION_SPEED, 0.5 );
 
             if (ray[i].angle >= 0.0)
                 ray[i].angle -= 360.0;
