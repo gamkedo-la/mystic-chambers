@@ -316,11 +316,7 @@ function draw()
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
     prevPlPos = vec2(plPos.x, plPos.y);
 
-    gun.transform.position = vec2(
-        screen.width/2 + (Math.sin(gunMoveCounter) * 30.0),
-        screen.height - 240 + Math.abs(Math.cos(gunMoveCounter) * 10.0));
-    if(currentGun >= 0)
-        if(!mapMode && typeof gun.imageObject != "undefined") gun.drawSc();
+    drawGun();
 
     if(!mapMode) 
     {
@@ -330,9 +326,10 @@ function draw()
 
     ui.draw();
 
-    if(mapMode)
+    //if(mapMode)
         drawText(renderer,
-        touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
+        touchPos[0].x.toString() + ", " + touchPos[0].y.toString()
+        + ", " + keysDown.toString());
 }
 
 function frame()

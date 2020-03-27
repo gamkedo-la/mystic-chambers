@@ -13,6 +13,26 @@ var wheelScroll = 0;
 var keysDown = [];
 var keysPressed = [];
 
+function isKeyPressed(key)
+{
+    for(let i = 0; i < keysPressed.length; i++)
+        if(keysPressed[i] == key) return true;
+    keysPressed.push(key);
+    return false;
+}
+function removeKeyPressed(key)
+{
+    for(let i = 0; i < keysPressed.length; i++)
+    { 
+        if (keysPressed[i] == key)
+        {
+            keysPressed.splice(i, 1);
+            break;
+        }
+    }
+}
+function resetKeyPressed() { keysPressed = []; }
+
 function onTouchStart(ev)
 {
     isTouched = true;
@@ -95,8 +115,9 @@ function onKeyDown(ev)
 
 function onKeyPress(ev)
 {
-    if(keysPressed.indexOf(ev.key) == -1)
-        keysPressed.push(ev.key);
+    //keysPressed is a custom event
+    /*if(keysPressed.indexOf(ev.key) == -1)
+        keysPressed.push(ev.key);*/
 }
 
 function onKeyUp(ev)

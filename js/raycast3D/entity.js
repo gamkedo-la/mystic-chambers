@@ -252,28 +252,44 @@ function removeEntity(remEnt)
     }
 }
 
-function removeEntityInSector(remEnt)
+function removeEntityInSector(remEnt, sec)
 {
-    if(typeof activeSector != "undefined")
+    if(typeof sec == "undefined") sec = activeSector;
+
+    if(typeof sec != "undefined")
     {
-        if(typeof activeSector.sectorData.entitiesLeft != "undefined")
+        if(typeof sec.sectorData.entitiesLeft != "undefined")
         {
-            for( let i = 0; i < activeSector.sectorData.entitiesLeft.length; i++)
+            for( let i = 0; i < sec.sectorData.entitiesLeft.length; i++)
             { 
-                if (activeSector.sectorData.entitiesLeft[i] === remEnt)
+                if (sec.sectorData.entitiesLeft[i] === remEnt)
                 {
-                    activeSector.sectorData.entitiesLeft.splice(i, 1); 
+                    sec.sectorData.entitiesLeft.splice(i, 1); 
                 }
             }
         }
-        if(typeof activeSector.sectorData.entitiesRight != "undefined")
+        if(typeof sec.sectorData.entitiesRight != "undefined")
         {
-            for( let i = 0; i < activeSector.sectorData.entitiesRight.length; i++)
+            for( let i = 0; i < sec.sectorData.entitiesRight.length; i++)
             { 
-                if (activeSector.sectorData.entitiesRight[i] === remEnt)
+                if (sec.sectorData.entitiesRight[i] === remEnt)
                 {
-                    activeSector.sectorData.entitiesRight.splice(i, 1); 
+                    sec.sectorData.entitiesRight.splice(i, 1); 
                 }
+            }
+        }
+        if(sec == activeSector && typeof sec.sectorData.sectorsLeft != "undefined")
+        {
+            for( let i = 0; i < sec.sectorData.sectorsLeft.length; i++)
+            { 
+                removeEntityInSector(remEnt, sec.sectorData.sectorsLeft[i]);
+            }
+        }
+        if(sec == activeSector && typeof sec.sectorData.sectorsRight != "undefined")
+        {
+            for( let i = 0; i < sec.sectorData.sectorsRight.length; i++)
+            { 
+                removeEntityInSector(remEnt, sec.sectorData.sectorsRight[i]);
             }
         }
     }

@@ -50,7 +50,7 @@ class ItemManager {
 
                     case ENT_REVOLVERGUN:
                         availableGuns[GUN_REVOLVER] = true;
-                        currentGun = GUN_REVOLVER;
+                        changeGun(GUN_REVOLVER);
                         totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_REVOLVER] = gunAmmoCapacity[GUN_REVOLVER];
                         break;
@@ -61,7 +61,7 @@ class ItemManager {
 
                     case ENT_WINCHESTERGUN:
                         availableGuns[GUN_WINCHESTER] = true;
-                        currentGun = GUN_WINCHESTER;
+                        changeGun(GUN_WINCHESTER);
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_WINCHESTER] = gunAmmoCapacity[GUN_WINCHESTER];
                         break;
