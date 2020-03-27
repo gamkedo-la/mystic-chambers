@@ -144,6 +144,8 @@ window.onload = function()
 
     //wall[10].decal = entImg[0][0];
 
+    //var floorAndCeiling = new floorClass(); // WIP experiment!
+
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
     uistates.push(new UIState(gameplayUI));
