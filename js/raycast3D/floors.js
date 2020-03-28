@@ -38,6 +38,17 @@ class floorClass
 
     update(position, angle)
     {
+        if(mapMode)
+        {
+            this.floor.style.display = "none";
+            this.ceiling.style.display = "none";
+        }
+        else
+        {
+            this.floor.style.display = "block";
+            this.ceiling.style.display = "block";
+        }
+
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
 
         // this.floor.style.transform="rotate3d(1, 1, 1, 45deg);"; // or rad

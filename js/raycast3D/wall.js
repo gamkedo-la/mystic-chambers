@@ -11,9 +11,7 @@ wallColors = [
 ];
 wall = [];
 
-var wallCollisionMinDistance = 0.01;
-var wallCollisionReaction = 2.0;
-var wallCollisionPadding = 2.0;
+var wallCollisionMinDistance = 250.0;
 
 activeSector = undefined;
 class SectorData {
@@ -45,8 +43,6 @@ class Wall
         this.sectorData = new SectorData();
 
         this.index = totalWalls++;
-
-        this.direction = 0;
     }
 
     set(x1, y1, x2, y2)
@@ -100,34 +96,27 @@ class Wall
         
         var a = this.angle;
 
-        var Ax = this.p1.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        var Ay = this.p1.y - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
-        var Bx = this.p2.x - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        var By = this.p2.y - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        var Ax = this.p1.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        var Ay = this.p1.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        var Bx = this.p2.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        var By = this.p2.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
         var X = p.x; var Y = p.y;
+        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
+        var prevPosPadd = (Bx * Y) - (By * X);
+
+        Ax = this.p1.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        Ay = this.p1.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        Bx = this.p2.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
+        By = this.p2.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        X = prevP.x; Y = prevP.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var posPadd = (Bx * Y) - (By * X);
 
-        Ax = this.p1.x;
-        Ay = this.p1.y;
-        Bx = this.p2.x;
-        By = this.p2.y;
-        X = p.x; Y = p.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var posNoPadd = (Bx * Y) - (By * X);
-
-        if((posPadd < -wallCollisionMinDistance && this.direction > 0)
-        || (posPadd > wallCollisionMinDistance && this.direction < 0))
-            //return prevP;
+        if((posPadd < -wallCollisionMinDistance
+        && !(prevPosPadd < -wallCollisionMinDistance))
+        || (posPadd > wallCollisionMinDistance
+        && !(prevPosPadd > wallCollisionMinDistance)))
             p = prevP;
-        //else
-        {
-            if (!readOnlyMode) {
-                if(posNoPadd < -wallCollisionMinDistance) this.direction = -1;
-                else if(posNoPadd > wallCollisionMinDistance) this.direction = 1;
-                else this.direction = 0;
-            }
-        }
         
         return p;
     }

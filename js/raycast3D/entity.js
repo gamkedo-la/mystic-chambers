@@ -106,7 +106,7 @@ class Entity
 
     draw(renderer, plRay, line)
     {
-        if (this.ai) this.ai(plRay);
+        if (this.ai && !mapMode) this.ai(plRay);
         
         if(line)
         {
