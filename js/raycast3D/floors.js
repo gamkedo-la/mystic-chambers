@@ -10,6 +10,9 @@ class floorClass
     {
         if (DEBUGFLOORS) console.log("floor and ceiling init...");
 
+        this.gradientFix = document.createElement("DIV");
+        this.gradientFix.className = "gradientFix";
+
         this.floor = document.createElement("DIV");
         this.floor.className = "floordiv";
 
@@ -19,20 +22,37 @@ class floorClass
         this.blackScreen = document.createElement("DIV");
         this.blackScreen.className = "blackScreen";
         
+        document.body.appendChild(this.gradientFix);
         document.body.appendChild(this.floor);
         document.body.appendChild(this.ceiling);
         document.body.appendChild(this.blackScreen);
     }
 
-    update()
+    update(position, angle)
     {
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
 
         // this.floor.style.transform="rotate3d(1, 1, 1, 45deg);"; // or rad
-        // maybe scroll the bg tile? might not be as fast, but simpler
-        
-        // this.floor.style.backgroundPosition = 
 
+        // maybe scroll the bg tile? might not be as fast, but simpler
+        // FIXME yeah, scrolling bg tile is quite laggy! any fix???
+        // removing performance eaters will give super smooth FPS!
+        
+        angle = 90 - angle;
+        
+        this.floor.style.transformOrigin = "center center";
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, 3072px)"; 
+        this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
+        
+        //performance eater
+        this.floor.style.backgroundPosition = (position.x%100).toString() + "%" + (position.y%100).toString() + "%";
+
+        this.ceiling.style.transformOrigin = "center center";
+        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, 4096px)"; 
+        this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
+        
+        //performance eater
+        this.ceiling.style.backgroundPosition = (position.x%100).toString() + "% " + (position.y%100).toString() + "%";
     }
 }
 

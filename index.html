@@ -22,17 +22,26 @@
     { 
         position:absolute; display:block;
         top:0px; left:0px;
-        width:8192px; height:2048px; 
-        background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_concrete.png);
-        transform:rotate3d(1, 0, 0, 90deg) translate3d(-3200px, -1024px, 256px);
-        z-index:-1;
+        width:8192px; height:8192px;
+        /*background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_concrete.png);*/
+        background:url(images/wall_concrete.png);
+        z-index:-2;
         pointer-events:none;
     }
 
     .ceilingdiv
     {
-        background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_tech.png);
-        transform:rotate3d(1, 0, 0, 90deg) translate3d(-3200px, -1024px, 1024px);
+        /*background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_tech.png);*/
+        background:url(images/wall_tech.png);
+    }
+
+    .gradientFix
+    {
+      position: absolute; display: block;
+      top:0px; left: 0px;
+      width: 100vw; height: 100vh;
+      background-image: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.9), black, black, rgba(0,0,0,0.9), rgba(0,0,0,0.5));
+      z-index:-1;
     }
 
     .blackScreen
@@ -41,7 +50,7 @@
       top:0px; left: 0px;
       width: 100vw; height: 100vh;
       background-color: black;
-      z-index:-2;
+      z-index:-3;
     }
 
     *:fullscreen {
@@ -59,9 +68,6 @@
 <body>
   
   <canvas id="gameCanvas"></canvas>
-  <div class="floordiv"></div>
-  <div class="ceilingdiv"></div>
-  <div class="blackScreen"></div>
   
   <script src="js/bac-js/basic.js"></script>
   <script src="js/bac-js/transform.js"></script>

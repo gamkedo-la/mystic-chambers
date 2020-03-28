@@ -144,7 +144,7 @@ window.onload = function()
 
     //wall[10].decal = entImg[0][0];
 
-    //floorAndCeiling = new floorClass(); // WIP experiment!
+    floorAndCeiling = new floorClass(); // WIP experiment!
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
@@ -201,7 +201,7 @@ function update(deltaTime)
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
 
-    //floorAndCeiling.update();
+    floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
 
     ui.update();
 }
@@ -214,12 +214,12 @@ function draw()
 
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
-    // draw all the floors and walls in 3d
+    //draw all the floors and walls in 3d
     if(!mapMode || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
-        /*if(platform != ANDROID)
+        if(platform != ANDROID)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
-                ray[ray.length/2].angle)*/
+                ray[ray.length/2].angle)
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
         calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)
