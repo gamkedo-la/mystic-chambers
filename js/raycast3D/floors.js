@@ -2,12 +2,12 @@
 // because affine texture mode7 style pixel-by-pixel raycasting was too slow
 // this "fakes" a similar effect using two DIVs and a 3d CSS xform
 
-const DEBUGFLOORS = true;
+const DEBUGFLOORS = false;
 
-class floorClass {
-
-    constructor() {
-
+class floorClass
+{
+    constructor()
+    {
         if (DEBUGFLOORS) console.log("floor and ceiling init...");
 
         this.floor = document.createElement("DIV");
@@ -15,14 +15,17 @@ class floorClass {
 
         this.ceiling = document.createElement("DIV");
         this.ceiling.className = "ceilingdiv";
-        
-        document.body.appendChild(this.floor);  
-        document.body.appendChild(this.ceiling);  
 
+        this.blackScreen = document.createElement("DIV");
+        this.blackScreen.className = "blackScreen";
+        
+        document.body.appendChild(this.floor);
+        document.body.appendChild(this.ceiling);
+        document.body.appendChild(this.blackScreen);
     }
 
-    update() {
-
+    update()
+    {
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
 
         // this.floor.style.transform="rotate3d(1, 1, 1, 45deg);"; // or rad

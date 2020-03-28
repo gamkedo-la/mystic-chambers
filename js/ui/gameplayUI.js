@@ -11,12 +11,6 @@ var toolTipTitle, tooltipLabel;
 
 function setupGameplayUI()
 {
-    toggleMapMode = new TextButton(
-        tr(vec2AV(0.025, 0.025, squareBtnSize, 1), squareBtnSize),
-        new Label(tr(), "X"),
-        new Button(),"Click here to exit the level editor\nand play the game fullscreen.");
-    gameplayUI.push(toggleMapMode);
-
     wallEditorObjects = [];
     wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),
         undefined,"Click to insert another\nof the selected type.");
@@ -267,11 +261,11 @@ function setupGameplayUI()
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
         resetPosBtn, reloadLvBtn, saveLvBtn, hideUIBtn, prevLvBtn, lvLabel, nextLvBtn ]), false, vec2(5, 5), vec2(4, 2), false));
 
-    var tooltipSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.08);
-    var tooltipLabelSize = vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.05);
-    var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.5, scrSizeFactor * 0.08)),undefined,undefined,"Welcome to the Mystic Chambers\nIn-game Level Editor!");
-    toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers");
-    toolTipLabel = new Label(tr(vec2(0, scrSizeFactor * 0.032), tooltipLabelSize), "In-game Level Editor!");
+    var tooltipSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08);
+    var tooltipLabelSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.05);
+    var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08)),undefined,undefined,"Welcome to the Mystic Chambers Level Editor!\nPress F11 to Toggle between Play and Editor");
+    toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers Level Editor!");
+    toolTipLabel = new Label(tr(vec2(0, scrSizeFactor * 0.032), tooltipLabelSize), "Press F11 to Toggle between Play and Editor");
     cpStartObjects.push(new SubState(tr(), [toolTipBackground,toolTipTitle,toolTipLabel]));
 
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
@@ -350,12 +344,7 @@ function showTooltip(txt)
 
 function handleToolTips()
 {
-    if (toggleMapMode.button.output == UIOUTPUT_HOVER)
-    {
-        toolTipTitle.text = "Click this button to";
-        toolTipLabel.text = "Toggle Map Mode ON/OFF";
-    }
-    else if (resetPosBtn.button.output == UIOUTPUT_HOVER)
+    if (resetPosBtn.button.output == UIOUTPUT_HOVER)
     {
         toolTipTitle.text = "Click this button to";
         toolTipLabel.text = "Reset layer Start Position";
@@ -375,13 +364,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
     controlPanel.enabled = mapMode;
 
-    if (toggleMapMode.button.output == UIOUTPUT_SELECT)
-    {
-        mapMode = !mapMode;
-        if(platform != ANDROID) enableFullScreen(canvas);
-        toggleMapMode.button.resetOutput();
-    }
-    else if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
+    if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
     {
         showGrid = !showGrid;
         if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = "green"; }

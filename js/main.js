@@ -144,7 +144,7 @@ window.onload = function()
 
     //wall[10].decal = entImg[0][0];
 
-    //var floorAndCeiling = new floorClass(); // WIP experiment!
+    //floorAndCeiling = new floorClass(); // WIP experiment!
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
@@ -166,10 +166,9 @@ function events(deltaTime)
     if( (screen.availHeight || screen.height - 30) <= window.innerHeight)
         canvas.requestPointerLock();
     else if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas)
-        try{canvas.exitPointerLock();} catch(e) {}
-            
+        try { canvas.exitPointerLock(); } catch(e) {}
 
-    if(platform == WINDOWS)
+    if (platform == WINDOWS)
         mapMode = !isPointerLocked(); // FIXME this can also get toggled by code elsewhere
 
     eventSprites();
@@ -202,6 +201,8 @@ function update(deltaTime)
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
 
+    //floorAndCeiling.update();
+
     ui.update();
 }
 
@@ -209,16 +210,16 @@ function draw()
 {
     renderer.clearRect(0, 0, canvas.width, canvas.height);
 
-    drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, EDITOR_BG_COLOUR);
+    //drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, EDITOR_BG_COLOUR);
 
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
     // draw all the floors and walls in 3d
     if(!mapMode || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
-        if(platform != ANDROID)
+        /*if(platform != ANDROID)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,
-                ray[ray.length/2].angle)
+                ray[ray.length/2].angle)*/
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
         calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)

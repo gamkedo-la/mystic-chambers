@@ -5,33 +5,63 @@
   <meta content="test/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="utf-8" http-equiv="encoding">
   <style>
-    body { 
-        width:100%; height:100%; margin:0; padding:0; overflow:hidden; 
+    body
+    { 
+        width:100%; height:100%; margin:0; padding:0; overflow:hidden;
         perspective:512px;
+        background-color: rgba(0,0,0,0);
     }
-    #gameCanvas {
+
+    #gameCanvas
+    {
         margin:0; padding:0; z-index:0;
+        background-color: rgba(0,0,0,0);
     }
-    .floordiv, .ceilingdiv { 
-        position:absolute; display:block; 
+
+    .floordiv, .ceilingdiv
+    { 
+        position:absolute; display:block;
         top:0px; left:0px;
         width:8192px; height:2048px; 
-        background:url(images/wall_concrete.png);
+        background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_concrete.png);
         transform:rotate3d(1, 0, 0, 90deg) translate3d(-3200px, -1024px, 256px);
-        z-index:999999;
+        z-index:-1;
         pointer-events:none;
     }
 
-    .ceilingdiv {
-        background:url(images/wall_tech.png);
+    .ceilingdiv
+    {
+        background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_tech.png);
         transform:rotate3d(1, 0, 0, 90deg) translate3d(-3200px, -1024px, 1024px);
+    }
+
+    .blackScreen
+    {
+      position: absolute; display: block;
+      top:0px; left: 0px;
+      width: 100vw; height: 100vh;
+      background-color: black;
+      z-index:-2;
+    }
+
+    *:fullscreen {
+        background-color: rgba(0,0,0,0);
+    }
+    *:-webkit-full-screen {
+        background-color: rgba(0,0,0,0);
+    }
+    *:-moz-full-screen {
+        background-color: rgba(0,0,0,0);
     }
   </style>
 </head>
 
-<body style="width: 100%; height: 100%; margin: 0;">
+<body>
   
   <canvas id="gameCanvas"></canvas>
+  <div class="floordiv"></div>
+  <div class="ceilingdiv"></div>
+  <div class="blackScreen"></div>
   
   <script src="js/bac-js/basic.js"></script>
   <script src="js/bac-js/transform.js"></script>
