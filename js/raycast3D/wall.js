@@ -85,7 +85,7 @@ class Wall
         this.p2.y += vec2.y;
     }
 
-    getCollValue(p, prevP, allowSectors, readOnlyMode)
+    getCollValue(p, prevP, allowSectors)
     {
         if(typeof allowSectors == "undefined" || allowSectors == false)
         {
@@ -94,20 +94,18 @@ class Wall
             || typeof this.sectorData.wallsRight != "undefined") return p;
         }
         
-        var a = this.angle;
-
-        var Ax = this.p1.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        var Ay = this.p1.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
-        var Bx = this.p2.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        var By = this.p2.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        var Ax = this.p1.x;
+        var Ay = this.p1.y;
+        var Bx = this.p2.x;
+        var By = this.p2.y;
         var X = p.x; var Y = p.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var prevPosPadd = (Bx * Y) - (By * X);
 
-        Ax = this.p1.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        Ay = this.p1.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
-        Bx = this.p2.x;// - (wallCollisionPadding * this.direction * Math.cos(a + degToRad(90.0)));
-        By = this.p2.y;// - (wallCollisionPadding * this.direction * Math.sin(a + degToRad(90.0)));
+        Ax = this.p1.x;
+        Ay = this.p1.y;
+        Bx = this.p2.x;
+        By = this.p2.y;
         X = prevP.x; Y = prevP.y;
         Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
         var posPadd = (Bx * Y) - (By * X);
@@ -371,7 +369,7 @@ function collisionWithSectorsInSector(currentPos, previousPos, sec)
 {
     if(currentPos == previousPos) return currentPos;
 
-    currentPos = sec.getCollValue(currentPos, previousPos);
+    currentPos = sec.getCollValue(currentPos, previousPos, true);
     if(currentPos == previousPos) return currentPos;
 
     if(typeof sec.sectorData.sectorsLeft != "undefined")

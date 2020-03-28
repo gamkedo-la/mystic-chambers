@@ -4,6 +4,8 @@
 
 const DEBUGFLOORS = false;
 
+var floorHeight = 3600;
+
 class floorClass
 {
     constructor()
@@ -38,7 +40,7 @@ class floorClass
 
     update(position, angle)
     {
-        if(mapMode)
+        if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
         {
             this.floor.style.display = "none";
             this.ceiling.style.display = "none";
@@ -64,7 +66,7 @@ class floorClass
         angle *= anglescale;
         
         this.floor.style.transformOrigin = "center center";
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, 3072px)"; 
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, " + floorHeight.toString() + "px)"; 
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
         
         //performance eater

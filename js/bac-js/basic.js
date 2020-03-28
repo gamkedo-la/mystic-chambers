@@ -414,16 +414,28 @@ function setPointerLock(canvas)
   document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 }
 
-function enableFullScreen(canvas)
+function enableFullScreen(e)
 {
-  if (canvas.requestFullscreen)
-    canvas.requestFullscreen();
-  else if (canvas.msRequestFullscreen)
-    canvas.msRequestFullscreen();
-  else if (canvas.mozRequestFullScreen)
-    canvas.mozRequestFullScreen();
-  else if (canvas.webkitRequestFullScreen)
-    canvas.webkitRequestFullScreen();
+  if (e.requestFullscreen)
+    e.requestFullscreen();
+  else if (e.msRequestFullscreen)
+    e.msRequestFullscreen();
+  else if (e.mozRequestFullScreen)
+    e.mozRequestFullScreen();
+  else if (e.webkitRequestFullScreen)
+    e.webkitRequestFullScreen();
+}
+
+function disableFullscreen(e) 
+{
+  if (e.exitFullscreen)
+    e.exitFullscreen();
+  else if (e.mozCancelFullScreen)
+    e.mozCancelFullScreen();
+  else if (e.webkitExitFullscreen)
+    e.webkitExitFullscreen();
+  else if (e.msExitFullscreen)
+    e.msExitFullscreen();
 }
 
 // example:

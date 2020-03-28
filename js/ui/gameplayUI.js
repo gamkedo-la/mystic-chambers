@@ -82,7 +82,7 @@ function setupGameplayUI()
         undefined,"Click to toggle\neditor grid.");
     cpEditObjects.push(toggleGridBtn);
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
-        "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize)
+        "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize);
     cpEditObjects.push(gridSizeSlider);
 
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
@@ -108,6 +108,7 @@ function setupGameplayUI()
         ), vec2(0, -100), vec2(0, 100));
 
     rayRenderObjects = [];
+
     rayFOVSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 90),
         new Label(tr(), "FOV"), 16, rayRenderFOV, sliderKnobSize);
     rayRenderObjects.push(rayFOVSlider);
@@ -130,6 +131,14 @@ function setupGameplayUI()
     rayRenderObjects.push(rayResetBtn);
 
     roofFloorRenderObjects = [];
+
+    roofFloorPerspectiveSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2000), new Label(tr(),
+    "Pers.", undefined, undefined, -1), 2000, 512, sliderKnobSize);
+    roofFloorRenderObjects.push(roofFloorPerspectiveSlider);
+    floorHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 10000), new Label(tr(),
+    "Fl. H.", undefined, undefined, -1), 10000, floorHeight, sliderKnobSize);
+    roofFloorRenderObjects.push(floorHeightSlider);
+
     roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + roofFloorRenderTexture ? "ON" : "OFF", undefined, roofFloorRenderTexture ? "green" : "red"),
         undefined,"Click to toggle\nroof/floor textures.");
     roofFloorRenderObjects.push(roofFloorToggleTextureBtn);
@@ -587,6 +596,12 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    wallDarknessThreshold = wallDarkThresholdSlider.knobValue;
    wallDarkThresholdSlider.label.text = "Dark Th. " + wallDarkThresholdSlider.knobValue;
+
+   document.body.style.perspective = roofFloorPerspectiveSlider.knobValue.toString() + "px";
+   roofFloorPerspectiveSlider.label.text = "Pers. " + roofFloorPerspectiveSlider.knobValue;
+
+   floorHeight = floorHeightSlider.knobValue;
+   floorHeightSlider.label.text = "Fl. H. " + floorHeightSlider.knobValue;
 
    roofFloorPointSize = roofFloorPointSizeSlider.knobValue;
    roofFloorPointSizeSlider.label.text = "Point Size " + roofFloorPointSizeSlider.knobValue;

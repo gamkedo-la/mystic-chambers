@@ -145,7 +145,7 @@ window.onload = function()
 
     //wall[10].decal = entImg[0][0];
 
-    floorAndCeiling = new floorClass(); // WIP experiment!
+    floorAndCeiling = new floorClass();
 
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
@@ -163,6 +163,25 @@ function events(deltaTime)
 
     mainMenuUICustomEvents();
     gameplayUICustomEvents(deltaTime, wall, area);
+
+    if(keysDown.indexOf("Escape") != -1)
+    {
+        if(!isKeyPressed(gunSwitchKeyPress))
+        {
+            if(!document.documentElement.fullscreen)
+            {
+                try { enableFullScreen(document.documentElement); } catch(e) { }
+            }
+            else
+            {
+                disableFullscreen(document.documentElement);
+            }
+        }
+    }
+    else
+    {
+        removeKeyPressed("Escape");
+    }
 
     if( (screen.availHeight || screen.height - 30) <= window.innerHeight)
         canvas.requestPointerLock();
@@ -210,8 +229,6 @@ function update(deltaTime)
 function draw()
 {
     renderer.clearRect(0, 0, canvas.width, canvas.height);
-
-    //drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, EDITOR_BG_COLOUR);
 
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
@@ -292,10 +309,7 @@ function draw()
 
     ui.draw();
 
-    //if(mapMode)
-        drawText(renderer,
-        touchPos[0].x.toString() + ", " + touchPos[0].y.toString()
-        + ", " + keysDown.toString());
+    if(mapMode) drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
 
     if(itemPickupFlash > 0)
     {
