@@ -46,7 +46,11 @@ class floorClass
         // FIXME yeah, scrolling bg tile is quite laggy! any fix???
         // removing performance eaters will give super smooth FPS!
         
+        const anglescale = 1; // it seems to turn too slow, but this is the 
+        //perspective and fov being different - we can tweak this in the CSS
+        // TODO FIXME: change body css perspective and fov to match game
         angle = 90 - angle;
+        angle *= anglescale;
         
         this.floor.style.transformOrigin = "center center";
         this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, 3072px)"; 
@@ -55,8 +59,9 @@ class floorClass
         //performance eater
         // this.floor.style.backgroundPosition = (position.x%100).toString() + "%" + (position.y%100).toString() + "%";
         // simulate a backgroundPosition change by sliding around a child div
-        const floorScrollScale = 10; // pixel dist for game units travelled
+        const floorScrollScale = 42; // pixel dist for game units travelled
         const bgtilesize = 320;
+        
         var xform = "translate3d("
                         +((position.x*floorScrollScale)%bgtilesize).toString()+"px, "
                         +((position.y*floorScrollScale)%bgtilesize).toString()+"px, "
