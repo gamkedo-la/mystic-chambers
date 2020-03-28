@@ -24,7 +24,7 @@
         top:0px; left:0px;
         width:8192px; height:8192px;
         /*background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_concrete.png);*/
-        background:url(images/wall_concrete.png);
+        /*background:url(images/wall_concrete.png);*/
         z-index:-2;
         pointer-events:none;
     }
@@ -32,6 +32,20 @@
     .ceilingdiv
     {
         /*background-image:linear-gradient(to bottom, black, rgba(0,0,0,0.5)), url(images/wall_tech.png);*/
+        /*background:url(images/wall_tech.png);*/
+    }
+
+    .ceilinggraphic, .floorgraphic
+    {
+        position:absolute; display:block;
+        top:0px;
+        left:0px;
+        width:8192px;
+        height:8192px;
+        background:url(images/wall_concrete.png);
+    }
+    .ceilinggraphic 
+    {
         background:url(images/wall_tech.png);
     }
 
