@@ -6,6 +6,8 @@ var entXOffset = 0.0;
 var entMinRenderAngle = 155.0;
 var entMaxRenderAngle = 205.0;
 
+var entCircleDrawSize = 2;
+
 var maxEntityVisibilityDistance = 250.0;
 
 var entCollisionSize = 4.0;
@@ -85,7 +87,6 @@ class Entity
     constructor()
     {
         this.p = vec2(0.0, 0.0);
-        this.size = 4.0;
         this.angle = 0.0;
         this.sprite = new Sprite(tr());
         this.renderOffset = vec2(0.0, 0.0);
@@ -104,19 +105,13 @@ class Entity
         this.sprite.imageObject = entImg[this.id];
     }
 
-    draw(renderer, plRay, line)
+    draw(renderer, plRay, circleOnly)
     {
         if (this.ai && !mapMode) this.ai(plRay);
         
-        if(line)
+        if(circleOnly)
         {
-            drawLine(renderer,
-                vec2(this.p.x - (Math.cos(degToRad(this.angle)) * this.size),
-                this.p.y - (Math.sin(degToRad(this.angle)) * this.size)),
-                vec2(this.p.x + (Math.cos(degToRad(this.angle)) * this.size),
-                this.p.y + (Math.sin(degToRad(this.angle)) * this.size)), entColor[this.id]);
-
-            drawCircle(renderer, this.p, entCollisionSize, false, entColor[this.id]);
+            drawCircle(renderer, this.p, entCircleDrawSize, false, entColor[this.id]);
         }
         else
         {
@@ -291,6 +286,17 @@ function removeEntityInSector(remEnt, sec)
                 removeEntityInSector(remEnt, sec.sectorData.sectorsRight[i]);
             }
         }
+    }
+}
+
+function removeEntityInAllSectors()
+{
+    for(let s = 0; s < wall.length; s++)
+    {
+        if(wall[s].type > 0) break;
+
+        walls[s].sectorData.entitiesLeft = [];
+        walls[s].sectorData.entitiesRight = [];
     }
 }
 

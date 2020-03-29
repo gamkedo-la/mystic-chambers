@@ -11,6 +11,15 @@ var areaHandleSize = 14;
 var areaHandleColor = "#00aaaaff";
 var areaMidlineColor = "#00aaaa40";
 
+var itemHandleSize = 10;
+var itemHandleColor = "#00ddaaff";
+
+var decorHandleSize = 10;
+var decorHandleColor = "#ddddaaff";
+
+var enemyHandleSize = 14;
+var enemyHandleColor = "#ff5500ff";
+
 function editorDrawGrid(renderer)
 {
     if(showGrid)
@@ -51,5 +60,32 @@ function editorDrawAreaHandles(renderer, areas)
             .subtract(vec2(areaHandleSize/4, areaHandleSize/4)), areaHandleSize/3,
             selectedAreaIndex == i && selectedAreaPosOrSize == areas[i].size,
             areaHandleColor);
+    }
+}
+
+function editorDrawDecorHandles(renderer, decorEnts)
+{
+    for(let i = 0; i < decorEnts.length; i++)
+    {
+        drawRect(renderer, decorEnts[i].p.subtract(vec2(decorHandleSize/2, decorHandleSize/2)),
+            vec2(decorHandleSize, decorHandleSize), selectedDecorIndex == i, decorHandleColor, 0);
+    }
+}
+
+function editorDrawItemHandles(renderer, itemEnts)
+{
+    for(let i = 0; i < itemEnts.length; i++)
+    {
+        drawRect(renderer, itemEnts[i].p.subtract(vec2(itemHandleSize/2, itemHandleSize/2)),
+            vec2(itemHandleSize, itemHandleSize), selectedItemIndex == i, itemHandleColor, 0);
+    }
+}
+
+function editorDrawEnemyHandles(renderer, enemyEnts)
+{
+    for(let i = 0; i < enemyEnts.length; i++)
+    {
+        drawRect(renderer, enemyEnts[i].p.subtract(vec2(enemyHandleSize/2, enemyHandleSize/2)),
+            vec2(enemyHandleSize, enemyHandleSize), selectedEnemyIndex == i, enemyHandleColor, 0);
     }
 }

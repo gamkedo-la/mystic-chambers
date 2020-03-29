@@ -4,7 +4,7 @@
 
 const DEBUGFLOORS = false;
 
-var floorHeight = 3600;
+var floorHeight = 3200;
 
 class floorClass
 {

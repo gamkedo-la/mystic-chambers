@@ -24,8 +24,29 @@ class DecorationManager {
             this.ents.push(ent);
             entities.push(ent);
         }
+    }
 
+    removeIfNotInEntities()
+    {
+        for (let d = 0; d < this.ents.length; d++)
+        {
+            var isInEntities = false;
+            for (let i = 0; i < entities.length; i++)
+            {
+                if(entities[i] == this.ents[d])
+                {
+                    isInEntities = true;
+                    break;
+                }
+            }
+
+            if(!isInEntities)
+            {
+                this.ents.splice(d, 1);
+                d--;
+            }
+        }
     }
 }
 
-var decorations = new DecorationManager();
+var decor = new DecorationManager();

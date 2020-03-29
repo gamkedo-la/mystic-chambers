@@ -24,29 +24,10 @@ window.onload = function()
     ];
     area = [];
 
-    fireSkullEnt = new Entity();
-    fireSkullEnt.set(530, 140, ENT_FIRESKULL);
-    fireSkullEnt.name = "[Wander] Fire Skull";
-    fireSkullEnt.ai = aiWander;
-    entities.push(fireSkullEnt);
-
-    seeker_fireSkullEnt = new Entity();
-    seeker_fireSkullEnt.set(540, 130, ENT_FIRESKULL);
-    seeker_fireSkullEnt.name = "[Seek] Fire Skull";
-    seeker_fireSkullEnt.ai = aiSeek;
-    entities.push(seeker_fireSkullEnt);
-
-    cowardly_fireSkullEnt = new Entity();
-    cowardly_fireSkullEnt.set(550, 120, ENT_FIRESKULL);
-    cowardly_fireSkullEnt.name = "[Avoid] Fire Skull";
-    cowardly_fireSkullEnt.ai = aiAvoid;
-    entities.push(cowardly_fireSkullEnt);
-
-    explorer_fireSkullEnt = new Entity();
-    explorer_fireSkullEnt.set(560, 120, ENT_FIRESKULL);
-    explorer_fireSkullEnt.name = "[Explore] Fire Skull";
-    explorer_fireSkullEnt.ai = aiExplore;
-    entities.push(explorer_fireSkullEnt);
+    enemies.add(530, 140, ENT_FIRESKULL, "[Wander] Fire Skull", aiWander);
+    enemies.add(540, 140, ENT_FIRESKULL, "[Seek] Fire Skull", aiSeek);
+    enemies.add(550, 120, ENT_FIRESKULL, "[Avoid] Fire Skull", aiAvoid);
+    enemies.add(560, 120, ENT_FIRESKULL, "[Explore] Fire Skull", aiExplore);
     
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
     items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
@@ -63,7 +44,7 @@ window.onload = function()
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
 
-    decorations.scatter(ENT_TECHTORCH, 800,
+    decor.scatter(ENT_TECHTORCH, 800,
         400, 0, 800, 400, vec2(1, -120)); // experimental WIP
 
     playerInit();
@@ -142,6 +123,9 @@ window.onload = function()
     entitiesInSectorSet = [];
     setEntitiesInSectors();
     deleteEntitiesOutsideSector();
+    decor.removeIfNotInEntities();
+    items.removeIfNotInEntities();
+    enemies.removeIfNotInEntities();
 
     //wall[10].decal = entImg[0][0];
 
@@ -202,13 +186,25 @@ function events(deltaTime)
             wall[i].addOffset(off.negative());
         for(let i = 0; i < area.length; i++)
             area[i].addOffset(off.negative());
+        for(let i = 0; i < decor.ents.length; i++)
+            decor.ents[i].addOffset(off.negative());
+        for(let i = 0; i < items.ents.length; i++)
+            items.ents[i].addOffset(off.negative());
+        for(let i = 0; i < enemies.ents.length; i++)
+            enemies.ents[i].addOffset(off.negative());
 
-        editorEvents(deltaTime, off, wall, area);
+        editorEvents(deltaTime, off, wall, area, decor.ents, items.ents, enemies.ents);
 
         for(let i = 0; i < wall.length; i++)
             wall[i].addOffset(off);
         for(let i = 0; i < area.length; i++)
             area[i].addOffset(off);
+        for(let i = 0; i < decor.ents.length; i++)
+            decor.ents[i].addOffset(off);
+        for(let i = 0; i < items.ents.length; i++)
+            items.ents[i].addOffset(off);
+        for(let i = 0; i < enemies.ents.length; i++)
+            enemies.ents[i].addOffset(off);
     }
 
     ui.event();
@@ -245,17 +241,22 @@ function draw()
         items.check(plPos);
     }
     
+    var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+            ray[ray.length/2].p.y - (window.innerHeight/2));
 
     if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
     {
         //Offsets added before rendering and removed after rendering for Camera Movement
         for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-                -(ray[ray.length/2].p.y - (window.innerHeight/2))));
-
+            wall[i].addOffset(off.negative());
         for(let i = 0; i < area.length; i++)
-            area[i].addOffset(vec2(-(ray[ray.length/2].p.x - (window.innerWidth/2)),
-                -(ray[ray.length/2].p.y - (window.innerHeight/2))));
+            area[i].addOffset(off.negative());
+        for(let i = 0; i < decor.ents.length; i++)
+            decor.ents[i].addOffset(off.negative());
+        for(let i = 0; i < items.ents.length; i++)
+            items.ents[i].addOffset(off.negative());
+        for(let i = 0; i < enemies.ents.length; i++)
+            enemies.ents[i].addOffset(off.negative());
 
         for (let i = 0; i < ray.length; i++)
         {
@@ -267,32 +268,32 @@ function draw()
             ray[i].p = vec2(plPos.x, plPos.y);
         }
 
-        editorDraw(renderer, wall, area);
+        editorDraw(renderer, wall, area, decor.ents, items.ents, enemies.ents);
+
+        for(let i = 0; i < decor.ents.length; i++)
+            decor.ents[i].addOffset(off);
+        for(let i = 0; i < items.ents.length; i++)
+            items.ents[i].addOffset(off);
+        for(let i = 0; i < enemies.ents.length; i++)
+            enemies.ents[i].addOffset(off);
+
+        drawEntities(renderer, ray[ray.length/2], true);
 
         for(let i = 0; i < area.length; i++)
         {
             area[i].draw(renderer, areaColors);
-            
-            area[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-                ray[ray.length/2].p.y - (window.innerHeight/2)));
+            area[i].addOffset(off);
         }
 
-        drawSectorsMap(renderer,
-            vec2(window.innerWidth/2, window.innerHeight/2),
-            vec2(0,0));
+        drawSectorsMap(renderer, vec2(window.innerWidth/2, window.innerHeight/2), vec2(0,0));
 
         for (let i = 0; i < wall.length; i++)
         {
             wall[i].draw(renderer, wallColors, 12);
-
-            wall[i].addOffset(vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-                ray[ray.length/2].p.y - (window.innerHeight/2)));
+            wall[i].addOffset(off);
         }
 
     }
-
-    if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
-        drawEntities(renderer, ray[ray.length/2], true);
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
