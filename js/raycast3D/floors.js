@@ -4,7 +4,14 @@
 
 const DEBUGFLOORS = false;
 
-var floorHeight = 3200;
+// thse are hacky magic numbers
+// FIXME remove all of these! use math instead
+var floorScrollScale = 42; // pixels scrolled per game units travelled
+var bgtilesize = 320; // size of texture in pixels
+var ceilingOffsetX= -3700;//-3360; // to center it on-screen
+var floorOffsetX = -3700;//-3360;
+var ceilingHeight = 4096; // so it appears at correct height
+var floorHeight = 3500;
 
 class floorClass
 {
@@ -47,17 +54,17 @@ class floorClass
         }
         else
         {
+            // setting these every single frame may cause performance problems
             this.floor.style.display = "block";
             this.ceiling.style.display = "block";
         }
 
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
 
-        // this.floor.style.transform="rotate3d(1, 1, 1, 45deg);"; // or rad
-
-        // maybe scroll the bg tile? might not be as fast, but simpler
-        // FIXME yeah, scrolling bg tile is quite laggy! any fix???
-        // removing performance eaters will give super smooth FPS!
+        // thse are a bit magic numbery - FIXME
+        ceilingOffsetX = -screen.width/2 - 2200;
+        floorOffsetX = -screen.width/2 - 2200;
+        floorHeight = 4096 - screen.height; 
         
         const anglescale = 1; // it seems to turn too slow, but this is the 
         //perspective and fov being different - we can tweak this in the CSS
@@ -65,30 +72,27 @@ class floorClass
         angle = 90 - angle;
         angle *= anglescale;
         
-        this.floor.style.transformOrigin = "center center";
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, " + floorHeight.toString() + "px)"; 
+        // rotate
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 0px, "+floorHeight+"px)"; 
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
-        
-        //performance eater
-        // this.floor.style.backgroundPosition = (position.x%100).toString() + "%" + (position.y%100).toString() + "%";
-        // simulate a backgroundPosition change by sliding around a child div
-        const floorScrollScale = 42; // pixel dist for game units travelled
-        const bgtilesize = 320;
-        
+        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 0px, "+ceilingHeight+"px)"; 
+        this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
+
+        // shift around floor and ceiling to simulate scrolling the sprite
         var xform = "translate3d("
                         +((position.x*floorScrollScale)%bgtilesize).toString()+"px, "
                         +((position.y*floorScrollScale)%bgtilesize).toString()+"px, "
                         +"0px"
                         +")";
-        this.floorGraphic.style.transform = xform;
 
-        this.ceiling.style.transformOrigin = "center center";
-        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d(-3360px, 0px, 4096px)"; 
-        this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
-        
-        //performance eater
-        //this.ceiling.style.backgroundPosition = (position.x%100).toString() + "% " + (position.y%100).toString() + "%";
+        this.floorGraphic.style.transform = xform;
         this.ceilingGraphic.style.transform = xform;
+
+        // FIXME: might need to change every frame due to modulo offset scroll
+        // so that the rotations are centered regardless of scroll offset?
+        //this.floor.style.transformOrigin = "center center"; 
+        //this.ceiling.style.transformOrigin = "center center";
+
 
     }
 }

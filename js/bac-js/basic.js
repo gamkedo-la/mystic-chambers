@@ -1,3 +1,6 @@
+const FULLSCREEN_ENABLED = true; // false for easy debugging
+// FIXME: doesn't block F11! and never could
+
 var lastUpdate = Date.now();
 
 function getDeltaTime()
@@ -416,6 +419,8 @@ function setPointerLock(canvas)
 
 function enableFullScreen(e)
 {
+    if (!FULLSCREEN_ENABLED) return;
+
   if (e.requestFullscreen)
     e.requestFullscreen();
   else if (e.msRequestFullscreen)
@@ -428,6 +433,8 @@ function enableFullScreen(e)
 
 function disableFullscreen(e) 
 {
+  if (!FULLSCREEN_ENABLED) return;
+
   if (e.exitFullscreen)
     e.exitFullscreen();
   else if (e.mozCancelFullScreen)
