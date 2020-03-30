@@ -117,7 +117,7 @@ function AudioGlobal() {
 //--//Audio playback classes--------------------------------------------------
 	this.playOneshot = function(buffer, vec2, mixVolume = 1, rate = 1)
 	{
-		if (!initialized || buffer.playing) return;
+		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
@@ -140,10 +140,27 @@ function AudioGlobal() {
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
 		gainNode.gain.value = mixVolume;
-		//panNode.pan.value = calculatePan(referance);
 		source.start();
 
 		return {source: source, volume: gainNode, pan: panNode};
+	}
+
+	this.play1DSound = function(buffer, mixVolume = 1, rate = 1) {
+		if (!initialized) return;
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+
+		source.connect(gainNode);
+		gainNode.connect(soundEffectsBus);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value = mixVolume;
+		console.log(mixVolume + " " + gainNode.gain)
+		source.start();
+
+		return {source: source, volume: gainNode};
 	}
 
 	this.playMusic = function(buffer, fadeIn = false) {
