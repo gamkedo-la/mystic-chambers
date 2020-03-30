@@ -3,7 +3,7 @@
 const SOUND_NOAMMO = 0;
 
 var soundsList = [
-    "audio/noAmmo.wav",
+	"audio/noAmmo.wav",
 ];
 
 var totalSounds = 1;
@@ -12,8 +12,8 @@ var sounds = [];
 //Constants-------------------------------------------------------------------
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
-const DROPOFF_MIN = 100;
-const DROPOFF_MAX = 500;
+const DROPOFF_MIN = 10;
+const DROPOFF_MAX = 100;
 
 var audio = new AudioGlobal();
 
@@ -25,6 +25,7 @@ function AudioGlobal() {
 	var isMuted;
 	var musicVolume, soundEffectsVolume;
 	var currentMusicTrack;
+	var currentSoundSources = [];
 	var panningModel  = "HRTF";
 
 //--//Set up WebAudioAPI nodes------------------------------------------------
@@ -39,6 +40,8 @@ function AudioGlobal() {
 		musicBus = audioCtx.createGain();
 		soundEffectsBus = audioCtx.createGain();
 		masterBus = audioCtx.createGain();
+
+		audio.loadSounds();
 
 		musicVolume = 0.7;
 		soundEffectsVolume = 0.7;
@@ -157,14 +160,35 @@ function AudioGlobal() {
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
 		gainNode.gain.value = mixVolume;
-		console.log(mixVolume + " " + gainNode.gain)
 		source.start();
 
 		return {source: source, volume: gainNode};
 	}
 
+	this.play3DSound = function(buffer, vec2,  mixVolume = 1, rate = 1) {
+		if (!initialized) return;
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+		var panNode = audioCtx.createStereoPanner();
+
+		source.connect(gainNode);
+		gainNode.connect(panNode);
+		panNode.connect(soundEffectsBus);
+
+		gainNode.gain.value = calcuateVolumeDropoff(vec2);
+		panNode.pan.value = calcuatePan(vec2);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		source.start();
+
+		return {source: source, volume: gainNode, pan: panNode, pos: vec2};
+	}
+
 	this.playMusic = function(buffer, fadeIn = false) {
-        if (!initialized) return;
+		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
@@ -204,7 +228,7 @@ function AudioGlobal() {
 		request.send();
 	}
 
-	this.loadSounds = function(id) {
+	this.loadSounds = function(id = 0) {
 		var request = new XMLHttpRequest();
 		request.open('GET', soundsList[id], true);
 		request.responseType = 'arraybuffer';
@@ -217,5 +241,22 @@ function AudioGlobal() {
 		request.send();
 	}
 
-    return this;
+	this.calcuateVolumeDropoff = function(vec2) {
+		distance = plPos.distance(vec2);
+
+		var newVolume = 1;
+		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
+			newVolume = Math.abs((distance - DROPOFF_MIN)/(DROPOFF_MAX - DROPOFF_MIN) - 1);
+		} else if (distance > DROPOFF_MAX) {
+			newVolume = 0;
+		}
+
+		return Math.pow(newVolume, 2);
+	}
+
+	this.calcuateVolumeDropoff = function(vec2) {
+		return 0;
+	}
+
+	return this;
 }

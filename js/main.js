@@ -15,7 +15,6 @@ window.onload = function()
     uiSettings();
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
-    audio.loadSounds(0);
 
     areaColors = [
         "#00ff0020",
