@@ -4,6 +4,12 @@ var playerHealth = playerMaxHealth;
 const PLAYER_ROTATION_SPEED = 0.11; // scale the raw mouse deltas to rotate a normal speed
 const PLAYER_EDITOR_ROTATION_SPEED = 1.25;
 
+// globals for easy access:
+// (can't trust plPos, angle hidden in ray[])
+var currentPlayerAngleDegrees = 0;
+var currentPlayerX = 0;
+var currentPlayerY = 0;
+
 //[forward, backward, left, right]
 var keyPresses = ['w', 's', 'a', 'd'];
 var movementAngles = [0.0, 180.0, 270.0, 90.0];
@@ -148,6 +154,12 @@ function playerEvents(deltaTime)
             ray[i].p = plPos;
         }
     }
+
+    // plPos is never defined and used as a temp: it can't be trusted
+    // plus this makes it easy to determine where player is looking
+    currentPlayerAngleDegrees = ray[ray.length / 2].angle;
+    currentPlayerX = plPos.x; 
+    currentPlayerY = plPos.y; 
 
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }
