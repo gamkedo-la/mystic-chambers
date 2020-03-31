@@ -143,7 +143,7 @@ function clamp(val, min, max)
 		return max;
 	
 	return val;
-};
+}
 
 function degToRad(val)
 {
@@ -160,7 +160,7 @@ function lerp(val1, val2, amount)
 	amount = amount < 0 ? 0 : amount;
 	amount = amount > 1 ? 1 : amount;
 	return (1 - amount) * val1 + amount * val2;
-};
+}
 
 function lerpVec2(vec2_a, vec2_b, amount)
 {
@@ -485,7 +485,8 @@ function readFile(file)
                 text = rawFile.responseText;
             }
         }
-    }
+    };
+    
     rawFile.send(null);
 
     return text;

@@ -13,16 +13,16 @@ const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 10;
 const DROPOFF_MAX = 100;
-const BEHIND_THE_HEAD = 0.25
+const BEHIND_THE_HEAD = 0.25;
 
 var audio = new AudioGlobal();
 
 function AudioGlobal() {
 
 	var initialized = false;
-	var audioCtx, audioListener;
+	var audioCtx;//, audioListener;
 	var musicBus, soundEffectsBus, masterBus;
-	var isMuted;
+	//var isMuted; // TODO: unimplemented
 	var musicVolume, soundEffectsVolume;
 	var currentMusicTrack;
 	var currentSoundSources = [];
@@ -54,7 +54,7 @@ function AudioGlobal() {
 		masterBus.connect(audioCtx.destination);
 
 		initialized = true;
-	}
+	};
 
 	this.update = function() {
 		now = audioCtx.currentTime;
@@ -66,7 +66,7 @@ function AudioGlobal() {
 			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff2(currentSoundSources[i].pos), now);
 			currentSoundSources[i].pan.pan.setValueAtTime(calcuatePan(currentSoundSources[i].pos), now);
 		}
-	}
+	};
 
 //--//volume handling functions-----------------------------------------------
 	this.toggleMute = function() {
@@ -76,7 +76,7 @@ function AudioGlobal() {
 		masterBus.gain.setTargetAtTime(newVolume, audioCtx.currentTime, 0.03);
 
 		return newVolume;
-	}
+	};
 
 	this.setMute = function(tOrF) {
 		if (!initialized) return;
@@ -85,7 +85,7 @@ function AudioGlobal() {
 		masterBus.gain.setTargetAtTime(newVolume, audioCtx.currentTime, 0.03);
 
 		return tOrF;
-	}
+	};
 
 	this.setMusicVolume = function(amount) {
 		if (!initialized) return;
@@ -99,7 +99,7 @@ function AudioGlobal() {
 		musicBus.gain.setTargetAtTime(Math.pow(musicVolume, 2), audioCtx.currentTime, 0.03);
 
 		return musicVolume;
-	}
+	};
 
 	this.setSoundEffectsVolume = function(amount) {
 		if (!initialized) return;
@@ -113,21 +113,21 @@ function AudioGlobal() {
 		soundEffectsBus.gain.setTargetAtTime(Math.pow(soundEffectsVolume, 2), audioCtx.currentTime, 0.03);
 
 		return soundEffectsVolume;
-	}
+	};
 
 	this.turnVolumeUp = function() {
 		if (!initialized) return;
 
 		this.setMusicVolume(musicVolume + VOLUME_INCREMENT);
 		this.setSoundEffectsVolume(soundEffectsVolume + VOLUME_INCREMENT);
-	}
+	};
 
 	this.turnVolumeDown = function() {
 		if (!initialized) return;
 
 		this.setMusicVolume(musicVolume - VOLUME_INCREMENT);
 		this.setSoundEffectsVolume(soundEffectsVolume - VOLUME_INCREMENT);
-	}
+	};
 
 //--//Audio playback classes--------------------------------------------------
 	this.playOneshot = function(buffer, vec2, mixVolume = 1, rate = 1)
@@ -158,7 +158,7 @@ function AudioGlobal() {
 		source.start();
 
 		return {source: source, volume: gainNode, pan: panNode};
-	}
+	};
 
 	this.play1DSound = function(buffer, mixVolume = 1, rate = 1) {
 		if (!initialized) return;
@@ -175,7 +175,7 @@ function AudioGlobal() {
 		source.start();
 
 		return {source: source, volume: gainNode};
-	}
+	};
 
 	this.play3DSound = function(buffer, vec2,  mixVolume = 1, rate = 1) {
 		if (!initialized) return;
@@ -200,7 +200,7 @@ function AudioGlobal() {
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
-	}
+	};
 
 	this.playMusic = function(buffer, fadeIn = false) {
 		if (!initialized) return;
@@ -229,7 +229,7 @@ function AudioGlobal() {
 		currentMusicTrack = {sound: source, volume: gainNode};
 
 		return {sound: source, volume: gainNode};
-	}
+	};
 
 	this.loadBGMusic = function(url) {
 		var request = new XMLHttpRequest();
@@ -239,9 +239,9 @@ function AudioGlobal() {
 			audio.context.decodeAudioData(request.response, function(buffer) {
 				audio.playMusic(buffer);
 			});
-		}
+		};
 		request.send();
-	}
+	};
 
 	this.loadSounds = function(id = 0) {
 		var request = new XMLHttpRequest();
@@ -252,11 +252,12 @@ function AudioGlobal() {
 				sounds.push(buffer);
 				if(id + 1 < soundsList.length) audio.loadSounds(id + 1);
 			});
-		}
+		};
 		request.send();
-	}
+	};
 
-	function calcuateVolumeDropoff(vec2) {
+    // currently not used by any code
+    function calcuateVolumeDropoff(vec2) {
 		var distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
@@ -288,11 +289,11 @@ function AudioGlobal() {
 		}
 
 		if (direction > 90 && direction <= 180) {
-			newVolume *= lerp(1, BEHIND_THE_HEAD, (direction-90)/90)
-			console.log(newVolume)
+			newVolume *= lerp(1, BEHIND_THE_HEAD, (direction-90)/90);
+			console.log(newVolume);
 		} else if (direction > 180 && direction <= 270) {
-			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90)
-			console.log(newVolume)
+			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90);
+			console.log(newVolume);
 		}
 
 		return Math.pow(newVolume, 2);

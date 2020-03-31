@@ -306,9 +306,10 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
     var totalWallsToBeDone = walls.length + 1;
     if(typeof otherSectors != "undefined") totalWallsToBeDone += otherSectors.length;
     var checkerLength = 1000;
+    var skipThisOne = false;
     for(let r = 0; r < 360; r+=5)
     {
-        var x1 = ent.p.x
+        var x1 = ent.p.x;
         var y1 = ent.p.y;
         var x2 = x1 + (checkerLength * Math.cos(degToRad(r)));
         var y2 = y1 + (checkerLength * Math.sin(degToRad(r)));
@@ -317,7 +318,7 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
 
         for(let i = 0; i < walls.length; i++)
         {
-            var skipThisOne = false;
+            skipThisOne = false;
             for(let d = 0; d < wallsDone.length; d++)
             {
                 if(wallsDone[d] == walls[i])
@@ -341,7 +342,7 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
         {
             for(let i = 0; i < otherSectors.length; i++)
             {
-                var skipThisOne = false;
+                skipThisOne = false;
                 for(let d = 0; d < wallsDone.length; d++)
                 {
                     if(wallsDone[d].x1 == otherSectors[i])
@@ -363,7 +364,7 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
             }
         }
 
-        var skipThisOne = false;
+        skipThisOne = false;
         for(let d = 0; d < wallsDone.length; d++)
         {
             if(wallsDone[d] == sector)

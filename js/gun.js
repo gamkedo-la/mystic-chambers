@@ -165,7 +165,7 @@ function gunEvent()
 
 function drawAllGunsDisplay(renderer)
 {
-    var gunXImg = 0;
+    var gunXImg = 0; // this var is never used
     gunXImg = drawGunDisplay(renderer, GUN_REVOLVER, ENT_REVOLVERGUN, gunXImg);
     gunXImg = drawGunDisplay(renderer, GUN_WINCHESTER, ENT_WINCHESTERGUN, gunXImg);
 }

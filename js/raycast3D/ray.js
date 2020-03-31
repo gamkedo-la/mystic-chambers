@@ -67,6 +67,7 @@ class Ray
     {
         if(typeof last == "undefined") last = false;
 
+        var sectorPresent = false;
         var data = new WallData();
         var raycast = new RaycastData(this.p.x, this.p.y, this.length, -1);
 
@@ -91,7 +92,7 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
-                                var sectorPresent = false;
+                                sectorPresent = false;
                                 if(typeof entitySectors != "undefined")
                                     for(let e = 0; e < entitySectors.length; e++)
                                     {
@@ -106,7 +107,7 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
-                                var sectorPresent = false;
+                                sectorPresent = false;
                                 if(typeof entitySectors != "undefined")
                                     for(let e = 0; e < entitySectors.length; e++)
                                     {
@@ -141,7 +142,7 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
-                                var sectorPresent = false;
+                                sectorPresent = false;
                                 if(typeof entitySectors != "undefined")
                                     for(let e = 0; e < entitySectors.length; e++)
                                     {
@@ -156,7 +157,7 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
-                                var sectorPresent = false;
+                                sectorPresent = false;
                                 if(typeof entitySectors != "undefined")
                                     for(let e = 0; e < entitySectors.length; e++)
                                     {
@@ -329,4 +330,4 @@ class Ray
 
         return data;
     }
-};
+}

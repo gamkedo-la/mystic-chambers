@@ -138,7 +138,7 @@ window.onload = function()
 
     inputSetup();
     setInterval(frame, 1000 / 60);
-}
+};
 
 function events(deltaTime)
 {
@@ -153,7 +153,9 @@ function events(deltaTime)
         {
             if(!document.documentElement.fullscreen)
             {
-                try { enableFullScreen(document.documentElement); } catch(e) { }
+                try { enableFullScreen(document.documentElement); } catch(e) { 
+                    console.log("Error enabling fullsreen.");
+                }
             }
             else
             {
@@ -169,7 +171,9 @@ function events(deltaTime)
     if( (screen.availHeight || screen.height - 30) <= window.innerHeight)
         canvas.requestPointerLock();
     else if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas)
-        try { canvas.exitPointerLock(); } catch(e) {}
+        try { canvas.exitPointerLock(); } catch(e) {
+            console.log("Error while exiting pointer lock.");
+        }
 
     if (platform == WINDOWS)
         mapMode = !isPointerLocked(); // FIXME this can also get toggled by code elsewhere
@@ -209,7 +213,7 @@ function events(deltaTime)
     ui.event();
 }
 
-function update(deltaTime)
+function update(deltaTime) // FIXME: deltaTime is not used yet
 {
     loadRoofAndFloorTextureDataOnce();
 

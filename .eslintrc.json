@@ -28,7 +28,7 @@
             }
         ],
         "no-undef":"off",
-        "no-console":"warn",
+        "no-console":"off",
         "no-warning-comments": ["warn", 
             {   "terms": ["todo", "fixme"], 
                 "location": "anywhere" }]

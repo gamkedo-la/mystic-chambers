@@ -204,7 +204,7 @@ class SubState extends UIObject
                     this.uiObjects[i].transform.position = this.uiObjects[i].transform.position.subtract(this.transform.position);
                 }
             }
-        }
+        };
     }
 
     update()
@@ -262,7 +262,7 @@ class Label extends UIObject
                 uiContext.renderer.font = this.font;
                 var lineHeight = uiContext.renderer.measureText('M').width;
 
-                var posAlignFactor = 0
+                var posAlignFactor = 0;
                 if(this.align == 0) posAlignFactor = (this.transform.scale.x / 2)
                 - (uiContext.renderer.measureText(this.text).width / 2);
                 else if(this.align == 1) posAlignFactor = this.transform.scale.x - uiContext.renderer.measureText(this.text).width;
@@ -319,7 +319,7 @@ class Button extends UIObject
 
                 this.prevTouchId = this.touchId;
             }
-        }
+        };
     }
 
     resetOutput()
@@ -452,7 +452,7 @@ class RadioButton extends UIObject
 
                 this.prevTouchId = this.touchId;
             }
-        }
+        };
     }
 
     draw()
@@ -527,7 +527,7 @@ class Panel extends UIObject
 
                 wheelScroll = 0;
             }
-        }
+        };
     }
 
     draw()
@@ -581,7 +581,7 @@ class GridGroup extends UIObject
             {
                 this.updateCellSize();
             }
-        }
+        };
     }
     
     updateCellSize()
@@ -686,7 +686,7 @@ class FlexGroup extends UIObject
             {
                 this.updateCellSize();
             }
-        }
+        };
     }
     
     updateCellSize()
@@ -813,7 +813,7 @@ class TextButton extends UIObject
                 this.button.event();
                 this.label.event();
             }
-        }
+        };
     }
 
     draw()
@@ -886,7 +886,7 @@ class Tab extends UIObject
 
                 this.prevTouchId = this.touchId;
             }
-        }
+        };
     }
 
     draw()
@@ -984,7 +984,7 @@ class Slider extends UIObject
                     this.output = UIOUTPUT_RUNNING;
                 }
             }
-        }
+        };
     }
 
     updatePositionFromKnobValue(st, end)

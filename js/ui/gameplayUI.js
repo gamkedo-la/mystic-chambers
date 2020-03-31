@@ -155,10 +155,10 @@ function setupGameplayUI()
         new Label(tr(), "Near Dist."), 1000, nearDist, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorNearDistSlider);
     roofFloorColor1Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 1"), 255, colorDepthYG1, sliderKnobSize)
+        new Label(tr(), "Color 1"), 255, colorDepthYG1, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorColor1Slider);
     roofFloorColor2Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 2"), 255, colorDepthYG2, sliderKnobSize)
+        new Label(tr(), "Color 2"), 255, colorDepthYG2, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorColor2Slider);
     roofFloorDepthStepSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 64),
         new Label(tr(), "Depth Step"), 64, depthYGStep, sliderKnobSize);
@@ -172,7 +172,7 @@ function setupGameplayUI()
 
     wallRenderObjects = [];
     wallHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(4, 64),
-        new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize)
+        new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize);
     wallRenderObjects.push(wallHeightSlider);
     wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + wallRenderTexture ? "ON" : "OFF", undefined, wallRenderTexture ? "green" : "red"),
         undefined,"Click to toggle\nwall textures.");
@@ -181,7 +181,7 @@ function setupGameplayUI()
         new Label(tr(), "Inclip"), 99, textureSize, sliderKnobSize);
     wallRenderObjects.push(wallInclipSlider);
     wallStretchSlider = new Slider(tr(vec2(), sliderSize), vec2(100, 50000),
-        new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize)
+        new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize);
     wallRenderObjects.push(wallStretchSlider);
     wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + wallDarkening ? "ON" : "OFF", undefined, wallDarkening ? "green" : "red"),
         undefined,"Click to toggle\nwall darkening effect.");
@@ -270,7 +270,7 @@ function setupGameplayUI()
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
         resetPosBtn, reloadLvBtn, saveLvBtn, hideUIBtn, prevLvBtn, lvLabel, nextLvBtn ]), false, vec2(5, 5), vec2(4, 2), false));
 
-    var tooltipSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08);
+    //var tooltipSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08);
     var tooltipLabelSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.05);
     var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08)),undefined,undefined,"Welcome to the Mystic Chambers Level Editor!\nPress F11 to Toggle between Play and Editor");
     toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers Level Editor!");

@@ -29,7 +29,7 @@ function viewportToWorld(vec2)
 
 function worldToScreen(vec2)
 {
-    return viewportToScreen(worldToViewport(vec2))
+    return viewportToScreen(worldToViewport(vec2));
 }
 
 function worldToViewport(vec2)

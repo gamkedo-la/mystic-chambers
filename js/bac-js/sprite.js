@@ -56,7 +56,7 @@ class ImageObject
             }
 
             imagesLoadingLeft--;
-        }
+        };
         
         this.image.src = imageSrc;
         this.size = size;
@@ -105,7 +105,7 @@ class Sprite
         {
             if (sprites[i] == this)
             {
-                sprites.splice(i, 1)
+                sprites.splice(i, 1);
                 break;
             }
         }

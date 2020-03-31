@@ -30,7 +30,7 @@ function validateRotation() {
 }
 
 // move back and forth
-function aiWander(plRay) {
+function aiWander() {
     var speed = 5000;
     var size = 0.1;
     
@@ -41,7 +41,7 @@ function aiWander(plRay) {
 }
 
 // move randomly using car-like turns!
-function aiExplore(p1Ray) {
+function aiExplore() {
     var speed = 0.25;
     var turnspeed = 0.05;
     
@@ -113,7 +113,7 @@ function aiSeek(plRay, backwards) {
             if (DEBUGAI) console.log("too far from player. not seeking.");
         }
     } else {
-        if (DEBUGAI) console.log("too close to player: seek paused")
+        if (DEBUGAI) console.log("too close to player: seek paused");
     }
 
 }
@@ -124,14 +124,14 @@ function aiAvoid(plRay) {
 }
 
 // spin around and bob up and down
-function aiSpinning(p1Ray) {
+function aiSpinning() {
     var speed = 0.1;
     this.aimAngleRadians = this.aimAngleRadians + speed;
     validateRotation.call(this); // stay in 0..360 deg
 }
 
 // spin around and bob up and down
-function aiSpinningBobbing(p1Ray) {
+function aiSpinningBobbing() {
     var speed = 0.05;
     var bobspeed = 350;
     var bobsize = 100;

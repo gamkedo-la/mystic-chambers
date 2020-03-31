@@ -70,9 +70,9 @@ class Wall
                 this.p1.x - ((dist/2.0) * Math.cos(a)),
                 this.p1.y - ((dist/2.0) * Math.sin(a))
             );
-		    
-		    drawLine(renderer, midVec2,
-		    vec2(midVec2.x - (length * Math.cos(a + degToRad(90.0))),
+
+            drawLine(renderer, midVec2,
+                vec2(midVec2.x - (length * Math.cos(a + degToRad(90.0))),
             (midVec2.y - (length * Math.sin(a + degToRad(90.0))))),
             "#333333");
 		}
@@ -152,7 +152,7 @@ class WallData
         this.type = -1;
         this.decal = undefined;
     }
-};
+}
 
 function convertWallsToString(walls)
 {

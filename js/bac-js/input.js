@@ -137,7 +137,7 @@ function inputSetup()
 
     //For PC
     window.addEventListener("mousedown", onMouseDown);
-    window.addEventListener("mousemove", onMouseMove)
+    window.addEventListener("mousemove", onMouseMove);
     window.addEventListener("mouseup", onMouseUp);
     window.addEventListener("wheel", onMouseWheelScroll);
 
