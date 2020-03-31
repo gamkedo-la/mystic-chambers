@@ -242,7 +242,7 @@ function AudioGlobal() {
 	}
 
 	this.calcuateVolumeDropoff = function(vec2) {
-		distance = plPos.distance(vec2);
+		distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
 		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
@@ -254,8 +254,27 @@ function AudioGlobal() {
 		return Math.pow(newVolume, 2);
 	}
 
-	this.calcuateVolumeDropoff = function(vec2) {
-		return 0;
+	this.calcuatePan = function(vec2) {
+		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+		while (direction >= 360) {
+			direction -= 360;
+		}
+		while (direction < 0) {
+			direction += 360;
+		}
+
+		var pan = 0;
+		if (direction <= 90) {
+			pan = lerp(0, -1, direction/90);
+		} else if (direction <= 180) {
+			pan = lerp(-1, 0, (direction-90)/90);
+		} else if (direction <= 270) {
+			pan = lerp(0, 1, (direction-180)/90);
+		} else if (direction < 360) {
+			pan = lerp(1, 0, (direction-270)/90);
+		}
+
+		return pan;
 	}
 
 	return this;

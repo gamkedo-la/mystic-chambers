@@ -9,6 +9,7 @@ const PLAYER_EDITOR_ROTATION_SPEED = 1.25;
 var currentPlayerAngleDegrees = 0;
 var currentPlayerX = 0;
 var currentPlayerY = 0;
+var currentPlayerPos = vec2(0,0);
 
 //[forward, backward, left, right]
 var keyPresses = ['w', 's', 'a', 'd'];
@@ -160,6 +161,9 @@ function playerEvents(deltaTime)
     currentPlayerAngleDegrees = ray[ray.length / 2].angle;
     currentPlayerX = plPos.x; 
     currentPlayerY = plPos.y; 
+    currentPlayerPos.x = currentPlayerX;
+    currentPlayerPos.y = currentPlayerY;
+
 
     audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }
