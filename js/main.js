@@ -219,6 +219,7 @@ function update(deltaTime)
     floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
 
     ui.update();
+    audio.update();
 }
 
 function draw()

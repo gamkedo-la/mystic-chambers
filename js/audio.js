@@ -6,7 +6,6 @@ var soundsList = [
 	"audio/noAmmo.wav",
 ];
 
-var totalSounds = 1;
 var sounds = [];
 
 //Constants-------------------------------------------------------------------
@@ -54,6 +53,18 @@ function AudioGlobal() {
 		masterBus.connect(audioCtx.destination);
 
 		initialized = true;
+	}
+
+	this.update = function() {
+		now = audioCtx.currentTime;
+		currentSoundSources = currentSoundSources.filter(function(referance){
+			return referance.endTime > now;
+		});
+
+		for (var i in currentSoundSources) {
+			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff(currentSoundSources[i].pos), now);
+			currentSoundSources[i].pan.pan.setValueAtTime(calcuatePan(currentSoundSources[i].pos), now);
+		}
 	}
 
 //--//volume handling functions-----------------------------------------------
@@ -184,7 +195,9 @@ function AudioGlobal() {
 		gainNode.gain.value *= Math.pow(mixVolume, 2);
 		source.start();
 
-		return {source: source, volume: gainNode, pan: panNode, pos: vec2};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		currentSoundSources.push(referance);
+		return referance;
 	}
 
 	this.playMusic = function(buffer, fadeIn = false) {
@@ -235,13 +248,13 @@ function AudioGlobal() {
 		request.onload = function() {
 			audio.context.decodeAudioData(request.response, function(buffer) {
 				sounds.push(buffer);
-				if(id + 1 < totalSounds) audio.loadSounds(id + 1);
+				if(id + 1 < soundsList.length) audio.loadSounds(id + 1);
 			});
 		}
 		request.send();
 	}
 
-	this.calcuateVolumeDropoff = function(vec2) {
+	function calcuateVolumeDropoff(vec2) {
 		distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
@@ -254,7 +267,7 @@ function AudioGlobal() {
 		return Math.pow(newVolume, 2);
 	}
 
-	this.calcuatePan = function(vec2) {
+	function calcuatePan(vec2) {
 		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
