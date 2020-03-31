@@ -150,7 +150,7 @@ function gunEvent()
                 }
                 else
                 {
-                    audio.play1DSound(sounds[SOUND_NOAMMO], 0.5);
+                    audio.play1DSound(sounds[SOUND_NOAMMO], 0.25);
                 }
             }
         }

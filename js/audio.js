@@ -13,6 +13,7 @@ const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 10;
 const DROPOFF_MAX = 100;
+const BEHIND_THE_HEAD = 0.25
 
 var audio = new AudioGlobal();
 
@@ -62,7 +63,7 @@ function AudioGlobal() {
 		});
 
 		for (var i in currentSoundSources) {
-			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff(currentSoundSources[i].pos), now);
+			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff2(currentSoundSources[i].pos), now);
 			currentSoundSources[i].pan.pan.setValueAtTime(calcuatePan(currentSoundSources[i].pos), now);
 		}
 	}
@@ -187,12 +188,13 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		gainNode.gain.value = calcuateVolumeDropoff(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff2(vec2);
 		panNode.pan.value = calcuatePan(vec2);
 
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
 		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		if (gainNode.gain < 0.01) {return;}
 		source.start();
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
@@ -255,13 +257,42 @@ function AudioGlobal() {
 	}
 
 	function calcuateVolumeDropoff(vec2) {
-		distance = currentPlayerPos.distance(vec2);
+		var distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
 		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
 			newVolume = Math.abs((distance - DROPOFF_MIN)/(DROPOFF_MAX - DROPOFF_MIN) - 1);
 		} else if (distance > DROPOFF_MAX) {
 			newVolume = 0;
+		}
+
+		return Math.pow(newVolume, 2);
+	}
+
+	function calcuateVolumeDropoff2(vec2) {
+		var distance = currentPlayerPos.distance(vec2);
+
+		var newVolume = 1;
+		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
+			newVolume = Math.abs((distance - DROPOFF_MIN)/(DROPOFF_MAX - DROPOFF_MIN) - 1);
+		} else if (distance > DROPOFF_MAX) {
+			newVolume = 0;
+		}
+
+		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+		while (direction >= 360) {
+			direction -= 360;
+		}
+		while (direction < 0) {
+			direction += 360;
+		}
+
+		if (direction > 90 && direction <= 180) {
+			newVolume *= lerp(1, BEHIND_THE_HEAD, (direction-90)/90)
+			console.log(newVolume)
+		} else if (direction > 180 && direction <= 270) {
+			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90)
+			console.log(newVolume)
 		}
 
 		return Math.pow(newVolume, 2);
