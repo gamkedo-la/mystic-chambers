@@ -4,6 +4,7 @@ wallImages = [
     new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
     new ImageObject("images/wall_stone.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_red.png", vec2(160, 160)),
+    new ImageObject("images/wall_stone_red_cracked.png", vec2(160, 160)),
 ];
 wallColors = [
     "#ffff0099",
