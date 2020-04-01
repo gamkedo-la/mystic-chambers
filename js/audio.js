@@ -174,6 +174,10 @@ function AudioGlobal() {
 		gainNode.gain.value = mixVolume;
 		source.start();
 
+		source.onended = function() {
+			source = null;
+		}
+
 		return {source: source, volume: gainNode};
 	};
 
@@ -194,8 +198,11 @@ function AudioGlobal() {
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
 		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		if (gainNode.gain < 0.01) {return;}
 		source.start();
+
+		source.onended = function() {
+			source = null;
+		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
