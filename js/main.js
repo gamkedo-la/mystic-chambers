@@ -1,6 +1,8 @@
+const PLAY_BUTTON = '`';
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
-const RENDER_EDITOR_AND_GAME_TOGETHER = false; // if false, draw either editor OR game
 const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
+
+renderEditorAndGameTogether = 0;
 
 window.onload = function()
 {
@@ -8,7 +10,6 @@ window.onload = function()
     renderer = canvas.getContext("2d");
     renderer.canvas.width = window.innerWidth;
     renderer.canvas.height = window.innerHeight;
-    setPointerLock(canvas);
     platform = getPlatform();
     spritesRenderer = renderer;
     audio.init();
@@ -147,40 +148,34 @@ function events(deltaTime)
     mainMenuUICustomEvents();
     gameplayUICustomEvents(deltaTime, wall, area);
 
-    if(keysDown.indexOf("Escape") != -1)
+    if(keysDown.indexOf(PLAY_BUTTON) != -1)
     {
-        if(!isKeyPressed(gunSwitchKeyPress))
+        if(!isKeyPressed(PLAY_BUTTON))
         {
-            if(!document.documentElement.fullscreen)
+            if(mapMode)
             {
-                try { enableFullScreen(document.documentElement); } catch(e) { 
-                    console.log("Error enabling fullsreen.");
-                }
+                mapMode = false;
+                enableFullScreen(document.documentElement);
+                enablePointerLock(canvas);
             }
             else
             {
+                mapMode = true;
                 disableFullscreen(document.documentElement);
+                disableFullscreen(canvas);
+                disableFullscreen(document);
+                disablePointerLock(document);
             }
         }
     }
     else
     {
-        removeKeyPressed("Escape");
+        removeKeyPressed(PLAY_BUTTON);
     }
-
-    if( (screen.availHeight || screen.height - 30) <= window.innerHeight)
-        canvas.requestPointerLock();
-    else if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas)
-        try { canvas.exitPointerLock(); } catch(e) {
-            console.log("Error while exiting pointer lock.");
-        }
-
-    if (platform == WINDOWS)
-        mapMode = !isPointerLocked(); // FIXME this can also get toggled by code elsewhere
 
     eventSprites();
 
-    if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
+    if(mapMode && renderEditorAndGameTogether < 3)
     {
         var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
             ray[ray.length/2].p.y - (window.innerHeight/2));
@@ -233,7 +228,7 @@ function draw()
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
     //draw all the floors and walls in 3d
-    if(!mapMode || RENDER_EDITOR_AND_GAME_TOGETHER)
+    if(!mapMode || renderEditorAndGameTogether >= 1)
     {
         if(platform != ANDROID && RAYCAST_FLOOR_CEILING_ENABLED) {
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,ray[ray.length/2].angle);
@@ -242,13 +237,15 @@ function draw()
         calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)
             ray[i].p = vec2(plPos.x, plPos.y);
-        items.check(plPos);
+        
+        //Items can only be picked in true gameplay mode
+        if(!mapMode) items.check(plPos);
     }
     
     var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
             ray[ray.length/2].p.y - (window.innerHeight/2));
 
-    if(mapMode)// || RENDER_EDITOR_AND_GAME_TOGETHER)
+    if(mapMode && renderEditorAndGameTogether < 3)
     {
         //Offsets added before rendering and removed after rendering for Camera Movement
         for(let i = 0; i < wall.length; i++)
@@ -305,7 +302,7 @@ function draw()
 
     drawGun();
 
-    if(!mapMode) 
+    if(!mapMode && renderEditorAndGameTogether >= 1) 
     {
         drawAllGunsDisplay(renderer);
         drawKeysDisplay(renderer);

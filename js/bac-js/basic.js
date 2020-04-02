@@ -411,10 +411,16 @@ function getPixelXY(imgData, x, y, w)
   return getPixelDataRGB(imgData, (y*w)+x);
 }
 
-function setPointerLock(canvas)
+function enablePointerLock(e)
 {
-  canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
-  document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+  e.requestPointerLock = e.requestPointerLock || e.mozRequestPointerLock;
+  e.requestPointerLock();
+}
+
+function disablePointerLock(e)
+{
+  e.exitPointerLock = e.exitPointerLock || e.mozExitPointerLock;
+  e.exitPointerLock();
 }
 
 function enableFullScreen(e)

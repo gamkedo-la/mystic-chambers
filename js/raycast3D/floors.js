@@ -13,6 +13,9 @@ var floorOffsetX = -3700;//-3360;
 var ceilingHeight = 4096; // so it appears at correct height
 var floorHeight = 3500;
 
+var prevMapMode = true;
+var prevRenderEditorAndGameTogether = 0;
+
 class floorClass
 {
     constructor()
@@ -43,20 +46,28 @@ class floorClass
         document.body.appendChild(this.floor);
         document.body.appendChild(this.ceiling);
         document.body.appendChild(this.blackScreen);
+
+        this.floor.style.display = "none";
+        this.ceiling.style.display = "none";
     }
 
     update(position, angle)
     {
-        if(mapMode && !RENDER_EDITOR_AND_GAME_TOGETHER)
+        if(prevMapMode != mapMode
+        || prevRenderEditorAndGameTogether != renderEditorAndGameTogether)
         {
-            this.floor.style.display = "none";
-            this.ceiling.style.display = "none";
-        }
-        else
-        {
-            // setting these every single frame may cause performance problems
-            this.floor.style.display = "block";
-            this.ceiling.style.display = "block";
+            if(mapMode && renderEditorAndGameTogether <= 0)
+            {
+                this.floor.style.display = "none";
+                this.ceiling.style.display = "none";
+            }
+            else if(!mapMode || renderEditorAndGameTogether >= 2)
+            {
+                this.floor.style.display = "block";
+                this.ceiling.style.display = "block";
+            }
+            prevMapMode = mapMode;
+            prevRenderEditorAndGameTogether = renderEditorAndGameTogether;
         }
 
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
