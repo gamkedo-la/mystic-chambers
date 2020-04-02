@@ -1,4 +1,4 @@
-const PLAY_BUTTON = '`';
+const PLAY_BUTTON = '1';//'`'; // qwertz keybaords do not have a tilde key
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
 const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
 
