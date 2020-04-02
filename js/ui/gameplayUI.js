@@ -133,7 +133,7 @@ function setupGameplayUI()
     roofFloorRenderObjects = [];
 
     roofFloorPerspectiveSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2000), new Label(tr(),
-    "Pers.", undefined, undefined, -1), 2000, 512, sliderKnobSize);
+    "Pers.", undefined, undefined, -1), 2000, document.body.style.perspective, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorPerspectiveSlider);
     floorHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 10000), new Label(tr(),
     "Fl. H.", undefined, undefined, -1), 10000, floorHeight, sliderKnobSize);
@@ -260,6 +260,7 @@ function setupGameplayUI()
     reloadLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved.");
     saveLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level"),undefined,"Click here to download the\nlevel data to save locally.");
     debugPlayBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Debug Play"),undefined,"Click to play in editor\nwithout pointer lock.");
+    debugEntBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Debug Ent.", undefined, debugEntities ? "green" : "red"),undefined,"Click to enable entities in\nmap mode and debug play mode.");
     
     prevLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "< Prev. Lv."),undefined,"Discard any recent changes\nand load the previous level.");
     lvLabel = new Label(tr(vec2(), btnSize), getLevelName());
@@ -270,21 +271,20 @@ function setupGameplayUI()
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu.")));
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display."), true));
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
-        resetPosBtn, reloadLvBtn, saveLvBtn, debugPlayBtn, prevLvBtn, lvLabel, nextLvBtn, hideUIBtn ]), false, vec2(5, 5), vec2(4, 2), false));
+        resetPosBtn, reloadLvBtn, saveLvBtn, debugPlayBtn, debugEntBtn, prevLvBtn, lvLabel, nextLvBtn, hideUIBtn ]), false, vec2(5, 5), vec2(5, 2), false));
 
-    //var tooltipSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08);
     var tooltipLabelSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.05);
-    var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08)),undefined,undefined,"Welcome to the Mystic Chambers Level Editor!\nPress " + PLAY_BUTTON + " to Toggle between Play and Editor");
+    var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08)), undefined, undefined, "Welcome to the Mystic Chambers Level Editor!\nPress " + PLAY_BUTTON + " to Toggle between Play and Editor");
     toolTipTitle = new Label(tr(vec2(), tooltipLabelSize), "Welcome to the Mystic Chambers Level Editor!");
     toolTipLabel = new Label(tr(vec2(0, scrSizeFactor * 0.032), tooltipLabelSize), "Press F11 to Toggle between Play and Editor");
-    cpStartObjects.push(new SubState(tr(), [toolTipBackground,toolTipTitle,toolTipLabel]));
 
     controlPanel = new SubState(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
         [
         new FlexGroup(
-            tr(vec2(5, 5), vec2(window.innerWidth, 50)), 
+            tr(vec2(5, 5), vec2(window.innerWidth, 100)), 
             new SubState(tr(), cpStartObjects),
             false, vec2(10, 0), vec2(10, 1), false),
+        new SubState(tr(vec2AV(0.01, 0.01, vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08), ANCHOR_TOPRIGHT)), [toolTipBackground,toolTipTitle,toolTipLabel]),
         cpEditPanel,
         cpRenderPanel
         ]);
@@ -404,7 +404,14 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         renderEditorAndGameTogether++;
         if(renderEditorAndGameTogether >= 4) renderEditorAndGameTogether = 0;
 
-        hideUIBtn.button.resetOutput();
+        debugPlayBtn.button.resetOutput();
+    }
+    else if (debugEntBtn.button.output == UIOUTPUT_SELECT)
+    {
+        debugEntities = !debugEntities;
+        debugEntBtn.label.textColor = debugEntities ? "green" : "red";
+
+        debugEntBtn.button.resetOutput();
     }
     else if (hideUIBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -606,7 +613,14 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    wallDarknessThreshold = wallDarkThresholdSlider.knobValue;
    wallDarkThresholdSlider.label.text = "Dark Th. " + wallDarkThresholdSlider.knobValue;
 
-   document.body.style.perspective = roofFloorPerspectiveSlider.knobValue.toString() + "px";
+   if(roofFloorPerspectiveSlider.knobValue.toString().length >= 0)
+        document.body.style.perspective = roofFloorPerspectiveSlider.knobValue.toString() + "px";
+    else
+    {
+        roofFloorPerspectiveSlider.knobValue = parseInt(document.body.style.perspective.replace("px", ""));
+        roofFloorPerspectiveSlider.startKnobValueSet = 10;
+    }
+    
    roofFloorPerspectiveSlider.label.text = "Pers. " + roofFloorPerspectiveSlider.knobValue;
 
    floorHeight = floorHeightSlider.knobValue;

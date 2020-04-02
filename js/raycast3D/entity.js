@@ -107,7 +107,7 @@ class Entity
 
     draw(renderer, plRay, circleOnly)
     {
-        if (this.ai && !mapMode) this.ai(plRay);
+        if (this.ai && (!mapMode || debugEntities)) this.ai(plRay);
         
         if(circleOnly)
         {

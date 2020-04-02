@@ -20,6 +20,8 @@ class floorClass
 {
     constructor()
     {
+        document.body.style.perspective = "888px";
+
         if (DEBUGFLOORS) console.log("floor and ceiling init...");
 
         this.gradientFix = document.createElement("DIV");

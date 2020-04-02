@@ -3,6 +3,7 @@ const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially tra
 const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
 
 renderEditorAndGameTogether = 0;
+debugEntities = false;
 
 window.onload = function()
 {
@@ -239,7 +240,7 @@ function draw()
             ray[i].p = vec2(plPos.x, plPos.y);
         
         //Items can only be picked in true gameplay mode
-        if(!mapMode) items.check(plPos);
+        if(!mapMode || debugEntities) items.check(plPos);
     }
     
     var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
