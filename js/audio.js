@@ -8,7 +8,7 @@ var soundsList = [
 
 var sounds = [];
 
-//Constants-------------------------------------------------------------------
+//--//Constants---------------------------------------------------------------
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 10;
@@ -250,6 +250,19 @@ function AudioGlobal() {
 		request.send();
 	};
 
+	this.loadMusicEvent = function(url) {
+		var request = new XMLHttpRequest();
+		request.open('GET', url, true);
+		request.responseType = 'arraybuffer';
+		request.onload = function() {
+			audio.context.decodeAudioData(request.response, function(buffer) {
+				audio.duckMusic(buffer.duration);
+				audio.play1DSound(buffer);
+			});
+		};
+		request.send();
+	};
+
 	this.loadSounds = function(id = 0) {
 		var request = new XMLHttpRequest();
 		request.open('GET', soundsList[id], true);
@@ -261,6 +274,12 @@ function AudioGlobal() {
 			});
 		};
 		request.send();
+	};
+
+	this.duckMusic = function (duration, volume = 0) {
+		currentMusicTrack.volume.gain.setTargetAtTime(volume, audioCtx.currentTime, CROSSFADE_TIME);
+		currentMusicTrack.volume.gain.setTargetAtTime(1, audioCtx.currentTime + duration, CROSSFADE_TIME);
+		return;
 	};
 
     // currently not used by any code
