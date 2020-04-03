@@ -78,7 +78,38 @@ function AudioGlobal() {
 			v1.y = currentSoundSources[i].pos.y - off.y;
 			v2.x = plPos.x - off.x;
 			v2.y = plPos.y - off.y;
-	        drawLine(renderer, v1, v2, "#FFFFFFFF");
+			drawLine(renderer, v1, v2, "#FFFFFFFF");
+
+			
+
+			//do
+			{
+				var rSec = activeSector//nextRenderSector;
+				//nextRenderSector = undefined;
+				
+				let ang = Math.atan2(plPos.y - currentSoundSources[i].pos.y, 
+					plPos.x - currentSoundSources[i].pos.x);
+				let r = new Ray(currentSoundSources[i].pos, radToDeg(ang));
+				let rData = r.raycastSector(wall, plPos, rSec, false, []);
+			   			   let pdist = getDistBtwVec2(plPos, currentSoundSources[i].pos);
+			   let hitPoint;
+			   if (pdist < rData.depth) {
+				   hitPoint = vec2(plPos.x, plPos.y);
+			   } else {
+				   hitPoint = vec2(currentSoundSources[i].pos.x + Math.cos(ang) * rData.depth, 
+			   		currentSoundSources[i].pos.y + Math.sin(ang) * rData.depth);
+			   }
+			   let soundDist = getDistBtwVec2(hitPoint, currentSoundSources[i].pos);
+			   hitPoint.x -= off.x;
+			   hitPoint.y -= off.y;
+			   drawRect(renderer, hitPoint, vec2(5, 5), true, "#FFFFFFFF", false);
+
+			   drawText(renderer, "" + rData.depth, v1, "#FFFFFFFF");
+			   drawText(renderer, "" + soundDist, v2, "#FFFFFFFF");
+
+
+			}
+			//while(typeof nextRenderSector != "undefined");
 		}
 	}
 
@@ -325,7 +356,7 @@ function AudioGlobal() {
 		return;
 	};
 
-    function calcuateVolumeDropoff(vec2) {
+	function calcuateVolumeDropoff(vec2) {
 		var distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
