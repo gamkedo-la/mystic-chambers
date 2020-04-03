@@ -296,6 +296,7 @@ class Button extends UIObject
             if(this.enabled)
             {
                 this.touchId = touched(this.transform);
+                
                 if (this.touchId != -1 && this.prevTouchId == -1)
                 {
                     this.btnColor = this.selectColor;

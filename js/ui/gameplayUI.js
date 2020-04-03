@@ -9,6 +9,9 @@ var gameplayUI = [];
 
 var toolTipTitle, tooltipLabel;
 
+var toggleONColor = "#55ff55";
+var toggleOFFColor = "#ff5555";
+
 function setupGameplayUI()
 {
     wallEditorObjects = [];
@@ -60,12 +63,14 @@ function setupGameplayUI()
     decorEditorObjects.push(decorDelAllBtn);
 
     itemsEditorObjects = [];
-    itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
-        undefined,"This area will contain\nitems you can place."));
+    itemsDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
+        new Button(tr(), "#992222"));
+    itemsEditorObjects.push(itemsDelAllBtn);
 
     enemiesEditorObjects = [];
-    enemiesEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
-        undefined,"This area will contain\nenemies you can place."));
+    enemiesDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
+        new Button(tr(), "#992222"));
+    enemiesEditorObjects.push(enemiesDelAllBtn);
 
     cpEditTabs = [];
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), wallEditorObjects, undefined,
@@ -86,7 +91,7 @@ function setupGameplayUI()
         "Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
-    toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + showGrid ? "ON" : "OFF", undefined, showGrid ? "green" : "red"),
+    toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + (showGrid ? "ON" : "OFF"), undefined, showGrid ? "green" : "red"),
         undefined,"Click to toggle\neditor grid.");
     cpEditObjects.push(toggleGridBtn);
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
@@ -150,7 +155,7 @@ function setupGameplayUI()
     "Fl. H.", undefined, undefined, -1), 5000, floorHeight, sliderKnobSize);
     roofFloorRenderObjects.push(floorHeightSlider);
 
-    roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + roofFloorRenderTexture ? "ON" : "OFF", undefined, roofFloorRenderTexture ? "green" : "red"),
+    roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (roofFloorRenderTexture ? "ON" : "OFF"), undefined, roofFloorRenderTexture ? "green" : "red"),
         undefined,"Click to toggle\nroof/floor textures.");
     roofFloorRenderObjects.push(roofFloorToggleTextureBtn);
     roofFloorPointSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 50),
@@ -177,7 +182,7 @@ function setupGameplayUI()
     roofFloorDepthThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
         new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorDepthThresholdSlider);
-    roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + renderRoofFloor ? "ON" : "OFF", undefined, renderRoofFloor ? "green" : "red"),
+    roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + (renderRoofFloor ? "ON" : "OFF"), undefined, renderRoofFloor ? "green" : "red"),
         undefined,"Click to toggle\nroof/floor rendering.");
     roofFloorRenderObjects.push(roofFloorToggleRenderBtn);
 
@@ -185,7 +190,7 @@ function setupGameplayUI()
     wallHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(4, 64),
         new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize);
     wallRenderObjects.push(wallHeightSlider);
-    wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + wallRenderTexture ? "ON" : "OFF", undefined, wallRenderTexture ? "green" : "red"),
+    wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (wallRenderTexture ? "ON" : "OFF"), undefined, wallRenderTexture ? "green" : "red"),
         undefined,"Click to toggle\nwall textures.");
     wallRenderObjects.push(wallToggleTextureBtn);
     wallInclipSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 1000),
@@ -194,7 +199,7 @@ function setupGameplayUI()
     wallStretchSlider = new Slider(tr(vec2(), sliderSize), vec2(100, 50000),
         new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize);
     wallRenderObjects.push(wallStretchSlider);
-    wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + wallDarkening ? "ON" : "OFF", undefined, wallDarkening ? "green" : "red"),
+    wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + (wallDarkening ? "ON" : "OFF"), undefined, wallDarkening ? "green" : "red"),
         undefined,"Click to toggle\nwall darkening effect.");
     wallRenderObjects.push(wallToggleDarkenBtn);
     wallDarkFactorSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 30.0),
@@ -531,6 +536,14 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         }
         decor.ents = new Array();
         decorDelAllBtn.button.resetOutput();
+    }
+        while(enemies.ents.length > 0)
+        {
+            removeEntity(enemies.ents[enemies.ents.length - 1]);
+            enemies.ents.pop();
+        }
+        enemies.ents = new Array();
+        enemiesDelAllBtn.button.resetOutput();
     }
     else if(fpsResetBtn.button.output == UIOUTPUT_SELECT)
     {

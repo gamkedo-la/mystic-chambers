@@ -9,11 +9,11 @@ var wallStretchFactor = 5000.0;
 var wallHeightFactor = 12.0;
 
 var wallDarkening = true;
-var wallDarkeningFactor = 4.0;
-var wallDarkeningLayers = 5.0;
-var wallDarkeningSteps = 2.0;
+var wallDarkeningFactor = 10.0;
+var wallDarkeningLayers = 2.0;
+var wallDarkeningSteps = 1.0;
 var wallBrightnessThreshold = 0.2;
-var wallDarknessThreshold = 0.6;
+var wallDarknessThreshold = 0.75;
 
 var fishEyeRemoveFactor = 1.0;
 var fishEyeRemoveThreshold = 1.0;

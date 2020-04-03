@@ -8,8 +8,8 @@ const DEBUGFLOORS = false;
 // FIXME remove all of these! use math instead
 var floorScrollScale = 42; // pixels scrolled per game units travelled
 var bgtilesize = 320; // size of texture in pixels
-var ceilingOffsetX= -3700;//-3360; // to center it on-screen
-var floorOffsetX = -3700;//-3360;
+var ceilingOffsetX= -3700; // to center it on-screen
+var floorOffsetX = -3700;
 var ceilingHeight = 4096; // so it appears at correct height
 var floorHeight = 3500;
 
@@ -26,6 +26,9 @@ class floorClass
 
         this.gradientFix = document.createElement("DIV");
         this.gradientFix.className = "gradientFix";
+
+        this.gradientAltFix = document.createElement("DIV");
+        this.gradientAltFix.className = "gradientAltFix";
 
         this.floor = document.createElement("DIV");
         this.floor.className = "floordiv";
@@ -45,6 +48,7 @@ class floorClass
         this.blackScreen.className = "blackScreen";
         
         document.body.appendChild(this.gradientFix);
+        document.body.appendChild(this.gradientAltFix);
         document.body.appendChild(this.floor);
         document.body.appendChild(this.ceiling);
         document.body.appendChild(this.blackScreen);
@@ -77,18 +81,14 @@ class floorClass
         // thse are a bit magic numbery - FIXME
         ceilingOffsetX = -screen.width/2 - 2700;
         floorOffsetX = -screen.width/2 - 2700;
-        floorHeight = 3442;//4096 - screen.height; 
-        
-        const anglescale = 1; // it seems to turn too slow, but this is the 
-        //perspective and fov being different - we can tweak this in the CSS
-        // TODO FIXME: change body css perspective and fov to match game
+        floorHeight = 3442;
+
         angle = 90 - angle;
-        angle *= anglescale;
         
         // rotate
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 0px, "+floorHeight+"px)";
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 1250px, "+floorHeight+"px)";
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
-        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 0px, "+ceilingHeight+"px)"; 
+        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 1250px, "+ceilingHeight+"px)"; 
         this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
 
         // shift around floor and ceiling to simulate scrolling the sprite
@@ -100,13 +100,6 @@ class floorClass
 
         this.floorGraphic.style.transform = xform;
         this.ceilingGraphic.style.transform = xform;
-
-        // FIXME: might need to change every frame due to modulo offset scroll
-        // so that the rotations are centered regardless of scroll offset?
-        //this.floor.style.transformOrigin = "center center"; 
-        //this.ceiling.style.transformOrigin = "center center";
-
-
     }
 }
 

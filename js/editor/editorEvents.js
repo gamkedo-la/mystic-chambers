@@ -32,6 +32,7 @@ var selectedDecorIndex = -1;
 var lastSelectedDecorIndex = -1;
 
 var currentDecorType = 0;
+var decorScatterAmount = 0;
 
 //ITEMS
 var itemHandleTr = null;

@@ -1,8 +1,6 @@
 // designed for non-interactive props - they never update
 // such as grass, greebles, rocks, debris, cracks, crates
 
-var decorScatterAmount = 0;
-
 class DecorationManager {
 
     constructor()

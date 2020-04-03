@@ -156,10 +156,14 @@ function touched(transform) //or sprite
     {
         for(let i = 0; i < 5; i++)
         {
-            var p = transform.relPointInside(touchPos[i]);
+            if(transform.position.x != 0 && transform.position.y != 0
+            && touchPos[i].x != 0 && touchPos[i].y != 0)
+            {
+                var p = transform.relPointInside(touchPos[i]);
 
-            if (p.x != -1 && p.y != -1)
-                return i;
+                if (p.x != -1 && p.y != -1)
+                    return i;
+            }
         }
     }
 
