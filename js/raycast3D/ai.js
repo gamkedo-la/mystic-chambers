@@ -74,20 +74,20 @@ function aiExplore() {
 }
 
 // move toward the player
-function aiSeek(plRay, backwards) {
+function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
     
     if (DEBUGAI) console.log("aiSeek"+(backwards?" (AVOID)":"")+" for entity id " + this.id + " named " + this.name);
-    if (DEBUGAI) console.log("pos: " + this.p.x+","+this.p.y+" angle: "+this.angle);
+    if (DEBUGAI) console.log("pos: " + this.p.x.toFixed(1)+","+this.p.y.toFixed(1)+" angle: "+this.angle.toFixed(1));
 
+    // this is recorded here only for debug red line display in entity draw
+    this.debugTarget = plRay;
+    
     var speed = 0.25;
     if (backwards) speed *= -1;
 
-    var mindist = 8; // don't get too close
-    var maxdist = 250; // player is ignored beyond this distance
-
     var dist = plRay.p.distance(this.p);
 
-    if (DEBUGAI) console.log(dist.toFixed(1)+"m to p1Ray: " + plRay.p.x.toFixed(1)+","+plRay.p.y.toFixed(1)+" angle: "+plRay.angle.toFixed(1));
+    if (DEBUGAI) console.log(dist.toFixed(1)+"m to target: " + plRay.p.x.toFixed(1)+","+plRay.p.y.toFixed(1)+" angle: "+plRay.angle.toFixed(1));
 
     // move if not too close
     if (dist>mindist) {
@@ -139,4 +139,39 @@ function aiSpinningBobbing() {
     validateRotation.call(this); // stay in 0..360 deg
     // up and down like a doom weapon
     this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
+}
+
+// seeks any nearby entities like health, ammo, guns, and WAYPOINTS
+var waypoints = [];
+function aiWaypointNavigation(p1Ray) {
+
+    // init
+    if (!this.wpTarget) {
+        if (DEBUGAI) console.log("initializing waypoint navigation");
+        this.wpTarget = items.ents[Math.floor(Math.random() * items.ents.length)];
+        this.wpPrev = items.ents[Math.floor(Math.random() * items.ents.length)];
+        this.wpTimeleft = 0;
+    }
+
+    // get bored after a while
+    this.wpTimeleft--;
+    
+    if (this.wpTimeleft<=0) {
+        if (DEBUGAI) console.log("time for a new waypoint");
+        this.wpPrev = this.wpTarget;
+        while (this.wpTarget == this.wpPrev) { // avoid picking the same one twice in a row
+            this.wpTarget = items.ents[Math.floor(Math.random() * items.ents.length)];
+        }
+        this.wpTimeleft = Math.random()*500;
+        if (DEBUGAI) console.log("new waypoint is " + this.wpTarget.name+" at "+this.wpTarget.p.x.toFixed(1)+","+this.wpTarget.p.y.toFixed(1));
+    }
+
+    // FIXME: act differently depending on what ENT_* type it is
+    // and sort by distance to pick closest
+    //for(let i = 0; i < items.ents.length; i++) {
+    //    if (items.ents[i]. == 
+    //}
+
+    aiSeek.call(this,this.wpTarget);
+
 }

@@ -29,6 +29,7 @@ window.onload = function()
     enemies.add(540, 140, ENT_FIRESKULL, "[Seek] Fire Skull", aiSeek);
     enemies.add(550, 120, ENT_FIRESKULL, "[Avoid] Fire Skull", aiAvoid);
     enemies.add(560, 120, ENT_FIRESKULL, "[Explore] Fire Skull", aiExplore);
+    enemies.add(560, 120, ENT_FIRESKULL, "[Waypoint] Fire Skull", aiWaypointNavigation);
     
     items.add(560, 290, ENT_REDKEY, vec2(1, -100));
     items.add(630, 240, ENT_GREENKEY, vec2(1, -100));

@@ -112,6 +112,11 @@ class Entity
         if(circleOnly)
         {
             drawCircle(renderer, this.p, entCircleDrawSize, false, entColor[this.id]);
+            // used to debug AI
+            if (this.debugTarget) {
+                drawLine(renderer, this.p, this.debugTarget.p, "rgba(255,0,0,0.5");
+            }
+
         }
         else
         {
