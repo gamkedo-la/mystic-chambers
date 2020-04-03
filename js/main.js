@@ -294,6 +294,7 @@ function draw()
             wall[i].draw(renderer, wallColors, 12);
             wall[i].addOffset(off);
         }
+        if (AUDIO_DEBUG) {audio.draw(off);}
 
     }
 
@@ -312,7 +313,9 @@ function draw()
 
     ui.draw();
 
-    if(mapMode) drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
+    if(mapMode) {
+        drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
+    }
 
     if(itemPickupFlash > 0)
     {

@@ -1,4 +1,4 @@
-
+const AUDIO_DEBUG = false;
 //Sound IDs
 const SOUND_NOAMMO = 0;
 
@@ -58,15 +58,29 @@ function AudioGlobal() {
 
 	this.update = function() {
 		now = audioCtx.currentTime;
-		currentSoundSources = currentSoundSources.filter(function(referance){
-			return referance.endTime > now;
-		});
+		if (!AUDIO_DEBUG) {
+			currentSoundSources = currentSoundSources.filter(function(referance){
+				return referance.endTime > now;
+			}); //Removed completed sounds.  temporarally removed
+		}
 
 		for (var i in currentSoundSources) {
 			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff2(currentSoundSources[i].pos), now);
 			currentSoundSources[i].pan.pan.setValueAtTime(calcuatePan(currentSoundSources[i].pos), now);
 		}
 	};
+
+	this.draw = function(off) {
+		let v1 = vec2(0,0);
+		let v2 = vec2(0,0);
+		for (var i in currentSoundSources) {
+			v1.x = currentSoundSources[i].pos.x - off.x;
+			v1.y = currentSoundSources[i].pos.y - off.y;
+			v2.x = plPos.x - off.x;
+			v2.y = plPos.y - off.y;
+	        drawLine(renderer, v1, v2, "#FFFFFFFF");
+		}
+	}
 
 //--//volume handling functions-----------------------------------------------
 	this.toggleMute = function() {
@@ -344,7 +358,6 @@ function AudioGlobal() {
 
 		if (direction > 90 && direction <= 180) {
 			newVolume *= lerp(1, BEHIND_THE_HEAD, (direction-90)/90);
-			console.log(newVolume);
 		} else if (direction > 180 && direction <= 270) {
 			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90);
 		}
