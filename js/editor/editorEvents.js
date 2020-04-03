@@ -1,4 +1,6 @@
 
+var boxSelectionEvent = function(offset) {};
+
 //WALLS
 var wallHandleTr = null;
 var wallHandleTouchIndex = -1;
@@ -54,6 +56,35 @@ var currentEnemyType = 0;
 //GENERAL
 var editorSelectionCurrentDelay = 0;
 var editorSelectionDelay = 20;
+
+function boxHandleEvent(offset)
+{
+    if(isTouched)
+    {
+        if(!boxActive)
+        {
+            boxPos = vec2(touchPos[0].x, touchPos[0].y);
+            boxActive = true;
+        }
+        else
+        {
+            boxSize = vec2(touchPos[0].x - boxPos.x, touchPos[0].y - boxPos.y);
+        }
+    }
+    else if(boxActive)
+    {
+        if(boxPos.x != 0 && boxPos.y != 0
+            && Math.abs(boxSize.x) > 2 && Math.abs(boxSize.y) > 2)
+        {
+            boxSelectionEvent(offset);
+
+            boxPos = vec2(0, 0);
+            boxSize = vec2(0, 0);
+            boxSelectionEvent = function(offset) {};
+        }
+        boxActive = false;
+    }
+}
 
 function wallHandleEvents(walls, offset)
 {

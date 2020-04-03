@@ -25,6 +25,7 @@ function editorEvents(deltaTime, offset, walls, areas, decorEnts, itemEnts, enem
 {
     if(cpEditPanel.enabled)
     {
+        boxHandleEvent(offset);
         if(cpEditTabs[0].selector.selected) wallHandleEvents(walls, offset);
         if(cpEditTabs[1].selector.selected) areaHandleEvents(areas, offset);
         if(cpEditTabs[2].selector.selected) decorHandleEvents(decorEnts, offset);
@@ -42,6 +43,7 @@ function editorDraw(renderer, walls, areas, decorEnts, itemEnts, enemyEnts)
 {
     if(cpEditPanel.enabled)
     {
+        editorDrawBox(renderer);
         editorDrawGrid(renderer);
         if(cpEditTabs[0].selector.selected) editorDrawWallHandles(renderer, walls);
         if(cpEditTabs[1].selector.selected) editorDrawAreaHandles(renderer, areas);

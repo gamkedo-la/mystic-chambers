@@ -48,8 +48,16 @@ function setupGameplayUI()
     areasEditorObjects.push(areaDelAllBtn);
 
     decorEditorObjects = [];
-    decorEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
-        undefined,"This area will contain\ndecorations you can place."));
+
+    decorScatterBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Load Scatter"),
+        undefined,"Click to load Box Selection\nwith decoration scatter.");
+    decorEditorObjects.push(decorScatterBtn);
+    decorScatterSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 200),
+        new Label(tr(), "Scat. Amount"), 200, decorScatterAmount, sliderKnobSize);
+    decorEditorObjects.push(decorScatterSlider);
+    decorDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
+        new Button(tr(), "#992222"));
+    decorEditorObjects.push(decorDelAllBtn);
 
     itemsEditorObjects = [];
     itemsEditorObjects.push(new TextButton(tr(vec2(), btnSize), new Label(tr(), "WIP"),
@@ -84,6 +92,9 @@ function setupGameplayUI()
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
         "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize);
     cpEditObjects.push(gridSizeSlider);
+    entityFixBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Fix Entities", undefined),
+        undefined,"Click to remove outside entities\nand set entities in appropriate sectors.");
+    cpEditObjects.push(entityFixBtn);
 
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpEditTabs[0], cpEditTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
@@ -135,8 +146,8 @@ function setupGameplayUI()
     roofFloorPerspectiveSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2000), new Label(tr(),
     "Pers.", undefined, undefined, -1), 2000, document.body.style.perspective, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorPerspectiveSlider);
-    floorHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 10000), new Label(tr(),
-    "Fl. H.", undefined, undefined, -1), 10000, floorHeight, sliderKnobSize);
+    floorHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(1000, 6000), new Label(tr(),
+    "Fl. H.", undefined, undefined, -1), 5000, floorHeight, sliderKnobSize);
     roofFloorRenderObjects.push(floorHeightSlider);
 
     roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + roofFloorRenderTexture ? "ON" : "OFF", undefined, roofFloorRenderTexture ? "green" : "red"),
@@ -382,6 +393,16 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         else { toggleGridBtn.label.text = "Grid OFF"; toggleGridBtn.label.textColor = "red"; }
         toggleGridBtn.button.resetOutput();
     }
+    else if (entityFixBtn.button.output == UIOUTPUT_SELECT)
+    {
+        entitiesInSectorSet = [];
+        setEntitiesInSectors();
+        deleteEntitiesOutsideSector();
+        decor.removeIfNotInEntities();
+        items.removeIfNotInEntities();
+        enemies.removeIfNotInEntities();
+        entityFixBtn.button.resetOutput();
+    }
     else if (resetPosBtn.button.output == UIOUTPUT_SELECT)
     {
         for(let i = 0; i < ray.length; i++) ray[i].p = vec2(window.innerWidth/2, window.innerHeight/2);
@@ -492,6 +513,25 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         area = new Array();
         areaDelAllBtn.button.resetOutput();
     }
+    else if(decorScatterBtn.button.output == UIOUTPUT_SELECT)
+    {
+        boxSelectionEvent = function(offset) {
+            decor.scatter(ENT_TECHTORCH, decorScatterAmount,
+                boxPos.x, boxPos.y,
+                boxPos.x + boxSize.x, boxPos.y + boxSize.y, offset);
+        }
+        decorScatterBtn.button.resetOutput();
+    }
+    else if (decorDelAllBtn.button.output == UIOUTPUT_SELECT)
+    {
+        while(decor.ents.length > 0)
+        {
+            removeEntity(decor.ents[decor.ents.length - 1]);
+            decor.ents.pop();
+        }
+        decor.ents = new Array();
+        decorDelAllBtn.button.resetOutput();
+    }
     else if(fpsResetBtn.button.output == UIOUTPUT_SELECT)
     {
         maxFPS = 0;
@@ -568,6 +608,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    currentAreaType = areaTypeSlider.knobValue;
    areaTypeSlider.label.text = "Type " + areaTypeSlider.knobValue;
    if(selectedAreaIndex > -1 && selectedAreaIndex < area.length) area[selectedAreaIndex].type = currentAreaType; 
+
+   decorScatterAmount = decorScatterSlider.knobValue;
+   decorScatterSlider.label.text = "Scatter Am. " + decorScatterSlider.knobValue;
 
    fps = Math.floor(1000.0/deltaTime);
    minFPS = minFPS > fps ? fps : minFPS;

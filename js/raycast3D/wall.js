@@ -7,9 +7,11 @@ wallImages = [
     new ImageObject("images/wall_stone_red_cracked.png", vec2(160, 160)),
 ];
 wallColors = [
-    "#ffff0099",
-    "#50505099",
-    "#ff000099"
+    "#ffff0077",
+    "#00dd0077",
+    "#dd00dd77",
+    "#ff000077",
+    "#dd000077"
 ];
 wall = [];
 
@@ -75,7 +77,7 @@ class Wall
             drawLine(renderer, midVec2,
                 vec2(midVec2.x - (length * Math.cos(a + degToRad(90.0))),
             (midVec2.y - (length * Math.sin(a + degToRad(90.0))))),
-            "#333333");
+            "#555555");
 		}
     }
 
@@ -243,11 +245,11 @@ function drawSectorMapWallsLeft(sector, off)
     {
         for(let i = 0; i < sector.sectorData.wallsLeft.length; i++)
         {
-            if(sector.sectorData.wallsLeft[i].type == 0)
+            if(sector.sectorData.wallsLeft[i].type != 0)
             {
-            sector.sectorData.wallsLeft[i].addOffset(off);
-            sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
-            sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
+                sector.sectorData.wallsLeft[i].addOffset(off);
+                sector.sectorData.wallsLeft[i].draw(renderer, undefined, plPos);
+                sector.sectorData.wallsLeft[i].addOffset(vec2(-off.x, -off.y));
             }
         }
     }
@@ -259,11 +261,11 @@ function drawSectorMapWallsRight(sector, off)
     {
         for(let i = 0; i < sector.sectorData.wallsRight.length; i++)
         {
-            if(sector.sectorData.wallsRight[i].type == 0)
+            if(sector.sectorData.wallsRight[i].type != 0)
             {
-            sector.sectorData.wallsRight[i].addOffset(off);
-            sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
-            sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
+                sector.sectorData.wallsRight[i].addOffset(off);
+                sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
+                sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
             }
         }
     }

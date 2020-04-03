@@ -4,6 +4,11 @@ var gridCellSize = 20;
 var gridColor = "#ffffff20";
 var gridOffset = vec2(0, 0);
 
+var boxPos = vec2(0, 0);
+var boxSize = vec2(0, 0);
+var boxColor = "#2200ff33";
+var boxActive = false;
+
 var wallHandleSize = 14;
 var wallHandleColor = "#00dd00ff";
 
@@ -88,4 +93,9 @@ function editorDrawEnemyHandles(renderer, enemyEnts)
         drawRect(renderer, enemyEnts[i].p.subtract(vec2(enemyHandleSize/2, enemyHandleSize/2)),
             vec2(enemyHandleSize, enemyHandleSize), selectedEnemyIndex == i, enemyHandleColor, 0);
     }
+}
+
+function editorDrawBox(renderer)
+{
+    if(boxActive) drawRect(renderer, boxPos, boxSize, true, boxColor);
 }

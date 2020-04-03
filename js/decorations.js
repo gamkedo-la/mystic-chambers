@@ -1,6 +1,8 @@
 // designed for non-interactive props - they never update
 // such as grass, greebles, rocks, debris, cracks, crates
 
+var decorScatterAmount = 0;
+
 class DecorationManager {
 
     constructor()
@@ -10,8 +12,6 @@ class DecorationManager {
 
     scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
-        //console.log("scattering " + quantity + " entities...")
-
         for (var num=0; num<quantity; num++)
         {
             var ent = new Entity();

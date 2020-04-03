@@ -75,9 +75,9 @@ class floorClass
         if (DEBUGFLOORS) console.log("floor and ceiling update...");
 
         // thse are a bit magic numbery - FIXME
-        ceilingOffsetX = -screen.width/2 - 2200;
-        floorOffsetX = -screen.width/2 - 2200;
-        floorHeight = 4096 - screen.height; 
+        ceilingOffsetX = -screen.width/2 - 2700;
+        floorOffsetX = -screen.width/2 - 2700;
+        floorHeight = 3442;//4096 - screen.height; 
         
         const anglescale = 1; // it seems to turn too slow, but this is the 
         //perspective and fov being different - we can tweak this in the CSS
@@ -86,15 +86,15 @@ class floorClass
         angle *= anglescale;
         
         // rotate
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 0px, "+floorHeight+"px)"; 
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 0px, "+floorHeight+"px)";
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
         this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 0px, "+ceilingHeight+"px)"; 
         this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
 
         // shift around floor and ceiling to simulate scrolling the sprite
         var xform = "translate3d("
-                        +((position.x*floorScrollScale)%bgtilesize).toString()+"px, "
-                        +((position.y*floorScrollScale)%bgtilesize).toString()+"px, "
+                        +(((position.x*floorScrollScale)%bgtilesize)).toString()+"px, "
+                        +(((position.y*floorScrollScale)%bgtilesize)).toString()+"px, "
                         +"0px"
                         +")";
 

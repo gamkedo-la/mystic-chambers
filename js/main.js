@@ -1,6 +1,6 @@
-const PLAY_BUTTON = '1';//'`'; // qwertz keybaords do not have a tilde key
+const PLAY_BUTTON = '1';
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
-const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
+const RAYCAST_FLOOR_CEILING_ENABLED = true; // replaced by CSS optimization
 
 renderEditorAndGameTogether = 0;
 debugEntities = false;
@@ -44,9 +44,6 @@ window.onload = function()
     items.add(576, 298, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
-
-    decor.scatter(ENT_TECHTORCH, 800,
-        400, 0, 800, 400, vec2(1, -120)); // experimental WIP
 
     playerInit();
 
@@ -232,7 +229,7 @@ function draw()
     if(!mapMode || renderEditorAndGameTogether >= 1)
     {
         if(platform != ANDROID && RAYCAST_FLOOR_CEILING_ENABLED) {
-            renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y,ray[ray.length/2].angle);
+            renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y, ray[ray.length/2].angle);
         }
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
         calculateActiveSector(plPos);
