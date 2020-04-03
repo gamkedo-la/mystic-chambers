@@ -537,6 +537,18 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         decor.ents = new Array();
         decorDelAllBtn.button.resetOutput();
     }
+    else if (itemsDelAllBtn.button.output == UIOUTPUT_SELECT)
+    {
+        while(items.ents.length > 0)
+        {
+            removeEntity(items.ents[items.ents.length - 1]);
+            items.ents.pop();
+        }
+        items.ents = new Array();
+        itemsDelAllBtn.button.resetOutput();
+    }
+    else if (enemiesDelAllBtn.button.output == UIOUTPUT_SELECT)
+    {
         while(enemies.ents.length > 0)
         {
             removeEntity(enemies.ents[enemies.ents.length - 1]);
