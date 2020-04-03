@@ -13,7 +13,7 @@ const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 10;
 const DROPOFF_MAX = 100;
-const BEHIND_THE_HEAD = 0.25;
+const BEHIND_THE_HEAD = 0.5;
 
 var audio = new AudioGlobal();
 
@@ -209,6 +209,35 @@ function AudioGlobal() {
 		return referance;
 	};
 
+	this.play3DSound2 = function(buffer, vec2,  mixVolume = 1, rate = 1) {
+		if (!initialized) return;
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+		var panNode = audioCtx.createStereoPanner();
+
+		source.connect(gainNode);
+		gainNode.connect(panNode);
+		panNode.connect(soundEffectsBus);
+
+		var pos = calculatePos(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff2(vec2);
+		panNode.pan.value = calcuatePan(vec2);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		source.start();
+
+		source.onended = function() {
+			source = null;
+		}
+
+		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		currentSoundSources.push(referance);
+		return referance;
+	};
+
 	this.playMusic = function(buffer, fadeIn = false) {
 		if (!initialized) return;
 
@@ -282,7 +311,6 @@ function AudioGlobal() {
 		return;
 	};
 
-    // currently not used by any code
     function calcuateVolumeDropoff(vec2) {
 		var distance = currentPlayerPos.distance(vec2);
 
@@ -319,7 +347,6 @@ function AudioGlobal() {
 			console.log(newVolume);
 		} else if (direction > 180 && direction <= 270) {
 			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90);
-			console.log(newVolume);
 		}
 
 		return Math.pow(newVolume, 2);
@@ -346,6 +373,12 @@ function AudioGlobal() {
 		}
 
 		return pan;
+	}
+
+	function calculatePos(vec2) {
+		var pos = vec2;
+
+		return pos;
 	}
 
 	return this;
