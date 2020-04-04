@@ -136,12 +136,6 @@ function setupGameplayUI()
     rayMaxDepthSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1000),
         new Label(tr(), "Max D."), 1000, maxDepth, sliderKnobSize);
     rayRenderObjects.push(rayMaxDepthSlider);
-    rayFishEyeSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 5.0),
-        new Label(tr(), "Fish Eye"), 50, fishEyeRemoveFactor, sliderKnobSize);
-    rayRenderObjects.push(rayFishEyeSlider);
-    rayFishEyeThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 10.0),
-        new Label(tr(), "Fish Eye Thr."), 40, fishEyeRemoveThreshold, sliderKnobSize);
-    rayRenderObjects.push(rayFishEyeThresholdSlider);
     rayResetBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "RESET"),
         new Button(tr(), "#992222"));
     rayRenderObjects.push(rayResetBtn);
@@ -170,12 +164,6 @@ function setupGameplayUI()
     roofFloorNearDistSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
         new Label(tr(), "Near Dist."), 1000, nearDist, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorNearDistSlider);
-    roofFloorColor1Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 1"), 255, colorDepthYG1, sliderKnobSize);
-    roofFloorRenderObjects.push(roofFloorColor1Slider);
-    roofFloorColor2Slider = new Slider(tr(vec2(), sliderSize), vec2(0, 255),
-        new Label(tr(), "Color 2"), 255, colorDepthYG2, sliderKnobSize);
-    roofFloorRenderObjects.push(roofFloorColor2Slider);
     roofFloorDepthStepSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 64),
         new Label(tr(), "Depth Step"), 64, depthYGStep, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorDepthStepSlider);
@@ -202,15 +190,6 @@ function setupGameplayUI()
     wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + (wallDarkening ? "ON" : "OFF"), undefined, wallDarkening ? "green" : "red"),
         undefined,"Click to toggle\nwall darkening effect.");
     wallRenderObjects.push(wallToggleDarkenBtn);
-    wallDarkFactorSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 30.0),
-        new Label(tr(), "Dark Factor"), 30.0, wallDarkeningFactor, sliderKnobSize);
-    wallRenderObjects.push(wallDarkFactorSlider);
-    wallDarkLayersSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 80.0),
-        new Label(tr(), "Dark Layers"), 80.0, wallDarkeningLayers, sliderKnobSize);
-    wallRenderObjects.push(wallDarkLayersSlider);
-    wallDarkStepsSlider = new Slider(tr(vec2(), sliderSize), vec2(1.0, 10.0),
-        new Label(tr(), "Dark Steps"), 18.0, wallDarkeningSteps, sliderKnobSize);
-    wallRenderObjects.push(wallDarkStepsSlider);
     wallBrightThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
         new Label(tr(), "Bright Thres."), 20.0, wallBrightnessThreshold, sliderKnobSize);
     wallRenderObjects.push(wallBrightThresholdSlider);
@@ -391,6 +370,35 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
     controlPanel.enabled = mapMode;
 
+    if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length)
+        wall.splice(lastSelectedWallIndex, 1);
+    lastSelectedWallIndex = -1;
+
+    if(lastSelectedAreaIndex >= 0 && lastSelectedAreaIndex < area.length)
+        area.splice(lastSelectedAreaIndex, 1);
+    lastSelectedAreaIndex = -1;
+
+    if(lastSelectedDecorIndex >= 0 && lastSelectedDecorIndex < decor.length)
+    {
+        removeEntity(decor.ents[lastSelectedDecorIndex]);
+        decor.ents.splice(lastSelectedDecorIndex, 1);
+    }
+    lastSelectedDecorIndex = -1;
+
+    if(lastSelectedItemIndex >= 0 && lastSelectedItemIndex < items.length)
+    {
+        removeEntity(items.ents[lastSelectedItemIndex]);
+        items.ents.splice(lastSelectedItemIndex, 1);
+    }
+    lastSelectedItemIndex = -1;
+
+    if(lastSelectedEnemyIndex >= 0 && lastSelectedEnemyIndex < enemies.length)
+    {
+        removeEntity(enemies.ents[lastSelectedEnemyIndex]);
+        enemies.ents.splice(lastSelectedEnemyIndex, 1);
+    }
+    lastSelectedEnemyIndex = -1;
+
     if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
     {
         showGrid = !showGrid;
@@ -478,12 +486,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         wall.push(newWall);
         wallAddBtn.button.resetOutput();
     }
-    else if (wallDelBtn.button.output == UIOUTPUT_SELECT)
-    {
-        if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length) wall.splice(lastSelectedWallIndex, 1);
-        lastSelectedWallIndex = -1;
-        wallDelBtn.button.resetOutput();
-    }
     else if (wallSnapBtn.button.output == UIOUTPUT_SELECT)
     {
         snapWallsToGrid(wall, vec2(0, 0));
@@ -500,12 +502,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
             vec2(gridCellSize, gridCellSize), 0);
         area.push(newArea);
         areaAddBtn.button.resetOutput();
-    }
-    else if (areaDelBtn.button.output == UIOUTPUT_SELECT)
-    {
-        if(lastSelectedAreaIndex >= 0 && lastSelectedAreaIndex < area.length) area.splice(lastSelectedAreaIndex, 1);
-        lastSelectedAreaIndex = -1;
-        areaDelBtn.button.resetOutput();
     }
     else if (areaSnapBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -578,8 +574,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         rayFOVSlider.knobValue = rayRenderFOV = platform == ANDROID ? 30.0 : 45.0;
         rayAngleDiffSlider.knobValue = rayAngleDiff = platform == ANDROID ? 0.5 : 0.25;
         rayMaxDepthSlider.knobValue = maxDepth = 250.0;
-        rayFishEyeSlider.knobValue = fishEyeRemoveFactor = 1.0;
-        rayFishEyeThresholdSlider.knobValue = fishEyeRemoveThreshold = 1.0;
 
         rayResetBtn.button.resetOutput();
     }
@@ -651,12 +645,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    maxDepth = rayMaxDepthSlider.knobValue;
    rayMaxDepthSlider.label.text = "Max D. " + rayMaxDepthSlider.knobValue;
 
-   fishEyeRemoveFactor = rayFishEyeSlider.knobValue;
-   rayFishEyeSlider.label.text = "Fish Eye " + rayFishEyeSlider.knobValue;
-
-   fishEyeRemoveThreshold = rayFishEyeThresholdSlider.knobValue;
-   rayFishEyeThresholdSlider.label.text = "Fish Eye Th." + rayFishEyeThresholdSlider.knobValue;
-
    wallHeightFactor = wallHeightSlider.knobValue;
    wallHeightSlider.label.text = "Height " + wallHeightSlider.knobValue;
 
@@ -665,15 +653,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    wallStretchFactor = wallStretchSlider.knobValue;
    wallStretchSlider.label.text = "Stretch " + wallStretchSlider.knobValue;
-
-   wallDarkeningFactor = wallDarkFactorSlider.knobValue;
-   wallDarkFactorSlider.label.text = "Dark Factor " + wallDarkFactorSlider.knobValue;
-
-   wallDarkeningLayers = wallDarkLayersSlider.knobValue;
-   wallDarkLayersSlider.label.text = "Dark Layers " + wallDarkLayersSlider.knobValue;
-
-   wallDarkeningSteps = wallDarkStepsSlider.knobValue;
-   wallDarkStepsSlider.label.text = "Dark Steps " + wallDarkStepsSlider.knobValue;
 
    wallBrightnessThreshold = wallBrightThresholdSlider.knobValue;
    wallBrightThresholdSlider.label.text = "Bright Th. " + wallBrightThresholdSlider.knobValue;
@@ -705,13 +684,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    nearDist = roofFloorNearDistSlider.knobValue;
    roofFloorNearDistSlider.label.text = "Near Dist. " + roofFloorNearDistSlider.knobValue;
-
-   colorDepthYG1 = roofFloorColor1Slider.knobValue;
-   roofFloorColor1Slider.label.text = "Color 1 " + roofFloorColor1Slider.knobValue;
-
-   colorDepthYG2 = roofFloorColor2Slider.knobValue;
-   roofFloorColor2Slider.label.text = "Color 2 " + roofFloorColor2Slider.knobValue;
-
+   
    depthYGStep = roofFloorDepthStepSlider.knobValue;
    roofFloorDepthStepSlider.label.text = "Depth Step " + roofFloorDepthStepSlider.knobValue;
 

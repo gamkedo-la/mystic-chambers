@@ -1,6 +1,5 @@
 const PLAY_BUTTON = '1';
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
-const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
 
 renderEditorAndGameTogether = 0;
 debugEntities = false;
@@ -220,7 +219,7 @@ function draw()
     //draw all the floors and walls in 3d
     if(!mapMode || renderEditorAndGameTogether >= 1)
     {
-        if(platform != ANDROID && RAYCAST_FLOOR_CEILING_ENABLED)
+        if(platform != ANDROID)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y, ray[ray.length/2].angle);
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
         calculateActiveSector(plPos);

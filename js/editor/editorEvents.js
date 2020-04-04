@@ -31,7 +31,6 @@ var selectedDecor = null;
 var selectedDecorIndex = -1;
 var lastSelectedDecorIndex = -1;
 
-var currentDecorType = 0;
 var decorScatterAmount = 0;
 
 //ITEMS
@@ -42,8 +41,6 @@ var selectedItem = null;
 var selectedItemIndex = -1;
 var lastSelectedItemIndex = -1;
 
-var currentItemType = 0;
-
 //ENEMIES
 var enemyHandleTr = null;
 var enemyHandleTouchIndex = -1;
@@ -52,11 +49,10 @@ var selectedEnemy = null;
 var selectedEnemyIndex = -1;
 var lastSelectedEnemyIndex = -1;
 
-var currentEnemyType = 0;
-
 //GENERAL
 var editorSelectionCurrentDelay = 0;
 var editorSelectionDelay = 20;
+var currentEntityType = 0;
 
 function boxHandleEvent(offset)
 {
@@ -90,7 +86,7 @@ function boxHandleEvent(offset)
 function wallHandleEvents(walls, offset)
 {
     
-    
+
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
