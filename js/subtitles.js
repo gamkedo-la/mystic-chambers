@@ -1,11 +1,9 @@
-const MAX_DISPLAY_TIME = 60 * 5;
+const MAX_DISPLAY_TIME = 60 * 4;
 
 class SubtitleManager 
 {
     constructor(transform)
     {
-        this.color = "red";
-        this.font = 60 + "px Lucida, sans-serif";
         this.text = undefined;
         this.transform = transform==undefined ? tr() : transform;
         this.displayTimer = MAX_DISPLAY_TIME;
@@ -16,32 +14,26 @@ class SubtitleManager
         this.text = text;
         this.displayTimer = 0;
 
-        if (transform != undefined){
+        if (transform != undefined)
             this.transform = transform;
-        }
     }
 
     draw()
     {
         if (!mapMode && this.displayTimer < MAX_DISPLAY_TIME)
         {
-            renderer.fillStyle = this.color;
-            renderer.font = this.font;
+            renderer.fillStyle = uiContext.textColor;
+            renderer.font = uiContext.fontFamily + " " + uiContext.fontSize.toString() + "px";
             var textWidth = renderer.measureText(this.text).width;
             renderer.fillText(
                 this.text, 
                 this.transform.position.x - textWidth/2,
                 this.transform.position.y,
-            )
+            );
         }
 
         this.displayTimer += 1;
     }
 }
 
-subtitleManager = new SubtitleManager(
-    tr(vec2(
-        screen.width/2, 
-        gunDefMinY + gunImages[0][0].image.height/2 + 0.1*screen.height
-    ))
-)
+subtitleManager = new SubtitleManager(tr(vec2(screen.width/2, uiContext.fontSize * 1.5)));

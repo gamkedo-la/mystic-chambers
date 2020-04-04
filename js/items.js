@@ -18,7 +18,7 @@ class ItemManager {
 
         if (id!=ENT_BARREL_RED && id!=ENT_BARREL_STEEL) {
             ent.ai = aiSpinningBobbing;
-        }
+        }1
 
         this.ents.push(ent);
         entities.push(ent);
@@ -38,22 +38,22 @@ class ItemManager {
                         playerHealth += 25;
                         if(playerHealth > playerMaxHealth)
                             playerHealth = playerMaxHealth;
-                        subtitleManager.updateAndDisplayText("Picked health pack");
+                        subtitleManager.updateAndDisplayText("PICKED HEALTH PACK");
                         break;
 
                     case ENT_REDKEY:
                         availableKeys[KEY_RED] = true;
-                        subtitleManager.updateAndDisplayText("Picked red key");
+                        subtitleManager.updateAndDisplayText("PICKED RED KEY");
                         break;
 
                     case ENT_GREENKEY:
                         availableKeys[KEY_GREEN] = true;
-                        subtitleManager.updateAndDisplayText("Picked green key");
+                        subtitleManager.updateAndDisplayText("PICKED GREEN KEY");
                         break;
 
                     case ENT_BLUEKEY:
                         availableKeys[KEY_BLUE] = true;
-                        subtitleManager.updateAndDisplayText("Picked blue key");
+                        subtitleManager.updateAndDisplayText("PICKED BLUE KEY");
                         break;
 
                     case ENT_REVOLVERGUN:
@@ -61,12 +61,12 @@ class ItemManager {
                         changeGun(GUN_REVOLVER);
                         totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_REVOLVER] = gunAmmoCapacity[GUN_REVOLVER];
-                        subtitleManager.updateAndDisplayText("Picked revolver gun");
+                        subtitleManager.updateAndDisplayText("PICKED REVOLVER GUN");
                         break;
 
                     case ENT_REVOLVERAMMO:
                         totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
-                        subtitleManager.updateAndDisplayText("Picked revolver ammo");
+                        subtitleManager.updateAndDisplayText("PICKED REVOLVER AMMO");
                         break;
 
                     case ENT_WINCHESTERGUN:
@@ -74,12 +74,12 @@ class ItemManager {
                         changeGun(GUN_WINCHESTER);
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_WINCHESTER] = gunAmmoCapacity[GUN_WINCHESTER];
-                        subtitleManager.updateAndDisplayText("Picked winchester gun");
+                        subtitleManager.updateAndDisplayText("PICKED WINCHESTER GUN");
                         break;
 
                     case ENT_WINCHESTERAMMO:
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_WINCHESTER];
-                        subtitleManager.updateAndDisplayText("Picked winchester ammo");
+                        subtitleManager.updateAndDisplayText("PICKED WINCHESTER AMMO");
                         break;
 
                     case ENT_BARREL_STEEL:

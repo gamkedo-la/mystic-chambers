@@ -269,7 +269,7 @@ function draw()
 
     drawGun();
 
-    if(!mapMode && renderEditorAndGameTogether >= 1) 
+    if(!mapMode || renderEditorAndGameTogether >= 1) 
     {
         drawAllGunsDisplay(renderer);
         drawKeysDisplay(renderer);

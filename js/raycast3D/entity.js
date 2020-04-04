@@ -185,7 +185,6 @@ var entities = [];
 
 function drawEntities(renderer, plRay, line)
 {
-    //z indexing before draw
     entities.sort(
         function(entA, entB) {
             return plRay.p.distance(entA.p) < plRay.p.distance(entB.p) ? 1 : -1;
