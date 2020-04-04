@@ -71,13 +71,13 @@ window.onload = function()
 
     var s1_w1 = new Wall();
     s1_w1.set(549.99, 350, 524.99, 275);
-    s1_w1.type = 2;
+    s1_w1.type = 3;
     var s1_w2 = new Wall();
     s1_w2.set(599.99, 225, 524.99, 275);
-    s1_w2.type = 2;
+    s1_w2.type = 3;
     var s1_w3 = new Wall();
     s1_w3.set(549.99, 350, 674.99, 225);
-    s1_w3.type = 2;
+    s1_w3.type = 3;
 
     var s2_w1 = new Wall();
     s2_w1.set(574.99, 150, 599.99, 225);
@@ -91,19 +91,19 @@ window.onload = function()
 
     var s3_w1 = new Wall();
     s3_w1.set(499.99, 150, 574.99, 150);
-    s3_w1.type = 2;
+    s3_w1.type = 3;
     var s3_w2 = new Wall();
     s3_w2.set(449.99, 100, 499.99, 150);
-    s3_w2.type = 2;
+    s3_w2.type = 3;
     var s3_w3 = new Wall();
     s3_w3.set(499.99, 50, 449.99, 100);
-    s3_w3.type = 2;
+    s3_w3.type = 3;
     var s3_w4 = new Wall();
     s3_w4.set(599.99, 75, 499.99, 50);
-    s3_w4.type = 2;
+    s3_w4.type = 3;
     var s3_w5 = new Wall();
     s3_w5.set(599.99, 125, 599.99, 75);
-    s3_w5.type = 2;
+    s3_w5.type = 3;
 
     var s1_s2 = new Wall();
     s1_s2.set(674.99, 225, 599.99, 225);

@@ -5,13 +5,15 @@ wallImages = [
     new ImageObject("images/wall_stone.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_red.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_red_cracked.png", vec2(160, 160)),
+    new ImageObject("images/wall_danger.png", vec2(160, 160)),
 ];
 wallColors = [
     "#ffff0077",
     "#00dd0077",
     "#dd00dd77",
     "#ff000077",
-    "#dd000077"
+    "#dd000077",
+    "#bbbb0077"
 ];
 wall = [];
 

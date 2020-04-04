@@ -8,10 +8,11 @@ const DEBUGFLOORS = false;
 // FIXME remove all of these! use math instead
 var floorScrollScale = 42; // pixels scrolled per game units travelled
 var bgtilesize = 320; // size of texture in pixels
-var ceilingOffsetX= -3700; // to center it on-screen
+var ceilingOffsetX = -3700; // to center it on-screen
 var floorOffsetX = -3700;
-var ceilingHeight = 4096; // so it appears at correct height
+var ceilingHeight = 3960; // so it appears at correct height
 var floorHeight = 3500;
+var angleFixFactor = 1280;
 
 var prevMapMode = true;
 var prevRenderEditorAndGameTogether = 0;
@@ -85,9 +86,9 @@ class floorClass
         angle = 90 - angle;
         
         // rotate
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 1280px, "+floorHeight+"px)";
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, "+angleFixFactor+"px, "+floorHeight+"px)";
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
-        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 1280px, "+ceilingHeight+"px)"; 
+        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, "+angleFixFactor+"px, "+ceilingHeight+"px)"; 
         this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
 
         // shift around floor and ceiling to simulate scrolling the sprite
