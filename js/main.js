@@ -237,7 +237,6 @@ function draw()
         for (let i = 0; i < ray.length; i++)
             ray[i].p = vec2(plPos.x, plPos.y);
         
-        //Items can only be picked in true gameplay mode
         if(!mapMode || debugEntities) items.check(plPos);
     }
     
@@ -246,6 +245,8 @@ function draw()
 
     if(mapMode && renderEditorAndGameTogether < 3)
     {
+        aiOffset = vec2(off.x, off.y);
+
         //Offsets added before rendering and removed after rendering for Camera Movement
         for(let i = 0; i < wall.length; i++)
             wall[i].addOffset(off.negative());
@@ -294,6 +295,7 @@ function draw()
         }
         if (AUDIO_DEBUG) {audio.draw(off);}
 
+        aiOffset = vec2(0, 0);
     }
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)
