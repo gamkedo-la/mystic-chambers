@@ -320,6 +320,8 @@ function draw()
         drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, itemPickupFlashColor);
         itemPickupFlash--;
     }
+
+    subtitleManager.draw();
 }
 
 function frame()
