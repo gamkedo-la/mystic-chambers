@@ -45,6 +45,8 @@ var gun = new Sprite(tr(vec2(screen.width/2, 0)), undefined);
 var gunBobbingCounter = 0;
 var gunBobbingRate = 250.0;
 
+var gunReloadSound = {source:{buffer :null}}
+
 function changeGun(gunI)
 {
     previousGun = currentGun;
@@ -148,11 +150,9 @@ function gunEvent()
 
                     gun.imageObject = gunImages[currentGun][0];
                 }
-                else
-                {
-                    audio.play1DSound(sounds[SOUND_NOAMMO], 0.25);
-                }
-            }
+                else if (gunReloadSound.source.buffer == null) {
+                    gunReloadSound = audio.play1DSound(sounds[SOUND_NOAMMO], rndAP(0.25, 0.2), rndAP(1, 0.01));
+                }            }
         }
         else if(!gunReloading)
         {

@@ -65,7 +65,7 @@ function AudioGlobal() {
 		}
 
 		for (var i in currentSoundSources) {
-			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff2(currentSoundSources[i].pos), now);
+			currentSoundSources[i].volume.gain.setValueAtTime(calcuateVolumeDropoff(currentSoundSources[i].pos), now);
 			currentSoundSources[i].pan.pan.setValueAtTime(calcuatePan(currentSoundSources[i].pos), now);
 		}
 	};
@@ -111,7 +111,7 @@ function AudioGlobal() {
 			}
 			//while(typeof nextRenderSector != "undefined");
 		}
-	}
+	};
 
 //--//volume handling functions-----------------------------------------------
 	this.toggleMute = function() {
@@ -219,14 +219,18 @@ function AudioGlobal() {
 		gainNode.gain.value = mixVolume;
 		source.start();
 
-		source.onended = function() {
-			source = null;
+		source.onended = function(evt) {
+			source.buffer = null;
 		}
 
 		return {source: source, volume: gainNode};
 	};
 
 	this.play3DSound = function(buffer, vec2,  mixVolume = 1, rate = 1) {
+		return play3DSound2(buffer, vec2,  mixVolume, rate);
+	};
+
+	function play3DSound1(buffer, vec2,  mixVolume = 1, rate = 1) {
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -237,7 +241,42 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		gainNode.gain.value = calcuateVolumeDropoff2(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff(vec2);
+		panNode.pan.value = calcuatePan(vec2);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		source.start();
+
+		source.onended = function() {
+			source = null;
+		}
+
+		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		currentSoundSources.push(referance);
+		return referance;//3d panning and volume
+	};
+
+	function play3DSound2(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion
+		if (!initialized) return;
+
+		for (var i = 0; i < wall.length; i++) {
+			if (isLineOnLine(vec2.x, vec2.y, currentPlayerX, currentPlayerY, 
+					wall[i].p1.x, wall[i].p1.y, wall[i].p2.x, wall[i].p2.y)) {
+				return false;
+			}
+		}
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+		var panNode = audioCtx.createStereoPanner();
+
+		source.connect(gainNode);
+		gainNode.connect(panNode);
+		panNode.connect(soundEffectsBus);
+
+		gainNode.gain.value = calcuateVolumeDropoff(vec2);
 		panNode.pan.value = calcuatePan(vec2);
 
 		source.buffer = buffer;
@@ -254,7 +293,7 @@ function AudioGlobal() {
 		return referance;
 	};
 
-	this.play3DSound2 = function(buffer, vec2,  mixVolume = 1, rate = 1) {
+	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -266,7 +305,7 @@ function AudioGlobal() {
 		panNode.connect(soundEffectsBus);
 
 		var pos = calculatePos(vec2);
-		gainNode.gain.value = calcuateVolumeDropoff2(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff(vec2);
 		panNode.pan.value = calcuatePan(vec2);
 
 		source.buffer = buffer;
@@ -280,7 +319,7 @@ function AudioGlobal() {
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
-		return referance;
+		return referance;// +Propogation
 	};
 
 	this.playMusic = function(buffer, fadeIn = false) {
@@ -357,6 +396,10 @@ function AudioGlobal() {
 	};
 
 	function calcuateVolumeDropoff(vec2) {
+		return calcuateVolumeDropoff2(vec2);
+	}
+
+	function calcuateVolumeDropoff1(vec2) {
 		var distance = currentPlayerPos.distance(vec2);
 
 		var newVolume = 1;
@@ -366,7 +409,7 @@ function AudioGlobal() {
 			newVolume = 0;
 		}
 
-		return Math.pow(newVolume, 2);
+		return Math.pow(newVolume, 2);//Distance dropoff only
 	}
 
 	function calcuateVolumeDropoff2(vec2) {
@@ -393,7 +436,7 @@ function AudioGlobal() {
 			newVolume *= lerp(BEHIND_THE_HEAD, 1, (direction-180)/90);
 		}
 
-		return Math.pow(newVolume, 2);
+		return Math.pow(newVolume, 2);//adds head shadowing// +Head shadow
 	}
 
 	function calcuatePan(vec2) {
@@ -426,4 +469,8 @@ function AudioGlobal() {
 	}
 
 	return this;
+}
+
+function rndAP(base = 1, width = 0.1) {
+	return Math.random()*width*2 + base - width;
 }
