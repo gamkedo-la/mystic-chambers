@@ -246,8 +246,6 @@ function draw()
             ray[i].p = vec2(plPos.x, plPos.y);
         }
 
-        editorDraw(renderer, off, wall, area, decor.ents, items.ents, enemies.ents);
-
         drawEntities(renderer, ray[ray.length/2], true);
 
         for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors, 12);
@@ -257,6 +255,8 @@ function draw()
         addOffsetToList(area, off.negative());
         for(let i = 0; i < area.length; i++) area[i].draw(renderer, areaColors);
         addOffsetToList(area, off);
+
+        editorDraw(renderer, off, wall, area, decor.ents, items.ents, enemies.ents);
 
         if (AUDIO_DEBUG) { audio.draw(off); }
 

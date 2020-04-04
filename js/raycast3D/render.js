@@ -12,10 +12,10 @@ var wallDarkening = true;
 var wallDarkeningFactor = 10.0;
 var wallDarkeningLayers = 2.0;
 var wallDarkeningSteps = 1.0;
-var wallBrightnessThreshold = 0.2;
-var wallDarknessThreshold = 0.75;
+var wallBrightnessThreshold = 0.1;
+var wallDarknessThreshold = 0.85;
 
-var fishEyeRemoveFactor = 1.0;
+var fishEyeRemoveFactor = 0.0;
 var fishEyeRemoveThreshold = 1.0;
 var prevDepth = -1.0;
 
@@ -47,8 +47,8 @@ function drawRenderDataPiece(renderer, i, data, ray)
         if (data.depth >= maxDepth)
             return;
 
-        if(prevDepth > -0.999 && Math.abs(data.depth - prevDepth) < fishEyeRemoveThreshold)
-            data.depth = lerp(data.depth, prevDepth, fishEyeRemoveFactor);
+        //if(prevDepth > -0.999 && Math.abs(data.depth - prevDepth) < fishEyeRemoveThreshold)
+        //    data.depth = lerp(data.depth, prevDepth, fishEyeRemoveFactor);
 
         //data.depth = Math.sqrt(data.depth * 25);
         //data.depth = data.depth * Math.cos(degToRad(ray[ray.length/2].angle) - degToRad(ray[i].angle));
@@ -100,8 +100,18 @@ function drawRenderDataPiece(renderer, i, data, ray)
             if(wallDarkening && segmentSize.y - (segmentSize.y/wallDarkeningFactor) < window.innerHeight)
             {
                 renderer.globalAlpha = 1.0 - ((segmentSize.y - (segmentSize.y/wallDarkeningFactor)) / window.innerHeight);
-                renderer.globalAlpha = round(Math.floor(renderer.globalAlpha * wallDarkeningLayers), wallDarkeningSteps, 0) / Math.floor(wallDarkeningLayers);
-                renderer.globalAlpha = clamp(renderer.globalAlpha, wallBrightnessThreshold, wallDarknessThreshold);
+                //renderer.globalAlpha = round(Math.floor(renderer.globalAlpha * wallDarkeningLayers), wallDarkeningSteps, 0) / Math.floor(wallDarkeningLayers);
+                if(renderer.globalAlpha < 0.2) renderer.globalAlpha = 0.1;
+                else if(renderer.globalAlpha < 0.5) renderer.globalAlpha = 0.15;
+                else if(renderer.globalAlpha < 0.55) renderer.globalAlpha = 0.25;
+                else if(renderer.globalAlpha < 0.6) renderer.globalAlpha = 0.4;
+                else if(renderer.globalAlpha < 0.65) renderer.globalAlpha = 0.45;
+                else if(renderer.globalAlpha < 0.7) renderer.globalAlpha = 0.5;
+                else if(renderer.globalAlpha < 0.8) renderer.globalAlpha = 0.65;
+                else if(renderer.globalAlpha < 0.9) renderer.globalAlpha = 0.75;
+                else renderer.globalAlpha = 0.85;
+                //renderer.globalAlpha = clamp(renderer.globalAlpha, wallBrightnessThreshold, wallDarknessThreshold);
+
                 renderer.fillStyle= 'black';
                 renderer.fillRect(
                     segmentPos.x - 2, segmentPos.y - 1  + jumpOffset,

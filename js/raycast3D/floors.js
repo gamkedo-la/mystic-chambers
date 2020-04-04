@@ -81,14 +81,13 @@ class floorClass
         // thse are a bit magic numbery - FIXME
         ceilingOffsetX = -screen.width/2 - 2700;
         floorOffsetX = -screen.width/2 - 2700;
-        floorHeight = 3442;
 
         angle = 90 - angle;
         
         // rotate
-        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 1250px, "+floorHeight+"px)";
+        this.floor.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+floorOffsetX+"px, 1280px, "+floorHeight+"px)";
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
-        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 1250px, "+ceilingHeight+"px)"; 
+        this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, 1280px, "+ceilingHeight+"px)"; 
         this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
 
         // shift around floor and ceiling to simulate scrolling the sprite

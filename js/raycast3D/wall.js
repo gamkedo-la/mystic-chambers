@@ -141,6 +141,25 @@ class Wall
             Math.floor(this.p2.x * 100.0).toString() + " " + Math.floor(this.p2.y * 100.0).toString() + " " +
             Math.floor(this.type).toString() + " ";
     }
+
+    isPresentInActiveSector()
+    {
+        pos = getPositionSideInSector();
+
+        if(pos < 0)
+        {
+            if(typeof activeSector.sectorData.wallsLeft != "undefined")
+                for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
+                    if(activeSector.sectorData.wallsLeft[i] == this) return true;
+        }
+        else if(pos > 0)
+        {
+            if(typeof activeSector.sectorData.wallsRight != "undefined")
+                for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
+                    if(activeSector.sectorData.wallsRight[i] == this) return true;
+        }
+        return false;
+    }
 }
 
 class WallData
@@ -221,13 +240,26 @@ function calculateActiveSector(plPos, sec)
     }
 }
 
-function detectActiveSector(sector, plPos)
+function getPositionSideInSector(sec, _plPos)
 {
-    var Ax = sector.p1.x; var Ay = sector.p1.y;
-    var Bx = sector.p2.x; var By = sector.p2.y;
-    var X = plPos.x; var Y = plPos.y;
+    //if params are not inserted...
+
+    //...use active sector
+    if(typeof sec == "undefined") sec = activeSector;
+
+    //...and global player position
+    if(typeof _plPos == "undefined") _plPos = plPos;
+
+    var Ax = sec.p1.x; var Ay = sec.p1.y;
+    var Bx = sec.p2.x; var By = sec.p2.y;
+    var X = _plPos.x; var Y = _plPos.y;
     Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-    var pos = (Bx * Y) - (By * X);
+    return ((Bx * Y) - (By * X));
+}
+
+function detectActiveSector(sector, _plPos)
+{
+    var pos = getPositionSideInSector(sector, _plPos);
 
     if(((pos < 0 && sector.sectorData.direction > 0)
         || (pos > 0 && sector.sectorData.direction < 0))
@@ -331,11 +363,7 @@ function collisionWithWallsInSector(currentPos, previousPos, sec, readOnlyMode)
 
     if(typeof sec != "undefined")
     {
-        var Ax = sec.p1.x; var Ay = sec.p1.y;
-        var Bx = sec.p2.x; var By = sec.p2.y;
-        var X = currentPos.x; var Y = currentPos.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
+        var pos = getPositionSideInSector(sec, currentPos);
 
         if(pos < 0 && typeof sec.sectorData.wallsLeft != "undefined")
         {
