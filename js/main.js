@@ -57,6 +57,7 @@ window.onload = function()
     items.add(576, 298, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
+    items.add(590, 293, ENT_SPIKES, vec2(1, -100));
 
     playerInit();
 

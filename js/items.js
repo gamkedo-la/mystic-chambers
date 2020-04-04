@@ -16,7 +16,9 @@ class ItemManager {
         ent.set(x, y, id);
         if(typeof offset != "undefined") ent.renderOffset = offset;
 
-        if (id!=ENT_BARREL_RED && id!=ENT_BARREL_STEEL) {
+        if (id!=ENT_BARREL_RED
+        && id!=ENT_BARREL_STEEL
+        && id!=ENT_SPIKES) {
             ent.ai = aiSpinningBobbing;
         }1
 
@@ -92,6 +94,11 @@ class ItemManager {
                         // FIXME explode!
                         // console.log("red barrel hit!");
                         shouldDestroy = false; // TODO: BOOM!!!!
+                        break;
+
+                    case ENT_SPIKES:
+                        playerHealth -= 1;
+                        shouldDestroy = false;
                         break;
 
                     default:
