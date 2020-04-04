@@ -14,9 +14,13 @@ var entCollisionSize = 4.0;
 var entAfterCollisionGap = 0.25;
 var entCollisionAngleDiff = degToRad(-2.5);
 
-//Entity IDs
+//Entity IDs (Order: Decor, Items, Enemies) --START--
+//remember to update this if adding new items
+const decorStartType = 0;
 const ENT_TECHTORCH = 0;
-//
+const decorTotalTypes = 1;
+
+const itemStartType = 1;
 const ENT_HEALTHBOX = 1;
 const ENT_REDKEY = 2;
 const ENT_GREENKEY = 3;
@@ -28,10 +32,12 @@ const ENT_WINCHESTERAMMO = 8;
 const ENT_BARREL_RED = 9;
 const ENT_BARREL_STEEL = 10;
 const ENT_SPIKES = 11;
-//
-const ENT_FIRESKULL = 12; // remember to update this if adding new items above
-//
+const itemTotalTypes = 11;
 
+const enemyStartType = 12;
+const ENT_FIRESKULL = 12;
+const enemyTotalTypes = 1;
+//Entity IDs --END--
 
 entColor = [
     "#cccc0090",

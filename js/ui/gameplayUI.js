@@ -1,5 +1,6 @@
 
 var showControlPanel = true;
+var currentEditTabIndex = -1;
 
 const GAMEPLAYUI = 1;
 var minFPS = 99999;
@@ -9,8 +10,8 @@ var gameplayUI = [];
 
 var toolTipTitle, tooltipLabel;
 
-var toggleONColor = "#55ff55";
-var toggleOFFColor = "#ff5555";
+var toggleONColor = "#88ff88";
+var toggleOFFColor = "#ff4444";
 
 function setupGameplayUI()
 {
@@ -21,9 +22,6 @@ function setupGameplayUI()
     wallDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),
         undefined,"Click this button to delete\nthe previously added entity.");
     wallEditorObjects.push(wallDelBtn);
-    wallTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, wallImages.length - 1), new Label(tr(), "Type", undefined, undefined, -1, "Select a wall type"),
-        4, currentWallType, sliderKnobSize, undefined, undefined, undefined, undefined, undefined, "This slider\nselects a wall type");
-    wallEditorObjects.push(wallTypeSlider);
     wallSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),
         undefined,"Toggle grid snap\non or off, for alignment.");
     wallEditorObjects.push(wallSnapBtn);
@@ -91,7 +89,7 @@ function setupGameplayUI()
         "Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
-    toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + (showGrid ? "ON" : "OFF"), undefined, showGrid ? "green" : "red"),
+    toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + (showGrid ? "ON" : "OFF"), undefined, showGrid ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\neditor grid.");
     cpEditObjects.push(toggleGridBtn);
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
@@ -149,7 +147,7 @@ function setupGameplayUI()
     "Fl. H.", undefined, undefined, -1), 5000, floorHeight, sliderKnobSize);
     roofFloorRenderObjects.push(floorHeightSlider);
 
-    roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (roofFloorRenderTexture ? "ON" : "OFF"), undefined, roofFloorRenderTexture ? "green" : "red"),
+    roofFloorToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (roofFloorRenderTexture ? "ON" : "OFF"), undefined, roofFloorRenderTexture ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\nroof/floor textures.");
     roofFloorRenderObjects.push(roofFloorToggleTextureBtn);
     roofFloorPointSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 50),
@@ -170,7 +168,7 @@ function setupGameplayUI()
     roofFloorDepthThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
         new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorDepthThresholdSlider);
-    roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + (renderRoofFloor ? "ON" : "OFF"), undefined, renderRoofFloor ? "green" : "red"),
+    roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + (renderRoofFloor ? "ON" : "OFF"), undefined, renderRoofFloor ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\nroof/floor rendering.");
     roofFloorRenderObjects.push(roofFloorToggleRenderBtn);
 
@@ -178,7 +176,7 @@ function setupGameplayUI()
     wallHeightSlider = new Slider(tr(vec2(), sliderSize), vec2(4, 64),
         new Label(tr(), "Height"), 60, wallHeightFactor, sliderKnobSize);
     wallRenderObjects.push(wallHeightSlider);
-    wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (wallRenderTexture ? "ON" : "OFF"), undefined, wallRenderTexture ? "green" : "red"),
+    wallToggleTextureBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Texture " + (wallRenderTexture ? "ON" : "OFF"), undefined, wallRenderTexture ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\nwall textures.");
     wallRenderObjects.push(wallToggleTextureBtn);
     wallInclipSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 1000),
@@ -187,7 +185,7 @@ function setupGameplayUI()
     wallStretchSlider = new Slider(tr(vec2(), sliderSize), vec2(100, 50000),
         new Label(tr(), "Stretch"), 4990, wallStretchFactor, sliderKnobSize);
     wallRenderObjects.push(wallStretchSlider);
-    wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + (wallDarkening ? "ON" : "OFF"), undefined, wallDarkening ? "green" : "red"),
+    wallToggleDarkenBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Darken " + (wallDarkening ? "ON" : "OFF"), undefined, wallDarkening ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\nwall darkening effect.");
     wallRenderObjects.push(wallToggleDarkenBtn);
     wallBrightThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0.0, 1.0),
@@ -362,6 +360,14 @@ function handleToolTips()
     }
 }
 
+function getCurrentEditTabIndex()
+{
+    for(let i = 0; i < 4; i++)
+        if(cpEditTabs[i].selector.selected) return i;
+
+    return -1;
+}
+
 function gameplayUICustomEvents(deltaTime, wall, area)
 {
     healthLabel.text = playerHealth.toString();
@@ -369,6 +375,18 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     //handleToolTips();
 
     controlPanel.enabled = mapMode;
+
+    var tabIndex = getCurrentEditTabIndex();
+    if(currentEditTabIndex != tabIndex)
+    {
+        currentEditTabIndex = tabIndex;
+
+        if(currentEditTabIndex == 0) currentWallType = 0;
+        else if(currentEditTabIndex == 1) currentAreaType = 0;
+        else if(currentEditTabIndex == 2) currentEntityType = decorStartType;
+        else if(currentEditTabIndex == 3) currentEntityType = itemStartType;
+        else if(currentEditTabIndex == 4) currentEntityType = enemyStartType;
+    }
 
     if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length)
         wall.splice(lastSelectedWallIndex, 1);
@@ -402,8 +420,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
     {
         showGrid = !showGrid;
-        if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = "green"; }
-        else { toggleGridBtn.label.text = "Grid OFF"; toggleGridBtn.label.textColor = "red"; }
+        if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = toggleONColor; }
+        else { toggleGridBtn.label.text = "Grid OFF"; toggleGridBtn.label.textColor = toggleOFFColor; }
         toggleGridBtn.button.resetOutput();
     }
     else if (entityFixBtn.button.output == UIOUTPUT_SELECT)
@@ -443,7 +461,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     else if (debugEntBtn.button.output == UIOUTPUT_SELECT)
     {
         debugEntities = !debugEntities;
-        debugEntBtn.label.textColor = debugEntities ? "green" : "red";
+        debugEntBtn.label.textColor = debugEntities ? toggleONColor : toggleOFFColor;
 
         debugEntBtn.button.resetOutput();
     }
@@ -581,8 +599,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         roofFloorRenderTexture = !roofFloorRenderTexture;
 
-        if(roofFloorRenderTexture) { roofFloorToggleTextureBtn.label.text = "Texture ON"; roofFloorToggleTextureBtn.label.textColor = "green"; }
-        else { roofFloorToggleTextureBtn.label.text = "Texture OFF"; roofFloorToggleTextureBtn.label.textColor = "red"; }
+        if(roofFloorRenderTexture) { roofFloorToggleTextureBtn.label.text = "Texture ON"; roofFloorToggleTextureBtn.label.textColor = toggleONColor; }
+        else { roofFloorToggleTextureBtn.label.text = "Texture OFF"; roofFloorToggleTextureBtn.label.textColor = toggleOFFColor; }
 
         roofFloorToggleTextureBtn.button.resetOutput();
     }
@@ -590,8 +608,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         renderRoofFloor = !renderRoofFloor;
 
-        if(renderRoofFloor) { roofFloorToggleRenderBtn.label.text = "Render ON"; roofFloorToggleRenderBtn.label.textColor = "green"; }
-        else { roofFloorToggleRenderBtn.label.text = "Render OFF"; roofFloorToggleRenderBtn.label.textColor = "red"; }
+        if(renderRoofFloor) { roofFloorToggleRenderBtn.label.text = "Render ON"; roofFloorToggleRenderBtn.label.textColor = toggleONColor; }
+        else { roofFloorToggleRenderBtn.label.text = "Render OFF"; roofFloorToggleRenderBtn.label.textColor = toggleOFFColor; }
 
         roofFloorToggleRenderBtn.button.resetOutput();
     }
@@ -599,8 +617,8 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    {
         wallRenderTexture = !wallRenderTexture;
 
-        if(wallRenderTexture) { wallToggleTextureBtn.label.text = "Texture ON"; wallToggleTextureBtn.label.textColor = "green"; }
-        else { wallToggleTextureBtn.label.text = "Texture OFF"; wallToggleTextureBtn.label.textColor = "red"; }
+        if(wallRenderTexture) { wallToggleTextureBtn.label.text = "Texture ON"; wallToggleTextureBtn.label.textColor = toggleONColor; }
+        else { wallToggleTextureBtn.label.text = "Texture OFF"; wallToggleTextureBtn.label.textColor = toggleOFFColor; }
 
         wallToggleTextureBtn.button.resetOutput();
    }
@@ -608,18 +626,14 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    {
         wallDarkening = !wallDarkening;
 
-        if(wallDarkening) { wallToggleDarkenBtn.label.text = "Darken ON"; wallToggleDarkenBtn.label.textColor = "green"; }
-        else { wallToggleDarkenBtn.label.text = "Darken OFF"; wallToggleDarkenBtn.label.textColor = "red"; }
+        if(wallDarkening) { wallToggleDarkenBtn.label.text = "Darken ON"; wallToggleDarkenBtn.label.textColor = toggleONColor; }
+        else { wallToggleDarkenBtn.label.text = "Darken OFF"; wallToggleDarkenBtn.label.textColor = toggleOFFColor; }
 
         wallToggleDarkenBtn.button.resetOutput();
    }
 
    gridCellSize = gridSizeSlider.knobValue;
    gridSizeSlider.label.text = "Grid Size " + gridSizeSlider.knobValue.toString();
-
-   currentWallType = wallTypeSlider.knobValue;
-   wallTypeSlider.label.text = "Type " + wallTypeSlider.knobValue.toString();
-   if(selectedWallIndex > -1 && selectedWallIndex < wall.length) wall[selectedWallIndex].type = currentWallType; 
 
    areaPadding = areaPaddingSlider.knobValue;
    areaPaddingSlider.label.text = "Padding " + areaPaddingSlider.knobValue;
@@ -684,7 +698,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    nearDist = roofFloorNearDistSlider.knobValue;
    roofFloorNearDistSlider.label.text = "Near Dist. " + roofFloorNearDistSlider.knobValue;
-   
+
    depthYGStep = roofFloorDepthStepSlider.knobValue;
    roofFloorDepthStepSlider.label.text = "Depth Step " + roofFloorDepthStepSlider.knobValue;
 

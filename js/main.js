@@ -278,7 +278,8 @@ function draw()
 
     ui.draw();
 
-    if(mapMode) {
+    if(mapMode)
+    {
         drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
     }
 

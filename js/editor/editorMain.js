@@ -4,6 +4,8 @@ var totalLevels = 10;
 const levelPrefix = "levels/lv";
 const levelPostfix = ".txt";
 
+var editorSprite = new Sprite(tr(vec2A(50, -30, vec2(80,80), ANCHOR_BOTTOMLEFT), vec2(0.5, 0.5)), undefined);
+
 var generateWallsAmount = 50;
 
 function getLevelName() { return levelPrefix + currentLevel.toString() + levelPostfix; }
@@ -51,11 +53,31 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
 
         editorDrawBox(renderer);
         editorDrawGrid(renderer);
-        if(cpEditTabs[0].selector.selected) editorDrawWallHandles(renderer, walls);
+        if(cpEditTabs[0].selector.selected)
+        {
+            editorDrawWallHandles(renderer, walls);
+            editorSprite.imageObject = wallImages[currentWallType];
+            editorSprite.drawSc();
+        }
         if(cpEditTabs[1].selector.selected) editorDrawAreaHandles(renderer, areas);
-        if(cpEditTabs[2].selector.selected) editorDrawDecorHandles(renderer, decorEnts);
-        if(cpEditTabs[3].selector.selected) editorDrawItemHandles(renderer, itemEnts);
-        if(cpEditTabs[4].selector.selected) editorDrawEnemyHandles(renderer, enemyEnts);
+        if(cpEditTabs[2].selector.selected)
+        {
+            editorDrawDecorHandles(renderer, decorEnts);
+            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
+        }
+        if(cpEditTabs[3].selector.selected)
+        {
+            editorDrawItemHandles(renderer, itemEnts);
+            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
+        }
+        if(cpEditTabs[4].selector.selected)
+        {
+            editorDrawEnemyHandles(renderer, enemyEnts);
+            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
+        }
 
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset);
     }

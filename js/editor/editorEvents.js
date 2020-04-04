@@ -1,5 +1,10 @@
 
+var editorSelectionCurrentDelay = 0;
+var editorSelectionDelay = 15;
+var currentEntityType = 0;
 var boxSelectionEvent = function(offset) {};
+var editorTypeIncKey = "m";
+var editorTypeDecKey = "n";
 
 //WALLS
 var wallHandleTr = null;
@@ -49,10 +54,79 @@ var selectedEnemy = null;
 var selectedEnemyIndex = -1;
 var lastSelectedEnemyIndex = -1;
 
-//GENERAL
-var editorSelectionCurrentDelay = 0;
-var editorSelectionDelay = 20;
-var currentEntityType = 0;
+function switchTabAccordingToType(dir)
+{
+    if(cpEditTabs[0].selector.selected)
+    {
+        if(dir > 0 && currentWallType >= wallImages.length)
+        {
+            cpEditTabs[0].selector.selected = false;
+            cpEditTabs[2].selector.selected = true;
+            currentEditTabIndex = 2;
+            currentWallType = wallImages.length - 1;
+            currentEntityType = decorStartType - 1;
+        }
+        else if(dir < 0 && currentWallType <= 0)
+        {
+            cpEditTabs[0].selector.selected = false;
+            cpEditTabs[4].selector.selected = true;
+            currentEditTabIndex = 4;
+            currentEntityType = enemyStartType + enemyTotalTypes - 1 + 1;
+        }
+    }
+    else if(cpEditTabs[2].selector.selected)
+    {
+        if(dir > 0 && currentEntityType >= decorStartType + decorTotalTypes)
+        {
+            cpEditTabs[2].selector.selected = false;
+            cpEditTabs[3].selector.selected = true;
+            currentEditTabIndex = 3;
+            currentEntityType = itemStartType - 1;
+        }
+        else if(dir < 0 && currentEntityType < decorStartType)
+        {
+            cpEditTabs[2].selector.selected = false;
+            cpEditTabs[0].selector.selected = true;
+            currentEditTabIndex = 0;
+            currentWallType = wallImages.length - 1;
+        }
+    }
+    else if(cpEditTabs[3].selector.selected)
+    {
+        if(dir > 0 && currentEntityType >= itemStartType + itemTotalTypes)
+        {
+            cpEditTabs[3].selector.selected = false;
+            cpEditTabs[4].selector.selected = true;
+            currentEditTabIndex = 4;
+            currentEntityType = enemyStartType - 1;
+        }
+        else if(dir < 0 && currentEntityType < itemStartType)
+        {
+            cpEditTabs[3].selector.selected = false;
+            cpEditTabs[2].selector.selected = true;
+            currentEditTabIndex = 2;
+            currentEntityType = decorStartType + decorTotalTypes - 1 + 1;
+        }
+    }
+    else if(cpEditTabs[4].selector.selected)
+    {
+        if(dir > 0 && currentEntityType >= enemyStartType + enemyTotalTypes)
+        {
+            cpEditTabs[4].selector.selected = false;
+            cpEditTabs[0].selector.selected = true;
+            currentEditTabIndex = 0;
+            currentEntityType = decorStartType;
+            currentWallType = 0;
+        }
+        else if(dir < 0 && currentEntityType < enemyStartType)
+        {
+            cpEditTabs[4].selector.selected = false;
+            cpEditTabs[3].selector.selected = true;
+            currentEditTabIndex = 3;
+            currentEntityType = itemStartType + itemTotalTypes - 1 + 1;
+        }
+    }
+}
 
 function boxHandleEvent(offset)
 {
@@ -85,7 +159,24 @@ function boxHandleEvent(offset)
 
 function wallHandleEvents(walls, offset)
 {
+    var oldType = currentWallType;
+    currentWallType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentWallType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
     
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentWallType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    if(oldType != currentWallType)
+        switchTabAccordingToType(currentWallType - oldType);
+
+    //if(currentWallType >= wallImages.length) currentWallType = 0;
+    //else if(currentWallType <= -1) currentWallType = wallImages.length - 1;
 
     if(editorSelectionCurrentDelay > 0)
     {
@@ -161,6 +252,24 @@ function wallHandleEvents(walls, offset)
 
 function areaHandleEvents(areas, offset)
 {
+    currentAreaType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentAreaType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
+    
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentAreaType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    //switchTabAccordingToType(); //not for areas
+
+    //FIXME: 2 to be replaced with total area types
+    //if(currentAreaType >= 2) currentAreaType = 0;
+    //else if(currentAreaType <= -1) currentAreaType = 2 - 1;
+
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
@@ -241,6 +350,25 @@ function areaHandleEvents(areas, offset)
 
 function decorHandleEvents(decorEnts, offset)
 {
+    var oldType = currentEntityType;
+    currentEntityType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentEntityType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
+    
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentEntityType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    if(oldType != currentEntityType)
+        switchTabAccordingToType(currentEntityType - oldType);
+
+    //if(currentEntityType >= decorStartType + decorTotalTypes) currentEntityType = decorStartType;
+    //else if(currentEntityType < decorStartType) currentEntityType = decorStartType + decorTotalTypes - 1;
+
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
@@ -295,6 +423,25 @@ function decorHandleEvents(decorEnts, offset)
 
 function itemHandleEvents(itemEnts, offset)
 {
+    var oldType = currentEntityType;
+    currentEntityType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentEntityType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
+    
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentEntityType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    if(oldType != currentEntityType)
+        switchTabAccordingToType(currentEntityType - oldType);
+
+    //if(currentEntityType >= itemStartType + itemTotalTypes) currentEntityType = itemStartType;
+    //else if(currentEntityType < itemStartType) currentEntityType = itemStartType + itemTotalTypes - 1;
+
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
@@ -349,6 +496,25 @@ function itemHandleEvents(itemEnts, offset)
 
 function enemyHandleEvents(enemyEnts, offset)
 {
+    var oldType = currentEntityType;
+    currentEntityType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentEntityType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
+    
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentEntityType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    if(oldType != currentEntityType)
+        switchTabAccordingToType(currentEntityType - oldType);
+
+    if(currentEntityType >= enemyStartType + enemyTotalTypes) currentEntityType = enemyStartType;
+    else if(currentEntityType < enemyStartType) currentEntityType = enemyStartType + enemyTotalTypes - 1;
+
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
