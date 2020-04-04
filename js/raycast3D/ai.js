@@ -11,6 +11,8 @@
 const DEBUGAI = false; // output to debug.log?
 const DO_NOT_UPDATE_WALL_DIR = true; // read-only collision detection
 
+var aiOffset = vec2(0,0);
+
 // random from 0..360 deg (0..2pi)
 function randomAngleRadians() {
     return Math.random()*Math.PI*2;
@@ -80,7 +82,7 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
     if (DEBUGAI) console.log("pos: " + this.p.x.toFixed(1)+","+this.p.y.toFixed(1)+" angle: "+this.angle.toFixed(1));
 
     // this is recorded here only for debug red line display in entity draw
-    this.debugTarget = plRay;
+    this.debugTarget = plRay.p.subtract(aiOffset);
     
     var speed = 0.25;
     if (backwards) speed *= -1;
@@ -143,7 +145,7 @@ function aiSpinningBobbing() {
 
 // seeks any nearby entities like health, ammo, guns, and WAYPOINTS
 var waypoints = [];
-function aiWaypointNavigation(p1Ray) {
+function aiWaypointNavigation() {
 
     // init
     if (!this.wpTarget) {

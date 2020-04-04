@@ -1,9 +1,21 @@
 const PLAY_BUTTON = '1';
 const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
-const RAYCAST_FLOOR_CEILING_ENABLED = true; // replaced by CSS optimization
+const RAYCAST_FLOOR_CEILING_ENABLED = false; // replaced by CSS optimization
 
 renderEditorAndGameTogether = 0;
 debugEntities = false;
+
+function addOffsetToList(list, offset)
+{
+    for(let i = 0; i < list.length; i++)
+        list[i].addOffset(offset);
+}
+function addOffsetToLists(lists, offset)
+{
+    for(let i = 0; i < lists.length; i++)
+        addOffsetToList(lists[i], offset);
+}
+
 
 window.onload = function()
 {
@@ -176,32 +188,10 @@ function events(deltaTime)
 
     if(mapMode && renderEditorAndGameTogether < 3)
     {
-        var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
-            ray[ray.length/2].p.y - (window.innerHeight/2));
-
-        for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(off.negative());
-        for(let i = 0; i < area.length; i++)
-            area[i].addOffset(off.negative());
-        for(let i = 0; i < decor.ents.length; i++)
-            decor.ents[i].addOffset(off.negative());
-        for(let i = 0; i < items.ents.length; i++)
-            items.ents[i].addOffset(off.negative());
-        for(let i = 0; i < enemies.ents.length; i++)
-            enemies.ents[i].addOffset(off.negative());
-
-        editorEvents(deltaTime, off, wall, area, decor.ents, items.ents, enemies.ents);
-
-        for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(off);
-        for(let i = 0; i < area.length; i++)
-            area[i].addOffset(off);
-        for(let i = 0; i < decor.ents.length; i++)
-            decor.ents[i].addOffset(off);
-        for(let i = 0; i < items.ents.length; i++)
-            items.ents[i].addOffset(off);
-        for(let i = 0; i < enemies.ents.length; i++)
-            enemies.ents[i].addOffset(off);
+        editorEvents(deltaTime,
+            vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+            ray[ray.length/2].p.y - (window.innerHeight/2)),
+            wall, area, decor.ents, items.ents, enemies.ents);
     }
 
     ui.event();
@@ -229,15 +219,13 @@ function draw()
     //draw all the floors and walls in 3d
     if(!mapMode || renderEditorAndGameTogether >= 1)
     {
-        if(platform != ANDROID && RAYCAST_FLOOR_CEILING_ENABLED) {
+        if(platform != ANDROID && RAYCAST_FLOOR_CEILING_ENABLED)
             renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y, ray[ray.length/2].angle);
-        }
         renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
         calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)
             ray[i].p = vec2(plPos.x, plPos.y);
         
-        //Items can only be picked in true gameplay mode
         if(!mapMode || debugEntities) items.check(plPos);
     }
     
@@ -246,54 +234,33 @@ function draw()
 
     if(mapMode && renderEditorAndGameTogether < 3)
     {
-        //Offsets added before rendering and removed after rendering for Camera Movement
-        for(let i = 0; i < wall.length; i++)
-            wall[i].addOffset(off.negative());
-        for(let i = 0; i < area.length; i++)
-            area[i].addOffset(off.negative());
-        for(let i = 0; i < decor.ents.length; i++)
-            decor.ents[i].addOffset(off.negative());
-        for(let i = 0; i < items.ents.length; i++)
-            items.ents[i].addOffset(off.negative());
-        for(let i = 0; i < enemies.ents.length; i++)
-            enemies.ents[i].addOffset(off.negative());
+        aiOffset = vec2(off.x, off.y);
 
+        //wall offset added before rendering rays otherwise rays-walls casting won't work appropriately
+        addOffsetToList(wall, off.negative());
         for (let i = 0; i < ray.length; i++)
         {
             plPos = vec2(ray[i].p.x, ray[i].p.y);
             ray[i].p = vec2(window.innerWidth/2, window.innerHeight/2);
-
             ray[i].draw(renderer, wall, true);
-
             ray[i].p = vec2(plPos.x, plPos.y);
         }
 
-        editorDraw(renderer, wall, area, decor.ents, items.ents, enemies.ents);
-
-        for(let i = 0; i < decor.ents.length; i++)
-            decor.ents[i].addOffset(off);
-        for(let i = 0; i < items.ents.length; i++)
-            items.ents[i].addOffset(off);
-        for(let i = 0; i < enemies.ents.length; i++)
-            enemies.ents[i].addOffset(off);
+        editorDraw(renderer, off, wall, area, decor.ents, items.ents, enemies.ents);
 
         drawEntities(renderer, ray[ray.length/2], true);
 
-        for(let i = 0; i < area.length; i++)
-        {
-            area[i].draw(renderer, areaColors);
-            area[i].addOffset(off);
-        }
-
+        for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors, 12);
         drawSectorsMap(renderer, vec2(window.innerWidth/2, window.innerHeight/2), vec2(0,0));
+        addOffsetToList(wall, off);
 
-        for (let i = 0; i < wall.length; i++)
-        {
-            wall[i].draw(renderer, wallColors, 12);
-            wall[i].addOffset(off);
-        }
-        if (AUDIO_DEBUG) {audio.draw(off);}
+        addOffsetToList(area, off.negative());
+        for(let i = 0; i < area.length; i++) area[i].draw(renderer, areaColors);
+        addOffsetToList(area, off);
 
+        if (AUDIO_DEBUG) { audio.draw(off); }
+
+        aiOffset = vec2(0, 0);
     }
 
     if(plPos.x != prevPlPos.x && plPos.y != prevPlPos.y)

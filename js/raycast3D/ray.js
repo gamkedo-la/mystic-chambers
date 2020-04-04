@@ -330,4 +330,10 @@ class Ray
 
         return data;
     }
+
+    addOffset(vec2)
+    {
+        this.p.x += vec2.x;
+        this.p.y += vec2.y;
+    }
 }

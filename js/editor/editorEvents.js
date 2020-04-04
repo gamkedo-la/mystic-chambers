@@ -89,6 +89,8 @@ function boxHandleEvent(offset)
 
 function wallHandleEvents(walls, offset)
 {
+    
+    
     if(editorSelectionCurrentDelay > 0)
     {
         editorSelectionCurrentDelay--;
