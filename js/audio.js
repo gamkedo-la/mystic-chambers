@@ -20,20 +20,16 @@ var audio = new AudioGlobal();
 function AudioGlobal() {
 
 	var initialized = false;
-	var audioCtx;//, audioListener;
+	var audioCtx;
 	var musicBus, soundEffectsBus, masterBus;
-	//var isMuted; // TODO: unimplemented
 	var musicVolume, soundEffectsVolume;
 	var currentMusicTrack;
 	var currentSoundSources = [];
-	var panningModel  = "HRTF";
 
 //--//Set up WebAudioAPI nodes------------------------------------------------
 	this.init = function() {
 		if (initialized) return;
 
-		//console.log("Initializing Audio...");
-		// note: this causes a browser error if user has not interacted w page yet    
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		this.context = audioCtx;
 		this.audioListener = audioCtx.listener;
@@ -57,6 +53,8 @@ function AudioGlobal() {
 	};
 
 	this.update = function() {
+		if (!initialized) audio.init();
+
 		now = audioCtx.currentTime;
 		if (!AUDIO_DEBUG) {
 			currentSoundSources = currentSoundSources.filter(function(referance){
@@ -79,8 +77,6 @@ function AudioGlobal() {
 			v2.x = plPos.x - off.x;
 			v2.y = plPos.y - off.y;
 			drawLine(renderer, v1, v2, "#FFFFFFFF");
-
-			
 
 			//do
 			{
@@ -175,36 +171,6 @@ function AudioGlobal() {
 	};
 
 //--//Audio playback classes--------------------------------------------------
-	this.playOneshot = function(buffer, vec2, mixVolume = 1, rate = 1)
-	{
-		if (!initialized) return;
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createPanner();
-
-		panNode.panningModel = panningModel;
-		panNode.distanceModel = 'inverse';
-		panNode.coneInnerAngle = 360;
-		panNode.coneOuterAngle  = 0;
-		panNode.coneOuterGain  = 0;
-		panNode.rolloffFactor  = 1;// will need to be fixed to use what ever get implemented for objects
-		panNode.maxDistance = screen.width;
-		panNode.refDistance = 1;// will need to be fixed to use what ever get implemented for objects
-		panNode.setPosition(vec2.x, vec2.y, 0);
-
-		source.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value = mixVolume;
-		source.start();
-
-		return {source: source, volume: gainNode, pan: panNode};
-	};
-
 	this.play1DSound = function(buffer, mixVolume = 1, rate = 1) {
 		if (!initialized) return;
 
@@ -230,7 +196,7 @@ function AudioGlobal() {
 		return play3DSound2(buffer, vec2,  mixVolume, rate);
 	};
 
-	function play3DSound1(buffer, vec2,  mixVolume = 1, rate = 1) {
+	function play3DSound1(buffer, vec2,  mixVolume = 1, rate = 1) {//3d panning and volume
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -255,15 +221,17 @@ function AudioGlobal() {
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
-		return referance;//3d panning and volume
+		return referance;
 	};
 
 	function play3DSound2(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion
 		if (!initialized) return;
 
 		for (var i = 0; i < wall.length; i++) {
-			if (isLineOnLine(vec2.x, vec2.y, currentPlayerX, currentPlayerY, 
-					wall[i].p1.x, wall[i].p1.y, wall[i].p2.x, wall[i].p2.y)) {
+			if (isLineOnLine(vec2.x, vec2.y, 
+					currentPlayerX, currentPlayerY, 
+					wall[i].p1.x, wall[i].p1.y, 
+					wall[i].p2.x, wall[i].p2.y)) {
 				return false;
 			}
 		}
@@ -293,7 +261,7 @@ function AudioGlobal() {
 		return referance;
 	};
 
-	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {
+	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {// +Propogation
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -304,9 +272,20 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		var pos = calculatePos(vec2);
-		gainNode.gain.value = calcuateVolumeDropoff(vec2);
-		panNode.pan.value = calcuatePan(vec2);
+		var pos = vec2;
+		var arrayOfOccludingWalls = [];
+		for (var i = 0; i < wall.length; i++) {
+			if (isLineOnLine(vec2.x, vec2.y, 
+					currentPlayerX, currentPlayerY, 
+					wall[i].p1.x, wall[i].p1.y, 
+					wall[i].p2.x, wall[i].p2.y)) {
+
+				arrayOfOccludingWalls.push(wall[i]);
+			}
+		}
+
+		gainNode.gain.value = calcuateVolumeDropoff(pos);
+		panNode.pan.value = calcuatePan(pos);
 
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
@@ -317,9 +296,9 @@ function AudioGlobal() {
 			source = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
-		return referance;// +Propogation
+		return referance;
 	};
 
 	this.playMusic = function(buffer, fadeIn = false) {
@@ -460,12 +439,6 @@ function AudioGlobal() {
 		}
 
 		return pan;
-	}
-
-	function calculatePos(vec2) {
-		var pos = vec2;
-
-		return pos;
 	}
 
 	return this;

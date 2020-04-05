@@ -163,9 +163,6 @@ function playerEvents(deltaTime)
     currentPlayerY = plPos.y; 
     currentPlayerPos.x = currentPlayerX;
     currentPlayerPos.y = currentPlayerY;
-
-
-    audio.audioListener.setPosition(plPos.x, plPos.y, 0);
 }
 
 function haltPlayer()
