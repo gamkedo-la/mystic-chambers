@@ -1,4 +1,11 @@
 
+areaColors = [
+    "#00ff0020",
+    "#0000ff20",
+    "#80800020"
+];
+area = [];
+
 var areaPadding = 3.0;
 
 class Area

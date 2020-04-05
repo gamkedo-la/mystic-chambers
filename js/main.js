@@ -28,13 +28,6 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
-    areaColors = [
-        "#00ff0020",
-        "#0000ff20",
-        "#80800020"
-    ];
-    area = [];
-
     enemies.add(530, 140, ENT_FIRESKULL, "[Wander] Fire Skull", aiWander);
     enemies.add(540, 140, ENT_FIRESKULL, "[Seek] Fire Skull", aiSeek);
     enemies.add(550, 120, ENT_FIRESKULL, "[Avoid] Fire Skull", aiAvoid);
@@ -215,12 +208,14 @@ function draw()
 
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
-    //draw all the floors and walls in 3d
     if(!mapMode || renderEditorAndGameTogether >= 1)
     {
-        if(platform != ANDROID)
-            renderRaycast3DRoofAndFloorLining(renderer, ray[ray.length/2].p.x, ray[ray.length/2].p.y, ray[ray.length/2].angle);
-        renderRaycast3D(renderer, ray, wall, ray[ray.length/2], vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y));
+        renderRaycast3DRoofAndFloorLining(renderer,
+            ray[ray.length/2].p.x, ray[ray.length/2].p.y,
+            ray[ray.length/2].angle);
+        renderRaycast3D(renderer, ray, wall,
+            ray[ray.length/2], vec2(ray[ray.length/2].p.x,
+            ray[ray.length/2].p.y));
         calculateActiveSector(plPos);
         for (let i = 0; i < ray.length; i++)
             ray[i].p = vec2(plPos.x, plPos.y);
@@ -235,7 +230,8 @@ function draw()
     {
         aiOffset = vec2(off.x, off.y);
 
-        //wall offset added before rendering rays otherwise rays-walls casting won't work appropriately
+        //wall offset added before rendering rays
+        //otherwise rays-walls casting won't work appropriately
         addOffsetToList(wall, off.negative());
         for (let i = 0; i < ray.length; i++)
         {
@@ -266,10 +262,9 @@ function draw()
         playerCalculatedAngleMovement = plPos.angle(prevPlPos);
     prevPlPos = vec2(plPos.x, plPos.y);
 
-    drawGun();
-
     if(!mapMode || renderEditorAndGameTogether >= 1) 
     {
+        drawGun();
         drawAllGunsDisplay(renderer);
         drawKeysDisplay(renderer);
         drawCrosshair(renderer);
@@ -277,10 +272,7 @@ function draw()
 
     ui.draw();
 
-    if(mapMode)
-    {
-        drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
-    }
+    if(mapMode) drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
 
     if(itemPickupFlash > 0)
     {

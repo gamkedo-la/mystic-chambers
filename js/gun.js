@@ -249,5 +249,5 @@ function drawGun()
 
 
     if(currentGun >= 0)
-        if(!mapMode && typeof gun.imageObject != "undefined") gun.drawSc();
+        if(typeof gun.imageObject != "undefined") gun.drawSc();
 }
