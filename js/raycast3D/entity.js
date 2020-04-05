@@ -18,29 +18,33 @@ var entCollisionAngleDiff = degToRad(-2.5);
 //remember to update this if adding new items
 const decorStartType = 0;
 const ENT_TECHTORCH = 0;
-const decorTotalTypes = 1;
+const ENT_GRASS1 = 1;
+const decorTotalTypes = 2;
 
-const itemStartType = 1;
-const ENT_HEALTHBOX = 1;
-const ENT_REDKEY = 2;
-const ENT_GREENKEY = 3;
-const ENT_BLUEKEY = 4;
-const ENT_REVOLVERGUN = 5;
-const ENT_REVOLVERAMMO = 6;
-const ENT_WINCHESTERGUN = 7;
-const ENT_WINCHESTERAMMO = 8;
-const ENT_BARREL_RED = 9;
-const ENT_BARREL_STEEL = 10;
-const ENT_SPIKES = 11;
-const itemTotalTypes = 11;
+const itemStartType = 2;
+const ENT_HEALTHBOX = 2;
+const ENT_REDKEY = 3;
+const ENT_GREENKEY = 4;
+const ENT_BLUEKEY = 5;
+const ENT_REVOLVERGUN = 6;
+const ENT_REVOLVERAMMO = 7;
+const ENT_WINCHESTERGUN = 8;
+const ENT_WINCHESTERAMMO = 9;
+const ENT_BARREL_RED = 10;
+const ENT_BARREL_STEEL = 11;
+const ENT_SPIKES = 12;
+const ENT_PILLAR = 13;
+const ENT_PILLAR_BROKEN = 14;
+const itemTotalTypes = 13;
 
-const enemyStartType = 12;
-const ENT_FIRESKULL = 12;
+const enemyStartType = 15;
+const ENT_FIRESKULL = 15;
 const enemyTotalTypes = 1;
 //Entity IDs --END--
 
 entColor = [
     "#cccc0090",
+    "#00aa0090",
 
     "#ee555590",
     "#ff000090",
@@ -53,6 +57,8 @@ entColor = [
     "#85876890",
     "#85876890",
     "#ffcc0090",
+    "#cc00dd90",
+    "#cc00dd90",
 
     "#ee440090",
 ];
@@ -60,6 +66,7 @@ entColor = [
 entImg = [
     //DECOR IMAGES START
         new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
+        new ImageObject("images/grass1.png", vec2(1280, 160)),
     //DECOR IMAGES END
 
     //ITEM IMAGES START
@@ -74,6 +81,8 @@ entImg = [
         new ImageObject("images/barrel_red.png", vec2(160, 160)),
         new ImageObject("images/barrel_steel.png", vec2(160, 160)),
         new ImageObject("images/spikes.png", vec2(1280, 160)),
+        new ImageObject("images/pillar.png", vec2(1280, 160)),
+        new ImageObject("images/pillar_broken.png", vec2(1280, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START

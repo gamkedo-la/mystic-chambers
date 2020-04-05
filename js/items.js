@@ -18,7 +18,9 @@ class ItemManager {
 
         if (id!=ENT_BARREL_RED
         && id!=ENT_BARREL_STEEL
-        && id!=ENT_SPIKES) {
+        && id!=ENT_SPIKES
+        && id!=ENT_PILLAR
+        && id!=ENT_PILLAR_BROKEN) {
             ent.ai = aiSpinningBobbing;
         }1
 
@@ -26,11 +28,11 @@ class ItemManager {
         entities.push(ent);
     }
 
-    check(plPos)
+    check(pos)
     {
         for(let i = 0; i < this.ents.length; i++)
         {
-            var coll = this.ents[i].getCollValue(plPos);
+            var coll = this.ents[i].getCollValue(pos);
             if(coll.x != 0.0 && coll.y != 0.0)
             {
                 var shouldDestroy = true;
@@ -85,12 +87,18 @@ class ItemManager {
                         break;
 
                     case ENT_BARREL_STEEL:
+                        plPos = prevPlPos;
+                        this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
+                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;
                         // FIXME play metal clang sound, but otherwise do nothing
                         // console.log("steel barrel hit!");
                         shouldDestroy = false;
                         break;
 
                     case ENT_BARREL_RED:
+                        plPos = prevPlPos;
+                        this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
+                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;
                         // FIXME explode!
                         // console.log("red barrel hit!");
                         shouldDestroy = false; // TODO: BOOM!!!!
@@ -98,6 +106,16 @@ class ItemManager {
 
                     case ENT_SPIKES:
                         playerHealth -= 1;
+                        shouldDestroy = false;
+                        break;
+
+                    case ENT_PILLAR:
+                        plPos = prevPlPos;
+                        shouldDestroy = false;
+                        break;
+
+                    case ENT_PILLAR_BROKEN:
+                        plPos = prevPlPos;
                         shouldDestroy = false;
                         break;
 
