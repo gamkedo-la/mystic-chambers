@@ -1,6 +1,6 @@
 
 wallImages = [
-    new ImageObject("images/door.png", vec2(160, 160)),
+    new ImageObject("images/sector.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
     new ImageObject("images/wall_stone.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_red.png", vec2(160, 160)),
@@ -424,4 +424,40 @@ function collisionWithSectorsInSector(currentPos, previousPos, sec)
     }
 
     return currentPos;
+}
+
+function deleteWallFromAllSectors(w)
+{
+    for(let i = 0; i < wall.length; i++)
+    {
+        //if(wall[i].type == 0)
+        {
+            if(typeof wall[i].sectorData.wallsLeft != "undefined")
+            {
+                for(let n = 0; n < wall[i].sectorData.wallsLeft.length; n++)
+                {
+                    if(wall[i].sectorData.wallsLeft[n] == w)
+                    {
+                        wall[i].sectorData.wallsLeft.splice(n, 1);
+                        break;
+                        //n--;
+                    }
+                }
+            }
+            else if(typeof wall[i].sectorData.wallsRight != "undefined")
+            {
+                for(let n = 0; n < wall[i].sectorData.wallsRight.length; n++)
+                {
+                    if(wall[i].sectorData.wallsRight[n] == w)
+                    {
+                        wall[i].sectorData.wallsRight.splice(n, 1);
+                        break;
+                        //n--;
+                    }
+                }
+            }
+        }
+        //else
+            //break;
+    }
 }

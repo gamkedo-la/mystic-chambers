@@ -5,10 +5,10 @@ function uiSettings()
 
     btnSize = vec2(scrSizeFactor * 0.16, scrSizeFactor * 0.04);
     squareBtnSize = vec2(scrSizeFactor * 0.05, scrSizeFactor * 0.05);
-    tabSize = vec2(scrSizeFactor * 0.14, scrSizeFactor * 0.08);
+    tabSize = vec2(scrSizeFactor * 0.15, scrSizeFactor * 0.08);
     sliderSize = vec2(scrSizeFactor * 0.28, scrSizeFactor * 0.04);
     sliderKnobSize = scrSizeFactor * 0.0075;
-    panelSize = vec2(scrSizeFactor * 0.3, scrSizeFactor * 0.5);
+    panelSize = vec2(scrSizeFactor * 0.32, scrSizeFactor * 0.54);
     mapMode = true;
 
     uiContext.set(

@@ -9,6 +9,7 @@ var gridOffset = vec2(0, 0);
 var boxPos = vec2(0, 0);
 var boxSize = vec2(0, 0);
 var boxColor = "#2200ff33";
+var boxLineColor = "#0000ffff";
 var boxActive = false;
 
 var wallHandleSize = 14;
@@ -97,5 +98,9 @@ function editorDrawEnemyHandles(renderer, enemyEnts)
 
 function editorDrawBox(renderer)
 {
-    if(boxActive) drawRect(renderer, boxPos, boxSize, true, boxColor);
+    if(boxActive)
+    {
+        drawRect(renderer, boxPos, boxSize, true, boxColor);
+        drawLine(renderer, boxPos, boxPos.add(boxSize), boxLineColor);
+    }
 }

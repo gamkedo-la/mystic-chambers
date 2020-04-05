@@ -1,5 +1,5 @@
 const PLAY_BUTTON = '1';
-const EDITOR_BG_COLOUR = "black"; //"rgba(0,0,0,0.2)"; // could be partially transparent
+const EDITOR_BG_COLOUR = "black";
 
 renderEditorAndGameTogether = 0;
 debugEntities = false;
@@ -14,7 +14,6 @@ function addOffsetToLists(lists, offset)
     for(let i = 0; i < lists.length; i++)
         addOffsetToList(lists[i], offset);
 }
-
 
 window.onload = function()
 {

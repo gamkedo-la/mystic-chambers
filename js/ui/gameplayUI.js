@@ -16,12 +16,6 @@ var toggleOFFColor = "#ff4444";
 function setupGameplayUI()
 {
     wallEditorObjects = [];
-    wallAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),
-        undefined,"Click to insert another\nof the selected type.");
-    wallEditorObjects.push(wallAddBtn);
-    wallDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),
-        undefined,"Click this button to delete\nthe previously added entity.");
-    wallEditorObjects.push(wallDelBtn);
     wallSnapBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Snap"),
         undefined,"Toggle grid snap\non or off, for alignment.");
     wallEditorObjects.push(wallSnapBtn);
@@ -33,12 +27,6 @@ function setupGameplayUI()
     areaPaddingSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 20), new Label(tr(), "Padding", undefined, undefined, -1),
         40, areaPadding, sliderKnobSize);
     areasEditorObjects.push(areaPaddingSlider);
-    areaAddBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Add"),
-        undefined,"Click to spawn a new entity\nof the current type.");
-    areasEditorObjects.push(areaAddBtn);
-    areaDelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Delete Last Selected"),
-        undefined,"Click this button to delete\nthe previously selected entity.");
-    areasEditorObjects.push(areaDelBtn);
     areaTypeSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 2), new Label(tr(), "Type", undefined, undefined, -1),
         4, 0, sliderKnobSize);
     areasEditorObjects.push(areaTypeSlider);
@@ -50,12 +38,6 @@ function setupGameplayUI()
 
     decorEditorObjects = [];
 
-    decorScatterBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Load Scatter"),
-        undefined,"Click to load Box Selection\nwith decoration scatter.");
-    decorEditorObjects.push(decorScatterBtn);
-    decorScatterSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 200),
-        new Label(tr(), "Scat. Amount"), 200, decorScatterAmount, sliderKnobSize);
-    decorEditorObjects.push(decorScatterSlider);
     decorDelAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "DELETE ALL"),
         new Button(tr(), "#992222"));
     decorEditorObjects.push(decorDelAllBtn);
@@ -95,6 +77,9 @@ function setupGameplayUI()
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
         "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize);
     cpEditObjects.push(gridSizeSlider);
+    editorModeBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Mode: MOVE", undefined, "cyan"),
+        undefined,"Click to change editor mode:\nMOVE, DELETE or ADD.");
+    cpEditObjects.push(editorModeBtn);
     entityFixBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Fix Entities", undefined),
         undefined,"Click to remove outside entities\nand set entities in appropriate sectors.");
     cpEditObjects.push(entityFixBtn);
@@ -115,11 +100,11 @@ function setupGameplayUI()
     cpEditGrid = new FlexGroup(
         tr(vec2(10, 5), panelSize),
         new SubState(tr(), cpEditObjects),
-        false, vec2(5, 5), vec2(1, 10));
+        false, vec2(5, 5), vec2(1, 12));
     
     cpEditPanel = new Panel(
         tr(vec2(5, 60), panelSize), new SubState(tr(), [cpEditGrid]
-        ), vec2(0, -100), vec2(0, 100));
+        ), vec2(0, 60), vec2(0, 60));
 
     rayRenderObjects = [];
 
@@ -162,12 +147,6 @@ function setupGameplayUI()
     roofFloorNearDistSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
         new Label(tr(), "Near Dist."), 1000, nearDist, sliderKnobSize);
     roofFloorRenderObjects.push(roofFloorNearDistSlider);
-    roofFloorDepthStepSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 64),
-        new Label(tr(), "Depth Step"), 64, depthYGStep, sliderKnobSize);
-    roofFloorRenderObjects.push(roofFloorDepthStepSlider);
-    roofFloorDepthThresholdSlider = new Slider(tr(vec2(), sliderSize), vec2(0, 1),
-        new Label(tr(), "Depth Thr."), 10, depthYGThreshold, sliderKnobSize);
-    roofFloorRenderObjects.push(roofFloorDepthThresholdSlider);
     roofFloorToggleRenderBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Render " + (renderRoofFloor ? "ON" : "OFF"), undefined, renderRoofFloor ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\nroof/floor rendering.");
     roofFloorRenderObjects.push(roofFloorToggleRenderBtn);
@@ -245,9 +224,9 @@ function setupGameplayUI()
             new FlexGroup(
                 tr(vec2(10, 5), panelSize),
                 new SubState(tr(), cpRenderObjects),
-                false, vec2(5, 5), vec2(1, 10))
+                false, vec2(5, 5), vec2(1, 12))
         ]
-        ), vec2(0, -100), vec2(0, 100));
+        ), vec2(0, 60), vec2(0, 60));
 
     resetPosBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults.");
     reloadLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved.");
@@ -362,7 +341,7 @@ function handleToolTips()
 
 function getCurrentEditTabIndex()
 {
-    for(let i = 0; i < 4; i++)
+    for(let i = 0; i < 5; i++)
         if(cpEditTabs[i].selector.selected) return i;
 
     return -1;
@@ -388,41 +367,28 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         else if(currentEditTabIndex == 4) currentEntityType = enemyStartType;
     }
 
-    if(lastSelectedWallIndex >= 0 && lastSelectedWallIndex < wall.length)
-        wall.splice(lastSelectedWallIndex, 1);
-    lastSelectedWallIndex = -1;
-
-    if(lastSelectedAreaIndex >= 0 && lastSelectedAreaIndex < area.length)
-        area.splice(lastSelectedAreaIndex, 1);
-    lastSelectedAreaIndex = -1;
-
-    if(lastSelectedDecorIndex >= 0 && lastSelectedDecorIndex < decor.length)
-    {
-        removeEntity(decor.ents[lastSelectedDecorIndex]);
-        decor.ents.splice(lastSelectedDecorIndex, 1);
-    }
-    lastSelectedDecorIndex = -1;
-
-    if(lastSelectedItemIndex >= 0 && lastSelectedItemIndex < items.length)
-    {
-        removeEntity(items.ents[lastSelectedItemIndex]);
-        items.ents.splice(lastSelectedItemIndex, 1);
-    }
-    lastSelectedItemIndex = -1;
-
-    if(lastSelectedEnemyIndex >= 0 && lastSelectedEnemyIndex < enemies.length)
-    {
-        removeEntity(enemies.ents[lastSelectedEnemyIndex]);
-        enemies.ents.splice(lastSelectedEnemyIndex, 1);
-    }
-    lastSelectedEnemyIndex = -1;
-
     if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
     {
         showGrid = !showGrid;
         if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = toggleONColor; }
         else { toggleGridBtn.label.text = "Grid OFF"; toggleGridBtn.label.textColor = toggleOFFColor; }
         toggleGridBtn.button.resetOutput();
+    }
+    else if (editorModeBtn.button.output == UIOUTPUT_SELECT)
+    {
+        editorMode++;
+        if(editorMode > 2) editorMode = -1;
+        if(editorMode == -1)
+        {
+            editorModeBtn.label.text = "Mode: DELETE";
+            lastSelectedWallIndex = lastSelectedAreaIndex
+            = lastSelectedDecorIndex = lastSelectedItemIndex
+            = lastSelectedEnemyIndex = -1;
+        }
+        else if(editorMode == 0) editorModeBtn.label.text = "Mode: MOVE";
+        else if(editorMode == 1) editorModeBtn.label.text = "Mode: ADD";
+        else if(editorMode == 2) editorModeBtn.label.text = "Mode: CHANGE";
+        editorModeBtn.button.resetOutput();
     }
     else if (entityFixBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -495,15 +461,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         lvLabel.text = getLevelName();
         nextLvBtn.button.resetOutput();
     }
-    else if (wallAddBtn.button.output == UIOUTPUT_SELECT)
-    {
-        newWall = new Wall();
-        newWall.set(ray[ray.length/2].p.x, ray[ray.length/2].p.y,
-            ray[ray.length/2].p.x, ray[ray.length/2].p.y - gridCellSize);
-        newWall.type = 0;
-        wall.push(newWall);
-        wallAddBtn.button.resetOutput();
-    }
     else if (wallSnapBtn.button.output == UIOUTPUT_SELECT)
     {
         snapWallsToGrid(wall, vec2(0, 0));
@@ -513,13 +470,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         while(wall.length > 0) wall.pop();
         wallDelAllBtn.button.resetOutput();
-    }
-    else if (areaAddBtn.button.output == UIOUTPUT_SELECT)
-    {
-        newArea = new Area(vec2(ray[ray.length/2].p.x, ray[ray.length/2].p.y),
-            vec2(gridCellSize, gridCellSize), 0);
-        area.push(newArea);
-        areaAddBtn.button.resetOutput();
     }
     else if (areaSnapBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -531,15 +481,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         while(area.length > 0) area.pop();
         area = new Array();
         areaDelAllBtn.button.resetOutput();
-    }
-    else if(decorScatterBtn.button.output == UIOUTPUT_SELECT)
-    {
-        boxSelectionEvent = function(offset) {
-            decor.scatter(ENT_TECHTORCH, decorScatterAmount,
-                boxPos.x, boxPos.y,
-                boxPos.x + boxSize.x, boxPos.y + boxSize.y, offset);
-        }
-        decorScatterBtn.button.resetOutput();
     }
     else if (decorDelAllBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -585,7 +526,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         for (let i = -rayRenderFOV; i < 0.0; i += rayAngleDiff)
             ray.push(new Ray(pos, i));
         
-            rayRegenerateBtn.button.resetOutput();
+        rayRegenerateBtn.button.resetOutput();
     }
     else if(rayResetBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -642,9 +583,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
    areaTypeSlider.label.text = "Type " + areaTypeSlider.knobValue;
    if(selectedAreaIndex > -1 && selectedAreaIndex < area.length) area[selectedAreaIndex].type = currentAreaType; 
 
-   decorScatterAmount = decorScatterSlider.knobValue;
-   decorScatterSlider.label.text = "Scatter Am. " + decorScatterSlider.knobValue;
-
    fps = Math.floor(1000.0/deltaTime);
    minFPS = minFPS > fps ? fps : minFPS;
    maxFPS = maxFPS < fps ? fps : maxFPS;
@@ -698,12 +636,6 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    nearDist = roofFloorNearDistSlider.knobValue;
    roofFloorNearDistSlider.label.text = "Near Dist. " + roofFloorNearDistSlider.knobValue;
-
-   depthYGStep = roofFloorDepthStepSlider.knobValue;
-   roofFloorDepthStepSlider.label.text = "Depth Step " + roofFloorDepthStepSlider.knobValue;
-
-   depthYGThreshold = roofFloorDepthThresholdSlider.knobValue;
-   roofFloorDepthThresholdSlider.label.text = "Depth Thr. " + roofFloorDepthThresholdSlider.knobValue;
 
    entPosSegment = entPosSegmentSlider.knobValue;
    entPosSegmentSlider.label.text = "Pos. Seg. " + entPosSegmentSlider.knobValue;

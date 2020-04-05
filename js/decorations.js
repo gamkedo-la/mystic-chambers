@@ -8,6 +8,15 @@ class DecorationManager {
         this.ents = [];
     }
 
+    add(x, y, id, offset)
+    {
+        var ent = new Entity();
+        ent.set(x,y,id);
+        if(typeof offset != "undefined") ent.renderOffset = offset;
+        this.ents.push(ent);
+        entities.push(ent);
+    }
+
     scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
         for (var num=0; num<quantity; num++)

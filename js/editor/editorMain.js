@@ -4,9 +4,7 @@ var totalLevels = 10;
 const levelPrefix = "levels/lv";
 const levelPostfix = ".txt";
 
-var editorSprite = new Sprite(tr(vec2A(50, -30, vec2(80,80), ANCHOR_BOTTOMLEFT), vec2(0.5, 0.5)), undefined);
-
-var generateWallsAmount = 50;
+var editorSprite = new Sprite(tr(vec2A(90, -70, vec2(160,160), ANCHOR_BOTTOMLEFT)), undefined);
 
 function getLevelName() { return levelPrefix + currentLevel.toString() + levelPostfix; }
 
