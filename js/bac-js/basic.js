@@ -129,10 +129,10 @@ function isPointOnLine(vec2_a, vec2_b, vec2_c, error)
 {
   var distanceTest = compareFloat(getDistBtwVec2(vec2_a, vec2_c) + getDistBtwVec2(vec2_c, vec2_b), getDistBtwVec2(vec2_a, vec2_b), error);
     
-      if(compareFloat(vec2_a.x, vec2_c.x, error) && distanceTest) return compareFloat(vec2_b.x, vec2_c.x, error);
-      if(compareFloat(vec2_a.y, vec2_c.y, error) && distanceTest) return compareFloat(vec2_b.y, vec2_c.y, error);
+    if(compareFloat(vec2_a.x, vec2_c.x, error) && distanceTest) return compareFloat(vec2_b.x, vec2_c.x, error);
+    if(compareFloat(vec2_a.y, vec2_c.y, error) && distanceTest) return compareFloat(vec2_b.y, vec2_c.y, error);
 
-      return compareFloat((vec2_a.x - vec2_c.x)/(vec2_a.y - vec2_c.y), (vec2_c.x - vec2_b.x)/(vec2_c.y - vec2_b.y), error * 1000.0) && distanceTest;
+    return compareFloat((vec2_a.x - vec2_c.x)/(vec2_a.y - vec2_c.y), (vec2_c.x - vec2_b.x)/(vec2_c.y - vec2_b.y), error * 1000.0) && distanceTest;
 }
 
 function clamp(val, min, max)

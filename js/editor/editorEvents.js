@@ -151,6 +151,106 @@ function boxHandleEvent(offset)
         {
             boxSelectionEvent(offset);
 
+            if(editorMode == -1 || editorMode == 2)
+            {
+                tempArea = new Area(boxPos, boxSize, 0);
+                if(cpEditTabs[0].selector.selected)
+                {
+                    for(let i = 0; i < wall.length; i++)
+                    {
+                        if(tempArea.isPointInside(wall[i].p1)
+                        || tempArea.isPointInside(wall[i].p2))
+                        {
+                            if(editorMode == -1)
+                            {
+                                deleteWallFromAllSectors(wall[i]);
+                                wall.splice(i, 1);
+                                i--;
+                            }
+                            else if(editorMode == 2)
+                            {
+                                wall[i].type = currentWallType;
+                            }
+                        }
+                    }
+                }
+                else if(cpEditTabs[1].selector.selected)
+                {
+                    for(let i = 0; i < area.length; i++)
+                    {
+                        if(tempArea.isPointInside(area[i].pos))
+                        {
+                            if(editorMode == -1)
+                            {
+                                area.splice(i, 1);
+                                i--;
+                            }
+                            else if(editorMode == 2)
+                            {
+                                area[i].type = currentAreaType;
+                            }
+                        }
+                    }
+                }
+                else if(cpEditTabs[2].selector.selected)
+                {
+                    for(let i = 0; i < decor.ents.length; i++)
+                    {
+                        if(tempArea.isPointInside(decor.ents[i].p))
+                        {
+                            if(editorMode == -1)
+                            {
+                                removeEntity(decor.ents[i]);
+                                decor.ents.splice(i, 1);
+                                i--;
+                            }
+                            else if(editorMode == 2)
+                            {
+                                decor.ents[i].id = currentEntityType;
+                            }
+                        }
+                    }
+                }
+                else if(cpEditTabs[3].selector.selected)
+                {
+                    for(let i = 0; i < items.ents.length; i++)
+                    {
+                        if(tempArea.isPointInside(items.ents[i].p))
+                        {
+                            if(editorMode == -1)
+                            {
+                                removeEntity(items.ents[i]);
+                                items.ents.splice(i, 1);
+                                i--;
+                            }
+                            else if(editorMode == 2)
+                            {
+                                items.ents[i].id = currentEntityType;
+                            }
+                        }
+                    }
+                }
+                else if(cpEditTabs[4].selector.selected)
+                {
+                    for(let i = 0; i < enemies.ents.length; i++)
+                    {
+                        if(tempArea.isPointInside(enemies.ents[i].p))
+                        {
+                            if(editorMode == -1)
+                            {
+                                removeEntity(enemies.ents[i]);
+                                enemies.ents.splice(i, 1);
+                                i--;
+                            }
+                            else if(editorMode == 2)
+                            {
+                                enemies.ents[i].id = currentEntityType;
+                            }
+                        }
+                    }
+                }
+            }
+
             boxPos = vec2(0, 0);
             boxSize = vec2(0, 0);
 
@@ -272,6 +372,7 @@ function wallHandleEvents(walls, offset)
                         selectedWallEnd = selectedWallEnd.add(offset);
 
                         snapWallToGrid(walls[selectedWallIndex], offset);
+                        snapWallToGrid(walls[selectedWallIndex], offset);
 
                         wallHandleTouchIndex = -1;
                         selectedWall = null;
@@ -309,7 +410,22 @@ function wallHandleEvents(walls, offset)
                 && typeof editorTemp.p2 != "undefined")
                 {
                     editorTemp.angle = editorTemp.p1.angle(editorTemp.p2);
-                    wall.push(editorTemp);
+                    if(wall.length <= 0
+                    || typeof activeSector == "undefined")
+                    {
+                        editorTemp.type = 0;
+                        wall.push(editorTemp);
+                        activeSector = wall[0];
+                        snapWallToGrid(walls[0], offset);
+                        snapWallToGrid(walls[0], offset);
+                    }
+                    else
+                    {
+                        wall.push(editorTemp);
+                        addWallToSector(wall[wall.length - 1]);
+                        snapWallToGrid(walls[wall.length - 1], offset);
+                        snapWallToGrid(walls[wall.length - 1], offset);
+                    }
                     editorTemp = undefined;
                 }
                 editorAddCheck = false;

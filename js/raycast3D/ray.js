@@ -314,7 +314,7 @@ class Ray
             drawLine(renderer, vec2(this.p.x, this.p.y),
                 vec2(this.p.x + (raycast.pdist * Math.cos(degToRad(pangle))),
                 this.p.y + (raycast.pdist * Math.sin(degToRad(pangle)))),
-                "blue");
+                "#0000ff11");
         }
 
         if(raycast.index > -1)

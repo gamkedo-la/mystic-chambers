@@ -75,14 +75,14 @@ function setupGameplayUI()
         undefined,"Click to toggle\neditor grid.");
     cpEditObjects.push(toggleGridBtn);
     gridSizeSlider = new Slider(tr(vec2(), sliderSize), vec2(10, 100), new Label(tr(),
-        "Grid Size", undefined, undefined, -1), 18, gridCellSize, sliderKnobSize);
+        "Grid Size", undefined, undefined, -1), 9, gridCellSize, sliderKnobSize);
     cpEditObjects.push(gridSizeSlider);
     editorModeBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Mode: MOVE", undefined, "cyan"),
         undefined,"Click to change editor mode:\nMOVE, DELETE or ADD.");
     cpEditObjects.push(editorModeBtn);
-    entityFixBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Fix Entities", undefined),
+    fixBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Fix All", undefined),
         undefined,"Click to remove outside entities\nand set entities in appropriate sectors.");
-    cpEditObjects.push(entityFixBtn);
+    cpEditObjects.push(fixBtn);
 
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpEditTabs[0], cpEditTabs[1]]), false, vec2(5, 0), vec2(2, 1), true));
@@ -390,15 +390,16 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         else if(editorMode == 2) editorModeBtn.label.text = "Mode: CHANGE";
         editorModeBtn.button.resetOutput();
     }
-    else if (entityFixBtn.button.output == UIOUTPUT_SELECT)
+    else if (fixBtn.button.output == UIOUTPUT_SELECT)
     {
+        resetWallIndexes();
         entitiesInSectorSet = [];
         setEntitiesInSectors();
         deleteEntitiesOutsideSector();
         decor.removeIfNotInEntities();
         items.removeIfNotInEntities();
         enemies.removeIfNotInEntities();
-        entityFixBtn.button.resetOutput();
+        fixBtn.button.resetOutput();
     }
     else if (resetPosBtn.button.output == UIOUTPUT_SELECT)
     {
@@ -407,8 +408,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (reloadLvBtn.button.output == UIOUTPUT_SELECT)
     {
-        while(wall.length > 0) wall.pop();
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        activeSector = undefined;
         loadLevel(wall, area);
         reloadLvBtn.button.resetOutput();
     }
@@ -443,8 +445,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (prevLvBtn.button.output == UIOUTPUT_SELECT)
     {
-        while(wall.length > 0) wall.pop();
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        activeSector = undefined;
         currentLevel--;
         if(currentLevel <= 0) currentLevel = totalLevels;
         loadLevel(wall, area);
@@ -453,8 +456,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (nextLvBtn.button.output == UIOUTPUT_SELECT)
     {
-        while(wall.length > 0) wall.pop();
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        activeSector = undefined;
         currentLevel++;
         if(currentLevel >= totalLevels + 1) currentLevel = 1;
         loadLevel(wall, area);
@@ -464,11 +468,13 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     else if (wallSnapBtn.button.output == UIOUTPUT_SELECT)
     {
         snapWallsToGrid(wall, vec2(0, 0));
+        snapWallsToGrid(wall, vec2(0, 0));
         wallSnapBtn.button.resetOutput();
     }
     else if (wallDelAllBtn.button.output == UIOUTPUT_SELECT)
     {
-        while(wall.length > 0) wall.pop();
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
+        activeSector = undefined;
         wallDelAllBtn.button.resetOutput();
     }
     else if (areaSnapBtn.button.output == UIOUTPUT_SELECT)

@@ -49,7 +49,7 @@ var keyDisplayXIncrement = 40.0;
 
 function playerInit()
 {
-    plPos = vec2(580, 270);//window.innerWidth / 2, window.innerHeight / 2);
+    plPos = vec2(window.innerWidth / 2, window.innerHeight / 2);
     prevPlPos = vec2(plPos.x, plPos.y);
 
     ray = [];

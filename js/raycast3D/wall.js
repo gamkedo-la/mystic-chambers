@@ -17,7 +17,7 @@ wallColors = [
 ];
 wall = [];
 
-var wallCollisionMinDistance = 250.0;
+var wallCollisionPadding = 0.25;
 
 activeSector = undefined;
 class SectorData {
@@ -99,27 +99,9 @@ class Wall
             if(typeof this.sectorData.wallsLeft != "undefined"
             || typeof this.sectorData.wallsRight != "undefined") return p;
         }
-        
-        var Ax = this.p1.x;
-        var Ay = this.p1.y;
-        var Bx = this.p2.x;
-        var By = this.p2.y;
-        var X = p.x; var Y = p.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var prevPosPadd = (Bx * Y) - (By * X);
 
-        Ax = this.p1.x;
-        Ay = this.p1.y;
-        Bx = this.p2.x;
-        By = this.p2.y;
-        X = prevP.x; Y = prevP.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var posPadd = (Bx * Y) - (By * X);
-
-        if((posPadd < -wallCollisionMinDistance
-        && !(prevPosPadd < -wallCollisionMinDistance))
-        || (posPadd > wallCollisionMinDistance
-        && !(prevPosPadd > wallCollisionMinDistance)))
+        if(isPointOnLine(vec2(this.p1.x, this.p1.y),
+        vec2(this.p2.x, this.p2.y), vec2(p.x, p.y), wallCollisionPadding))
             p = prevP;
         
         return p;
@@ -198,26 +180,16 @@ function generateWallsFromString(walls, str)
     }
 }
 
+var activeSectorDetected = false;
 function calculateActiveSector(plPos, sec)
 {
-    var sector = undefined;
-    if(typeof sec != "undefined") sector = sec;
-    else if(typeof activeSector != "undefined") sector = activeSector;
+    if(typeof sec != "undefined") sec = activeSector;
 
     if(typeof sector != "undefined")
     {
-        var Ax = sector.p1.x; var Ay = sector.p1.y;
-        var Bx = sector.p2.x; var By = sector.p2.y;
-        var X = plPos.x; var Y = plPos.y;
-        Bx -= Ax; By -= Ay; X -= Ax; Y -= Ay;
-        var pos = (Bx * Y) - (By * X);
+        var pos = detectActiveSector(sec, plPos);
 
-        if(((pos < 0 && sector.sectorData.direction > 0)
-            || (pos > 0 && sector.sectorData.direction < 0))
-        && sector.sectorData.direction != 0)
-        {
-            activeSector = sector;
-        }
+        if(activeSectorDetected) { activeSectorDetected = false; return; }
 
         if(pos < 0)
         {
@@ -226,7 +198,7 @@ function calculateActiveSector(plPos, sec)
                 && typeof sector.sectorData.sectorsLeft != "undefined")
             {
                 for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
-                    calculateActiveSector(plPos, sector.sectorData.sectorsLeft[i]);
+                    detectActiveSector(sector.sectorData.sectorsLeft[i]);
             }
         }
         else
@@ -268,6 +240,7 @@ function detectActiveSector(sector, _plPos)
     && sector.sectorData.direction != 0)
     {
         activeSector = sector;
+        activeSectorDetected = true;
     }
 
     return pos;
@@ -311,9 +284,10 @@ function drawSectorsMap(renderer, plPos, off, sec)
     if(typeof sec != "undefined") sector = sec;
     else if(typeof activeSector != "undefined") sector = activeSector;
 
-    sector.addOffset(off);
     if(typeof sector != "undefined")
     {
+        sector.addOffset(off);
+
         pos = detectActiveSector(sector, plPos);
         if(pos < 0)
         {
@@ -337,8 +311,9 @@ function drawSectorsMap(renderer, plPos, off, sec)
                     drawSectorsMap(renderer, plPos, off, sector.sectorData.sectorsRight[i]);
             }
         }
+
+        sector.addOffset(vec2(-off.x, -off.y));
     }
-    sector.addOffset(vec2(-off.x, -off.y));
 }
 
 function resetWallIndexes()
@@ -357,7 +332,7 @@ function resetWallIndexes()
     }
 }
 
-function collisionWithWallsInSector(currentPos, previousPos, sec, readOnlyMode)
+function collisionWithWallsInSector(currentPos, previousPos, sec)
 {
     if(currentPos == previousPos) return currentPos;
 
@@ -375,7 +350,7 @@ function collisionWithWallsInSector(currentPos, previousPos, sec, readOnlyMode)
                 && typeof sec.sectorData.wallsLeft[i].sectorData.wallsRight == "undefined"
                 && sec.sectorData.wallsLeft[i].type > 0)
                 {
-                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos, readOnlyMode);
+                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
                     if(currentPos == previousPos) return currentPos;
                 }
             }
@@ -388,7 +363,7 @@ function collisionWithWallsInSector(currentPos, previousPos, sec, readOnlyMode)
                 && typeof sec.sectorData.wallsRight[i].sectorData.wallsRight == "undefined"
                 && sec.sectorData.wallsRight[i].type > 0)
                 {
-                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos, readOnlyMode);
+                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
                     if(currentPos == previousPos) return currentPos;
                 }
             }
@@ -424,6 +399,86 @@ function collisionWithSectorsInSector(currentPos, previousPos, sec)
     }
 
     return currentPos;
+}
+
+function addWallToSector(w, sec)
+{
+    if(typeof sec == "undefined") sec = activeSector;
+
+    var pos = getPositionSideInSector(sec, w.p1) + getPositionSideInSector(sec, w.p2);
+
+    if(pos < 0)
+    {
+        if(w.type == 0)
+        {
+            if(typeof sec.sectorData.sectorsLeft == "undefined")
+                sec.sectorData.sectorsLeft = [];
+
+            if(sec == activeSector)
+            {
+                addWallToSector(sec, w);
+                if(typeof sec.sectorData.wallsLeft != "undefined")
+                {
+                    for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
+                    {
+                        addWallToSector(sec.sectorData.wallsLeft[i], w);
+                    }
+                }
+                else if(typeof sec.sectorData.wallsRight != "undefined")
+                {
+                    for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
+                    {
+                        addWallToSector(sec.sectorData.wallsRight[i], w);
+                    }
+                }
+            }
+
+            sec.sectorData.sectorsLeft.push(w);
+        }
+        else
+        {
+            if(typeof sec.sectorData.wallsLeft == "undefined")
+                sec.sectorData.wallsLeft = [];
+
+            sec.sectorData.wallsLeft.push(w);
+        }
+    }
+    else if(pos > 0)
+    {
+        if(w.type == 0)
+        {
+            if(typeof sec.sectorData.sectorsRight == "undefined")
+                sec.sectorData.sectorsRight = [];
+
+            if(sec == activeSector)
+            {
+                addWallToSector(sec, w);
+                if(typeof sec.sectorData.wallsLeft != "undefined")
+                {
+                    for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
+                    {
+                        addWallToSector(sec.sectorData.wallsLeft[i], w);
+                    }
+                }
+                else if(typeof sec.sectorData.wallsRight != "undefined")
+                {
+                    for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
+                    {
+                        addWallToSector(sec.sectorData.wallsRight[i], w);
+                    }
+                }
+            }
+
+            sec.sectorData.sectorsRight.push(w);
+        }
+        else
+        {
+            if(typeof sec.sectorData.wallsRight == "undefined")
+                sec.sectorData.wallsRight = [];
+
+            sec.sectorData.wallsRight.push(w);
+        }
+    }
 }
 
 function deleteWallFromAllSectors(w)

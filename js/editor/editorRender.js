@@ -2,7 +2,7 @@
 var editorTypeHighlightColor = "yellow";
 
 var showGrid = true;
-var gridCellSize = 20;
+var gridCellSize = 10;
 var gridColor = "#ffffff20";
 var gridOffset = vec2(0, 0);
 
@@ -14,6 +14,7 @@ var boxActive = false;
 
 var wallHandleSize = 14;
 var wallHandleColor = "#00dd00ff";
+var wallActiveSectorHandleColor = "#ff000044";
 
 var areaHandleSize = 14;
 var areaHandleColor = "#00aaaaff";
@@ -43,6 +44,14 @@ function editorDrawWallHandles(renderer, walls)
 {
     for(let i = 0; i < walls.length; i++)
     {
+        if(walls[i] == activeSector)
+        {
+            drawRect(renderer, walls[i].p1.subtract(vec2(wallHandleSize, wallHandleSize)),
+                vec2(wallHandleSize*2, wallHandleSize*2), true, wallActiveSectorHandleColor, 0);
+            drawRect(renderer, walls[i].p2.subtract(vec2(wallHandleSize, wallHandleSize)),
+                vec2(wallHandleSize*2, wallHandleSize*2), true, wallActiveSectorHandleColor, 0);
+        }
+
         drawRect(renderer, walls[i].p1.subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
             vec2(wallHandleSize, wallHandleSize), selectedWallIndex == i && selectedWallEnd == wall[i].p1,
             currentWallType == walls[i].type ? editorTypeHighlightColor : wallHandleColor, 0);
@@ -60,8 +69,6 @@ function editorDrawAreaHandles(renderer, areas)
             vec2(areaHandleSize, areaHandleSize),
             selectedAreaIndex == i && selectedAreaPosOrSize == areas[i].pos,
             currentAreaType == areas[i].type ? editorTypeHighlightColor : areaHandleColor, 0);
-        drawLine(renderer, areas[i].pos, areas[i].pos.add(vec2(areas[i].size.x, areas[i].size.y))
-            .subtract(vec2(areaHandleSize/4, areaHandleSize/4)), areaMidlineColor);
         drawCircle(renderer, areas[i].pos.add(vec2(areas[i].size.x, areas[i].size.y))
             .subtract(vec2(areaHandleSize/4, areaHandleSize/4)), areaHandleSize/3,
             selectedAreaIndex == i && selectedAreaPosOrSize == areas[i].size,
@@ -103,4 +110,16 @@ function editorDrawBox(renderer)
         drawRect(renderer, boxPos, boxSize, true, boxColor);
         drawLine(renderer, boxPos, boxPos.add(boxSize), boxLineColor);
     }
+}
+
+function addOffsetToList(list, offset)
+{
+    for(let i = 0; i < list.length; i++)
+        list[i].addOffset(offset);
+}
+
+function addOffsetToLists(lists, offset)
+{
+    for(let i = 0; i < lists.length; i++)
+        addOffsetToList(lists[i], offset);
 }

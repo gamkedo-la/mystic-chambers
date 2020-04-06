@@ -4,17 +4,6 @@ const EDITOR_BG_COLOUR = "black";
 renderEditorAndGameTogether = 0;
 debugEntities = false;
 
-function addOffsetToList(list, offset)
-{
-    for(let i = 0; i < list.length; i++)
-        list[i].addOffset(offset);
-}
-function addOffsetToLists(lists, offset)
-{
-    for(let i = 0; i < lists.length; i++)
-        addOffsetToList(lists[i], offset);
-}
-
 window.onload = function()
 {
     canvas = document.getElementById("gameCanvas");
@@ -61,6 +50,7 @@ window.onload = function()
 
     // Wall Sector TEST
 
+    /*
     var s1_w1 = new Wall();
     s1_w1.set(549.99, 350, 524.99, 275);
     s1_w1.type = 3;
@@ -122,6 +112,7 @@ window.onload = function()
     activeSector = s1_s2;
 
     resetWallIndexes();
+    */
 
     entitiesInSectorSet = [];
     setEntitiesInSectors();

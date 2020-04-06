@@ -15,10 +15,16 @@ class Area
         this.pos = pos;
         this.size = size;
         this.type = type;
+
+        if(this.size.x < 0) { this.pos.x += this.size.x; this.size.x = Math.abs(this.size.x); }
+        if(this.size.y < 0) { this.pos.y += this.size.y; this.size.y = Math.abs(this.size.y); }
     }
 
     draw(renderer, typeColors)
     {
+        if(this.size.x < 0) { this.pos.x += this.size.x; this.size.x = Math.abs(this.size.x); }
+        if(this.size.y < 0) { this.pos.y += this.size.y; this.size.y = Math.abs(this.size.y); }
+
         drawRect(renderer, this.pos, this.size, true,
             typeof typeColors == "undefined" ? "white" : typeColors[this.type]);
     }
