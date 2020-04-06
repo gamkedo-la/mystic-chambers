@@ -7,7 +7,7 @@ const DEBUGFLOORS = false;
 // thse are hacky magic numbers
 // FIXME remove all of these! use math instead
 var floorScrollScale = 42; // pixels scrolled per game units travelled
-var bgtilesize = 320; // size of texture in pixels
+var bgtilesize = 160*4; // size of texture in pixels
 var ceilingOffsetX = -3700; // to center it on-screen
 var floorOffsetX = -3700;
 var ceilingHeight = 3960; // so it appears at correct height
@@ -45,6 +45,13 @@ class floorClass
         this.ceilingGraphic.className = "ceilinggraphic";
         this.ceiling.appendChild(this.ceilingGraphic);
 
+        //this.ceiling2 = document.createElement("DIV");
+        //this.ceiling2.className = "ceilingdiv";
+
+        //this.ceilingGraphic2 = document.createElement("DIV");
+        //this.ceilingGraphic2.className = "ceilinggraphic2";
+        //this.ceiling2.appendChild(this.ceilingGraphic2);
+
         this.blackScreen = document.createElement("DIV");
         this.blackScreen.className = "blackScreen";
         
@@ -52,10 +59,12 @@ class floorClass
         document.body.appendChild(this.gradientAltFix);
         document.body.appendChild(this.floor);
         document.body.appendChild(this.ceiling);
+        //document.body.appendChild(this.ceiling2);
         document.body.appendChild(this.blackScreen);
 
         this.floor.style.display = "none";
         this.ceiling.style.display = "none";
+        //this.ceiling2.style.display = "none";
     }
 
     update(position, angle)
@@ -67,11 +76,13 @@ class floorClass
             {
                 this.floor.style.display = "none";
                 this.ceiling.style.display = "none";
+                //this.ceiling2.style.display = "none";
             }
             else if(!mapMode || renderEditorAndGameTogether >= 2)
             {
                 this.floor.style.display = "block";
                 this.ceiling.style.display = "block";
+                //this.ceiling2.style.display = "block";
             }
             prevMapMode = mapMode;
             prevRenderEditorAndGameTogether = renderEditorAndGameTogether;
@@ -90,6 +101,8 @@ class floorClass
         this.floor.style.transform += "rotate(" + angle.toString() + "deg)";
         this.ceiling.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, "+angleFixFactor+"px, "+ceilingHeight+"px)"; 
         this.ceiling.style.transform += "rotate(" + angle.toString() + "deg)";
+        //this.ceiling2.style.transform = "rotate3d(1, 0, 0, 90deg) translate3d("+ceilingOffsetX+"px, "+angleFixFactor+"px, "+ceilingHeight+"px)"; 
+        //this.ceiling2.style.transform += "rotate(" + angle.toString() + "deg)";
 
         // shift around floor and ceiling to simulate scrolling the sprite
         var xform = "translate3d("
@@ -100,6 +113,7 @@ class floorClass
 
         this.floorGraphic.style.transform = xform;
         this.ceilingGraphic.style.transform = xform;
+        //this.ceilingGraphic2.style.transform = xform;
     }
 }
 
