@@ -150,7 +150,7 @@ function renderRaycast3D(renderer, ray, w, plRay, plPos)
         for(let i = 0; i < (renderDataGroup[g]).length; i++)
             drawRenderDataPiece(renderer, i, (renderDataGroup[g])[i], ray);
         drawEntitiesInSector(entitySectors[g],
-        (g >= entitySectors.length - 1 ? -1 : 1) * detectActiveSector(entitySectors[g], plPos),
+        (g >= entitySectors.length - 1 ? -1 : 1) * getPositionSideInSector(entitySectors[g], plPos),
         renderer, plRay);
     }
 }

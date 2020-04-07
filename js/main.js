@@ -207,7 +207,7 @@ function draw()
         renderRaycast3D(renderer, ray, wall,
             ray[ray.length/2], vec2(ray[ray.length/2].p.x,
             ray[ray.length/2].p.y));
-        calculateActiveSector(plPos);
+        sectorsMap(plPos);
         for (let i = 0; i < ray.length; i++)
             ray[i].p = vec2(plPos.x, plPos.y);
         

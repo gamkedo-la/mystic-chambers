@@ -180,40 +180,6 @@ function generateWallsFromString(walls, str)
     }
 }
 
-var activeSectorDetected = false;
-function calculateActiveSector(plPos, sec)
-{
-    if(typeof sec != "undefined") sec = activeSector;
-
-    if(typeof sector != "undefined")
-    {
-        var pos = detectActiveSector(sec, plPos);
-
-        if(activeSectorDetected) { activeSectorDetected = false; return; }
-
-        if(pos < 0)
-        {
-            sector.sectorData.direction = -1;
-            if(activeSector == sector
-                && typeof sector.sectorData.sectorsLeft != "undefined")
-            {
-                for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
-                    detectActiveSector(sector.sectorData.sectorsLeft[i]);
-            }
-        }
-        else
-        {
-            sector.sectorData.direction = 1;
-            if(activeSector == sector
-                && typeof sector.sectorData.sectorsRight != "undefined")
-            {
-                for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
-                    calculateActiveSector(plPos, sector.sectorData.sectorsRight[i]);
-            }
-        }
-    }
-}
-
 function getPositionSideInSector(sec, _plPos)
 {
     //if params are not inserted...
@@ -273,6 +239,38 @@ function drawSectorMapWallsRight(sector, off)
                 sector.sectorData.wallsRight[i].addOffset(off);
                 sector.sectorData.wallsRight[i].draw(renderer, undefined, plPos);
                 sector.sectorData.wallsRight[i].addOffset(vec2(-off.x, -off.y));
+            }
+        }
+    }
+}
+
+function sectorsMap(plPos, sec)
+{
+    var sector = undefined;
+    if(typeof sec != "undefined") sector = sec;
+    else if(typeof activeSector != "undefined") sector = activeSector;
+
+    if(typeof sector != "undefined")
+    {
+        pos = detectActiveSector(sector, plPos);
+        if(pos < 0)
+        {
+            sector.sectorData.direction = -1;
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsLeft != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
+                    sectorsMap(plPos, sector.sectorData.sectorsLeft[i]);
+            }
+        }
+        else
+        {
+            sector.sectorData.direction = 1;
+            if(activeSector == sector
+                && typeof sector.sectorData.sectorsRight != "undefined")
+            {
+                for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
+                    sectorsMap(plPos, sector.sectorData.sectorsRight[i]);
             }
         }
     }
