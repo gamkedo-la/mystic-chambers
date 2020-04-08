@@ -1,11 +1,9 @@
 const AUDIO_DEBUG = false;
 //Sound IDs
 const REVERB = 0;
-const SOUND_NOAMMO = 4;
+const SOUND_NOAMMO = 1;
 
 var soundsList = [
-	"audio/reverb1.wav",
-	"audio/reverb2.wav",
 	"audio/reverb3.wav",
 	"audio/noAmmo.mp3",
 ];
@@ -15,8 +13,9 @@ var sounds = [];
 //--//Constants---------------------------------------------------------------
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
-const DROPOFF_MIN = 10;
-const DROPOFF_MAX = 100;
+const DROPOFF_MIN = 20;
+const DROPOFF_MAX = 200;
+const REVERB_MAX = 3;
 const BEHIND_THE_HEAD = 0.5;
 
 var audio = new AudioGlobal();
@@ -81,35 +80,8 @@ function AudioGlobal() {
 			v2.x = plPos.x - off.x;
 			v2.y = plPos.y - off.y;
 			drawLine(renderer, v1, v2, "#FFFFFFFF");
+			drawRect(renderer, vec2(v1.x-2, v1.y-2), vec2(5, 5), true, "#FFFFFFFF", false);
 
-			//do
-			{
-				var rSec = activeSector//nextRenderSector;
-				//nextRenderSector = undefined;
-				
-				let ang = Math.atan2(plPos.y - currentSoundSources[i].pos.y, 
-					plPos.x - currentSoundSources[i].pos.x);
-				let r = new Ray(currentSoundSources[i].pos, radToDeg(ang));
-				let rData = r.raycastSector(wall, plPos, rSec, false, []);
-			   			   let pdist = getDistBtwVec2(plPos, currentSoundSources[i].pos);
-			   let hitPoint;
-			   if (pdist < rData.depth) {
-				   hitPoint = vec2(plPos.x, plPos.y);
-			   } else {
-				   hitPoint = vec2(currentSoundSources[i].pos.x + Math.cos(ang) * rData.depth, 
-			   		currentSoundSources[i].pos.y + Math.sin(ang) * rData.depth);
-			   }
-			   let soundDist = getDistBtwVec2(hitPoint, currentSoundSources[i].pos);
-			   hitPoint.x -= off.x;
-			   hitPoint.y -= off.y;
-			   drawRect(renderer, hitPoint, vec2(5, 5), true, "#FFFFFFFF", false);
-
-			   drawText(renderer, "" + rData.depth, v1, "#FFFFFFFF");
-			   drawText(renderer, "" + soundDist, v2, "#FFFFFFFF");
-
-
-			}
-			//while(typeof nextRenderSector != "undefined");
 		}
 	};
 
@@ -339,8 +311,9 @@ function AudioGlobal() {
 
 		source.connect(gainNode);
 		source.connect(verbMixNode);
+		verbMixNode.connect(verbNode);
+		verbNode.connect(gainNode);
 		gainNode.connect(panNode);
-		verbNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
 		gainNode.gain.value = calcuateVolumeDropoff(vec2);
@@ -351,14 +324,13 @@ function AudioGlobal() {
 		source.playbackRate.value = rate;
 		gainNode.gain.value *= Math.pow(mixVolume, 2);
 		verbNode.buffer = sounds[REVERB];
-		verbMixNode.gain.value *= Math.pow(mixVolume, 2);
 		source.start();
 
 		source.onended = function() {
 			source = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
@@ -437,7 +409,7 @@ function AudioGlobal() {
 	};
 
 	function calcuateVolumeDropoff(vec2) {
-		return calcuateVolumeDropoff2(vec2);
+		return calcuateVolumeDropoff1(vec2);
 	}
 
 	function calcuateVolumeDropoff1(vec2) {//Distance dropoff only
@@ -504,8 +476,12 @@ function AudioGlobal() {
 	}
 
 	function calcuateReverbPresence(vec2) {
+		var distance = currentPlayerPos.distance(vec2);
 
-		return 0.25;
+		var mixVolume = 0;
+		mixVolume = Math.pow(distance/DROPOFF_MAX * REVERB_MAX, 1.5);
+
+		return mixVolume;
 	}
 
 	return this;
