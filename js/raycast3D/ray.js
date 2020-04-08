@@ -92,14 +92,19 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
-                                sectorPresent = false;
-                                if(typeof entitySectors != "undefined")
-                                    for(let e = 0; e < entitySectors.length; e++)
-                                    {
-                                        if(entitySectors[e] == sector.sectorData.sectorsRight[i])
-                                            sectorPresent = true;
-                                    }
-                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
+                                this.raycastWall(sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);
+
+                                if(raycast.index > -1)
+                                {
+                                    sectorPresent = false;
+                                    if(typeof entitySectors != "undefined")
+                                        for(let e = 0; e < entitySectors.length; e++)
+                                        {
+                                            if(entitySectors[e] == sector.sectorData.sectorsRight[i])
+                                                sectorPresent = true;
+                                        }
+                                    if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
+                                }
                             }
                         }
 
@@ -107,14 +112,19 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
-                                sectorPresent = false;
-                                if(typeof entitySectors != "undefined")
-                                    for(let e = 0; e < entitySectors.length; e++)
-                                    {
-                                        if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
-                                            sectorPresent = true;
-                                    }
-                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
+                                this.raycastWall(sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
+
+                                if(raycast.index > -1)
+                                {
+                                    sectorPresent = false;
+                                    if(typeof entitySectors != "undefined")
+                                        for(let e = 0; e < entitySectors.length; e++)
+                                        {
+                                            if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
+                                                sectorPresent = true;
+                                        }
+                                    if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
+                                }
                             }
                         }
                     }
@@ -142,14 +152,19 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsLeft.length; i++)
                             {
-                                sectorPresent = false;
-                                if(typeof entitySectors != "undefined")
-                                    for(let e = 0; e < entitySectors.length; e++)
-                                    {
-                                        if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
-                                            sectorPresent = true;
-                                    }
-                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
+                                this.raycastWall(sector.sectorData.sectorsLeft[i], sector.sectorData.sectorsLeft[i].index, raycast);
+
+                                if(raycast.index > -1)
+                                {
+                                    sectorPresent = false;
+                                    if(typeof entitySectors != "undefined")
+                                        for(let e = 0; e < entitySectors.length; e++)
+                                        {
+                                            if(entitySectors[e] == sector.sectorData.sectorsLeft[i])
+                                                sectorPresent = true;
+                                        }
+                                    if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsLeft[i];
+                                }
                             }
                         }
 
@@ -157,14 +172,19 @@ class Ray
                         {
                             for(let i = 0; i < sector.sectorData.sectorsRight.length; i++)
                             {
-                                sectorPresent = false;
-                                if(typeof entitySectors != "undefined")
-                                    for(let e = 0; e < entitySectors.length; e++)
-                                    {
-                                        if(entitySectors[e] == sector.sectorData.sectorsRight[i])
-                                            sectorPresent = true;
-                                    }
-                                if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
+                                this.raycastWall(sector.sectorData.sectorsRight[i], sector.sectorData.sectorsRight[i].index, raycast);
+
+                                if(raycast.index > -1)
+                                {
+                                    sectorPresent = false;
+                                    if(typeof entitySectors != "undefined")
+                                        for(let e = 0; e < entitySectors.length; e++)
+                                        {
+                                            if(entitySectors[e] == sector.sectorData.sectorsRight[i])
+                                                sectorPresent = true;
+                                        }
+                                    if(!sectorPresent) nextRenderSector = sector.sectorData.sectorsRight[i];
+                                }
                             }
                         }
                     }
@@ -279,7 +299,7 @@ class Ray
             }*/
         }
 
-        if(raycast.index > -1)
+        if(raycast.index > -1 && w[raycast.index].type > 0)
         {
             data.index = w[raycast.index].index;
             data.depth = raycast.pdist;

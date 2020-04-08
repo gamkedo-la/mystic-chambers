@@ -1,4 +1,13 @@
 
+var editorMode = 0; //0 move, -1 delete, 1 add, 2 change
+var editorMoveKey = "z";
+var editorDeleteKey = "x";
+var editorAddKey = "c";
+var editorChangeKey = "v";
+
+var editorNoTouchWidth = screen.width * 0.15;
+var editorNoTouchColor = "#ff000010";
+
 var currentLevel = 1;
 var totalLevels = 10;
 const levelPrefix = "levels/lv";
@@ -23,6 +32,59 @@ function editorInit(walls, areas)
 
 function editorEvents(deltaTime, offset, walls, areas, decorEnts, itemEnts, enemyEnts)
 {
+    if(keysDown.indexOf(editorMoveKey) != -1)
+    {
+        if(!isKeyPressed(editorMoveKey))
+        {
+            editorMode = 0;
+        }
+    }
+    else
+    {
+        removeKeyPressed(editorMoveKey);
+    }
+
+    if(keysDown.indexOf(editorDeleteKey) != -1)
+    {
+        if(!isKeyPressed(editorDeleteKey))
+        {
+            editorMode = -1;
+            lastSelectedWallIndex = lastSelectedAreaIndex
+            = lastSelectedDecorIndex = lastSelectedItemIndex
+            = lastSelectedEnemyIndex = -1;
+        }
+    }
+    else
+    {
+        removeKeyPressed(editorDeleteKey);
+    }
+
+    if(keysDown.indexOf(editorAddKey) != -1)
+    {
+        if(!isKeyPressed(editorAddKey))
+        {
+            editorMode = 1;
+        }
+    }
+    else
+    {
+        removeKeyPressed(editorAddKey);
+    }
+
+    if(keysDown.indexOf(editorChangeKey) != -1)
+    {
+        if(!isKeyPressed(editorChangeKey))
+        {
+            editorMode = 2;
+        }
+    }
+    else
+    {
+        removeKeyPressed(editorChangeKey);
+    }
+
+    if(touchPos[0].x < editorNoTouchWidth) return;
+
     if(cpEditPanel.enabled)
     {
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset.negative());
@@ -55,6 +117,9 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
 {
     if(cpEditPanel.enabled)
     {
+        drawRect(renderer, vec2(0,0), vec2(editorNoTouchWidth, window.innerHeight),
+            true, editorNoTouchColor, 0);
+
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset.negative());
 
         editorDrawBox(renderer);

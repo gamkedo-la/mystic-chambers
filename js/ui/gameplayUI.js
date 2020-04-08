@@ -377,17 +377,13 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     else if (editorModeBtn.button.output == UIOUTPUT_SELECT)
     {
         editorMode++;
-        if(editorMode > 2) editorMode = -1;
-        if(editorMode == -1)
+        if(editorMode > 2)
         {
-            editorModeBtn.label.text = "Mode: DELETE";
+            editorMode = -1;
             lastSelectedWallIndex = lastSelectedAreaIndex
             = lastSelectedDecorIndex = lastSelectedItemIndex
             = lastSelectedEnemyIndex = -1;
         }
-        else if(editorMode == 0) editorModeBtn.label.text = "Mode: MOVE";
-        else if(editorMode == 1) editorModeBtn.label.text = "Mode: ADD";
-        else if(editorMode == 2) editorModeBtn.label.text = "Mode: CHANGE";
         editorModeBtn.button.resetOutput();
     }
     else if (fixBtn.button.output == UIOUTPUT_SELECT)
@@ -657,4 +653,9 @@ function gameplayUICustomEvents(deltaTime, wall, area)
 
    if(currentGun >= 0) ammoLabel.text = ammoInGun[currentGun] + "/" + totalAmmo[currentGun];
    else ammoLabel.text = "0/0";
+
+    if(editorMode == -1) editorModeBtn.label.text = "Mode: DELETE";
+    else if(editorMode == 0) editorModeBtn.label.text = "Mode: MOVE";
+    else if(editorMode == 1) editorModeBtn.label.text = "Mode: ADD";
+    else if(editorMode == 2) editorModeBtn.label.text = "Mode: CHANGE";
 }

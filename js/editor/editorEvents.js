@@ -1,5 +1,4 @@
 
-var editorMode = 0; //0 move, -1 delete, 1 add, 2 change
 var editorAddCheck = false;
 var editorTemp = undefined;
 
