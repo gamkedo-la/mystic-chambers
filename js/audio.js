@@ -62,7 +62,7 @@ function AudioGlobal() {
 		now = audioCtx.currentTime;
 		//if (!AUDIO_DEBUG) {
 			currentSoundSources = currentSoundSources.filter(function(referance){
-				return referance.endTime > now;
+				return referance.endTime > now && !referance.source.loop;
 			}); //Removed completed sounds.  temporarally removed
 		//}
 
@@ -170,7 +170,7 @@ function AudioGlobal() {
 	};
 
 	this.play3DSound = function(buffer, vec2,  mixVolume = 1, rate = 1) {
-		return play3DSound4(buffer, vec2,  mixVolume, rate);
+		return play3DSound3(buffer, vec2,  mixVolume, rate);
 	};
 
 	function play3DSound1(buffer, vec2,  mixVolume = 1, rate = 1) {//3d panning and volume
@@ -245,51 +245,7 @@ function AudioGlobal() {
 		return referance;
 	};
 
-	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {// +Propogation
-		if (!initialized) return;
-
-		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
-			return false;
-		}
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createStereoPanner();
-
-		source.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		var pos = vec2;
-		var arrayOfOccludingWalls = [];
-		for (var i = 0; i < wall.length; i++) {
-			if (isLineOnLine(vec2.x, vec2.y, 
-					currentPlayerX, currentPlayerY, 
-					wall[i].p1.x, wall[i].p1.y, 
-					wall[i].p2.x, wall[i].p2.y)) {
-
-				arrayOfOccludingWalls.push(wall[i]);
-			}
-		}
-
-		gainNode.gain.value = calcuateVolumeDropoff(pos);
-		panNode.pan.value = calcuatePan(pos);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		source.start();
-
-		source.onended = function() {
-			source = null;
-		}
-
-		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
-		currentSoundSources.push(referance);
-		return referance;
-	};
-
-	function play3DSound4(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
+	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
 		if (!initialized) return;
 
 		for (var i = 0; i < wall.length; i++) {
@@ -332,6 +288,50 @@ function AudioGlobal() {
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
+		currentSoundSources.push(referance);
+		return referance;
+	};
+
+	function play3DSound4(buffer, vec2,  mixVolume = 1, rate = 1) {// +Propogation
+		if (!initialized) return;
+
+		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
+			return false;
+		}
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+		var panNode = audioCtx.createStereoPanner();
+
+		source.connect(gainNode);
+		gainNode.connect(panNode);
+		panNode.connect(soundEffectsBus);
+
+		var pos = vec2;
+		var arrayOfOccludingWalls = [];
+		for (var i = 0; i < wall.length; i++) {
+			if (isLineOnLine(vec2.x, vec2.y, 
+					currentPlayerX, currentPlayerY, 
+					wall[i].p1.x, wall[i].p1.y, 
+					wall[i].p2.x, wall[i].p2.y)) {
+
+				arrayOfOccludingWalls.push(wall[i]);
+			}
+		}
+
+		gainNode.gain.value = calcuateVolumeDropoff(pos);
+		panNode.pan.value = calcuatePan(pos);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		source.start();
+
+		source.onended = function() {
+			source = null;
+		}
+
+		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
