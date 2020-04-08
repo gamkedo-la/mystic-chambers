@@ -1,4 +1,5 @@
 const AUDIO_DEBUG = false;
+
 //Sound IDs
 const REVERB = 0;
 const SOUND_NOAMMO = 1;
@@ -409,7 +410,7 @@ function AudioGlobal() {
 	};
 
 	function calcuateVolumeDropoff(vec2) {
-		return calcuateVolumeDropoff1(vec2);
+		return calcuateVolumeDropoff2(vec2);
 	}
 
 	function calcuateVolumeDropoff1(vec2) {//Distance dropoff only
@@ -453,6 +454,10 @@ function AudioGlobal() {
 	}
 
 	function calcuatePan(vec2) {
+		return calcuatePan2(vec2);
+	}
+
+	function calcuatePan1(vec2) {//360 pan
 		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
@@ -470,6 +475,35 @@ function AudioGlobal() {
 			pan = lerp(0, 1, (direction-180)/90);
 		} else if (direction < 360) {
 			pan = lerp(1, 0, (direction-270)/90);
+		}
+
+		return pan;
+	}
+
+	function calcuatePan2(vec2) {// +proximity
+		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+		while (direction >= 360) {
+			direction -= 360;
+		}
+		while (direction < 0) {
+			direction += 360;
+		}
+
+		var pan = 0;
+		if (direction <= 90) {
+			pan = lerp(0, -1, direction/90);
+		} else if (direction <= 180) {
+			pan = lerp(-1, 0, (direction-90)/90);
+		} else if (direction <= 270) {
+			pan = lerp(0, 1, (direction-180)/90);
+		} else if (direction < 360) {
+			pan = lerp(1, 0, (direction-270)/90);
+		}
+
+		var distance = currentPlayerPos.distance(vec2);
+		if (distance <=  DROPOFF_MIN) {
+			var panReduction = distance/DROPOFF_MIN;
+			pan *= panReduction;
 		}
 
 		return pan;
