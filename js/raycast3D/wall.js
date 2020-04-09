@@ -6,6 +6,23 @@ wallImages = [
     new ImageObject("images/wall_stone_red.png", vec2(160, 160)),
     new ImageObject("images/wall_stone_red_cracked.png", vec2(160, 160)),
     new ImageObject("images/wall_danger.png", vec2(160, 160)),
+    // new walls with decorated variants
+    new ImageObject("images/wallCarbon.png", vec2(160, 160)),
+    new ImageObject("images/wallCarbonReinforced.png", vec2(160, 160)),
+    new ImageObject("images/wallMarble.png", vec2(160, 160)),
+    new ImageObject("images/wallMarbleGoldtrim.png", vec2(160, 160)),
+    new ImageObject("images/wallObsidian.png", vec2(160, 160)),
+    new ImageObject("images/wallObsidianLight.png", vec2(160, 160)),
+    new ImageObject("images/wallRock.png", vec2(160, 160)),
+    new ImageObject("images/wallRockBluetrim.png", vec2(160, 160)),
+    new ImageObject("images/wallSandstone.png", vec2(160, 160)),
+    new ImageObject("images/wallSandstoneKeyhole.png", vec2(160, 160)),
+    new ImageObject("images/wallSteel.png", vec2(160, 160)),
+    new ImageObject("images/wallSteelGreenlight.png", vec2(160, 160)),
+    new ImageObject("images/wallTan.png", vec2(160, 160)),
+    new ImageObject("images/wallTanRedlight.png", vec2(160, 160)),
+    new ImageObject("images/wallTech.png", vec2(160, 160)),
+    new ImageObject("images/wallTechServer.png", vec2(160, 160)),
 ];
 wallColors = [
     "#ffff0077",
@@ -13,7 +30,25 @@ wallColors = [
     "#dd00dd77",
     "#ff000077",
     "#dd000077",
-    "#bbbb0077"
+    "#bbbb0077",
+    // new walls with decorated variants
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77",
+    "#dddddd77"
+
 ];
 wall = [];
 
