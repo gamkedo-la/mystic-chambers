@@ -190,6 +190,12 @@ function getPositionSideInSector(sec, _plPos)
     //...and global player position
     if(typeof _plPos == "undefined") _plPos = plPos;
 
+    // can still be undefined: FIXME
+    if(typeof sec == "undefined" || typeof _plPos == "undefined") {
+        console.log("missing sector or player position in getPositionSideInSector");
+        return;
+    }
+
     var Ax = sec.p1.x; var Ay = sec.p1.y;
     var Bx = sec.p2.x; var By = sec.p2.y;
     var X = _plPos.x; var Y = _plPos.y;
