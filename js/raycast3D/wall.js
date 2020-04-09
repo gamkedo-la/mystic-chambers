@@ -48,7 +48,6 @@ wallColors = [
     "#dddddd77",
     "#dddddd77",
     "#dddddd77"
-
 ];
 wall = [];
 
@@ -153,12 +152,63 @@ class Wall
         this.angle = this.p1.angle(this.p2);
     }
 
-    toString()
+    toString(goDeep)
     {
         if(isNaN(Math.floor(this.p1.x * 100.0)) || isNaN(Math.floor(this.p1.y * 100.0))) return "";
-        return Math.floor(this.p1.x * 100.0).toString() + " " + Math.floor(this.p1.y * 100.0).toString() + " " +
+
+        var wallStrArr = [];
+        
+        wallStrArr.push(Math.floor(this.p1.x * 100.0).toString() + " " + Math.floor(this.p1.y * 100.0).toString() + " " +
             Math.floor(this.p2.x * 100.0).toString() + " " + Math.floor(this.p2.y * 100.0).toString() + " " +
-            Math.floor(this.type).toString() + " ";
+            Math.floor(this.type).toString() + " ");
+
+        if(this.type == 0)
+        {
+            if(typeof goDeep == "undefined" || goDeep == true)
+            {
+                if(typeof this.sectorData.wallsLeft != "undefined")
+                {
+                    wallStrArr.push(this.sectorData.wallsLeft.length.toString() + " ");
+                    for(let i = 0; i < this.sectorData.wallsLeft.length; i++)
+                        wallStrArr.push(this.sectorData.wallsLeft[i].toString(false));
+                }
+                else wallStrArr.push("0 ");
+
+                if(typeof this.sectorData.wallsRight != "undefined")
+                {
+                    wallStrArr.push(this.sectorData.wallsRight.length.toString() + " ");
+                    for(let i = 0; i < this.sectorData.wallsRight.length; i++)
+                        wallStrArr.push(this.sectorData.wallsRight[i].toString(false));
+                }
+                else wallStrArr.push("0 ");
+
+                if(typeof this.sectorData.sectorsLeft != "undefined")
+                {
+                    wallStrArr.push(this.sectorData.sectorsLeft.length.toString() + " ");
+                    for(let i = 0; i < this.sectorData.sectorsLeft.length; i++)
+                        wallStrArr.push(this.sectorData.sectorsLeft[i].toString(false));
+                }
+                else wallStrArr.push("0 ");
+
+                if(typeof this.sectorData.sectorsRight != "undefined")
+                {
+                    wallStrArr.push(this.sectorData.sectorsRight.length.toString() + " ");
+                    for(let i = 0; i < this.sectorData.sectorsRight.length; i++)
+                        wallStrArr.push(this.sectorData.sectorsRight[i].toString(false));
+                }
+                else wallStrArr.push("0 ");
+            }
+            else
+            {
+                wallStrArr.push("0 0 0 0 ");
+            }
+        }
+
+        var wallStr = "";
+        for(let i = 0; i < wallStrArr.length; i++)
+            wallStr += wallStrArr[i];
+        
+        return wallStr;
     }
 
     isPresentInActiveSector()
@@ -198,20 +248,129 @@ class WallData
 function convertWallsToString(walls)
 {
     var str = "";
-    for(let i = 0; i < walls.length; i++) str += walls[i].toString();
+    for(let i = walls.length - 1; i >= 0; i--)
+    {
+        if(walls[i].type == 0)
+        {
+            str += walls[i].toString(true);
+            str += " ";
+        }
+    }
     str += ".";
     return str;
 }
 
 function generateWallsFromString(walls, str)
 {
+    str = str.replace('    ', ' ');
+    str = str.replace('   ', ' ');
+    str = str.replace('  ', ' ');
+
     var values = str.split(' ');
-    for(let i = 0; i < values.length; i+=5)
+    for(let i = 0; i < values.length;)
     {
         var newWall = new Wall();
-        newWall.set(parseInt(values[i] / 100.0), parseInt(values[i+1] / 100.0), parseInt(values[i+2] / 100.0), parseInt(values[i+3] / 100.0));
-        newWall.type = parseInt(values[i+4]);
+        newWall.set(
+            parseInt(values[i++] / 100.0),
+            parseInt(values[i++] / 100.0),
+            parseInt(values[i++] / 100.0),
+            parseInt(values[i++] / 100.0)
+        );
+        newWall.type = parseInt(values[i++]);
+
+        if(newWall.type == 0)
+        {
+            var count = parseInt(values[i++]);
+            if(count > 0) newWall.sectorData.wallsLeft = [];
+
+            while(count > 0)
+            {
+                var sNewWall = new Wall();
+                sNewWall.set(
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0)
+                );
+                sNewWall.type = parseInt(values[i++]);
+
+                newWall.sectorData.wallsLeft.push(sNewWall);
+                walls.push(sNewWall);
+
+                count--;
+            }
+
+            var count = parseInt(values[i++]);
+            if(count > 0) newWall.sectorData.wallsRight = [];
+
+            while(count > 0)
+            {
+                var sNewWall = new Wall();
+                sNewWall.set(
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0)
+                );
+                sNewWall.type = parseInt(values[i++]);
+
+                newWall.sectorData.wallsRight.push(sNewWall);
+                walls.push(sNewWall);
+
+                count--;
+            }
+
+            var count = parseInt(values[i++]);
+            if(count > 0) newWall.sectorData.sectorsLeft = [];
+
+            while(count > 0)
+            {
+                var sNewWall = new Wall();
+                sNewWall.set(
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0)
+                );
+                sNewWall.type = parseInt(values[i++]);
+
+                newWall.sectorData.sectorsLeft.push(sNewWall);
+                walls.push(sNewWall);
+
+                count--;
+            }
+
+            var count = parseInt(values[i++]);
+            if(count > 0) newWall.sectorData.sectorsRight = [];
+
+            while(count > 0)
+            {
+                var sNewWall = new Wall();
+                sNewWall.set(
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0),
+                    parseInt(values[i++] / 100.0)
+                );
+                sNewWall.type = parseInt(values[i++]);
+
+                newWall.sectorData.sectorsRight.push(sNewWall);
+                walls.push(sNewWall);
+
+                count--;
+            }
+        }
+
         walls.push(newWall);
+
+        if(typeof activeSector == "undefined")
+            activeSector = walls[walls.length-1];
+        
+        if(newWall.type > 0)
+        {
+            resetWallIndexes();
+            break;
+        }
     }
 }
 
@@ -222,14 +381,14 @@ function getPositionSideInSector(sec, _plPos)
     //...use active sector
     if(typeof sec == "undefined") sec = activeSector;
 
-    //...and global player position
-    if(typeof _plPos == "undefined") _plPos = plPos;
-
     // can still be undefined: FIXME
     if(typeof sec == "undefined" || typeof _plPos == "undefined") {
         console.log("missing sector or player position in getPositionSideInSector");
         return;
     }
+
+    //...and global player position
+    if(typeof _plPos == "undefined") _plPos = plPos;
 
     var Ax = sec.p1.x; var Ay = sec.p1.y;
     var Bx = sec.p2.x; var By = sec.p2.y;

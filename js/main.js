@@ -41,9 +41,7 @@ window.onload = function()
 
     playerInit();
 
-    //editorInit(wall, area);
-    //when using editor init, remove resetWallIndexes from below
-    //because it is already in editor init (load level)
+    editorInit(wall, area);
 
     setupGameplayUI();
     setupMainMenuUI();
