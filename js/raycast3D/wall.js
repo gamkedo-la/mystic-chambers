@@ -1,11 +1,11 @@
 
 wallImages = [
     new ImageObject("images/sector.png", vec2(160, 160)),
-    new ImageObject("images/wall_stone_moss.png", vec2(160, 160)),
-    new ImageObject("images/wall_stone.png", vec2(160, 160)),
-    new ImageObject("images/wall_stone_red.png", vec2(160, 160)),
-    new ImageObject("images/wall_stone_red_cracked.png", vec2(160, 160)),
-    new ImageObject("images/wall_danger.png", vec2(160, 160)),
+    new ImageObject("images/wallBrickGreen.png", vec2(160, 160)),
+    new ImageObject("images/wallBrickPurple.png", vec2(160, 160)),
+    new ImageObject("images/wallBrickRed.png", vec2(160, 160)),
+    new ImageObject("images/wallBrickRedCracked.png", vec2(160, 160)),
+    new ImageObject("images/wallDanger.png", vec2(160, 160)),
     // new walls with decorated variants
     new ImageObject("images/wallCarbon.png", vec2(160, 160)),
     new ImageObject("images/wallCarbonReinforced.png", vec2(160, 160)),
@@ -381,14 +381,14 @@ function getPositionSideInSector(sec, _plPos)
     //...use active sector
     if(typeof sec == "undefined") sec = activeSector;
 
+    //...and global player position
+    if(typeof _plPos == "undefined") _plPos = plPos;
+
     // can still be undefined: FIXME
     if(typeof sec == "undefined" || typeof _plPos == "undefined") {
         console.log("missing sector or player position in getPositionSideInSector");
         return;
     }
-
-    //...and global player position
-    if(typeof _plPos == "undefined") _plPos = plPos;
 
     var Ax = sec.p1.x; var Ay = sec.p1.y;
     var Bx = sec.p2.x; var By = sec.p2.y;

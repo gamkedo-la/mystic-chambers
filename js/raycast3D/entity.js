@@ -65,7 +65,7 @@ entColor = [
 
 entImg = [
     //DECOR IMAGES START
-        new ImageObject("images/tech_torch_x10.png", vec2(160, 160)),
+        new ImageObject("images/techTorch.png", vec2(160, 160)),
         new ImageObject("images/grass1.png", vec2(1280, 160)),
     //DECOR IMAGES END
 
@@ -78,11 +78,11 @@ entImg = [
         new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
         new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
         new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
-        new ImageObject("images/barrel_red.png", vec2(160, 160)),
-        new ImageObject("images/barrel_steel.png", vec2(160, 160)),
+        new ImageObject("images/barrelRed.png", vec2(160, 160)),
+        new ImageObject("images/barrelSteel.png", vec2(160, 160)),
         new ImageObject("images/spikes.png", vec2(1280, 160)),
         new ImageObject("images/pillar.png", vec2(1280, 160)),
-        new ImageObject("images/pillar_broken.png", vec2(1280, 160)),
+        new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
     //ITEM IMAGES END
 
     //ENEMY IMAGES START

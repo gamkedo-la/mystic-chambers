@@ -34,13 +34,13 @@ playerShotAccuracyFactor = 5;
 var gunImages = [
     [
         new ImageObject("images/revolver.png", vec2(480, 480)),
-        new ImageObject("images/revolverFire.png", vec2(480, 480)),
-        new ImageObject("images/revolverReload.png", vec2(480, 480)),
+        new ImageObject("images/revolver.png", vec2(480, 480)),
+        new ImageObject("images/revolver.png", vec2(480, 480)),
     ],
     [
         new ImageObject("images/winchester.png", vec2(480, 480)),
-        new ImageObject("images/winchesterFire.png", vec2(480, 480)),
-        new ImageObject("images/winchesterReload.png", vec2(480, 480)),
+        new ImageObject("images/winchester.png", vec2(480, 480)),
+        new ImageObject("images/winchester.png", vec2(480, 480)),
     ],
 ];
 var gun = new Sprite(tr(vec2(screen.width/2, 0)), undefined);
