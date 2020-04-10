@@ -253,7 +253,6 @@ function convertWallsToString(walls)
         if(walls[i].type == 0)
         {
             str += walls[i].toString(true);
-            str += " ";
         }
     }
     str += ".";
@@ -262,10 +261,6 @@ function convertWallsToString(walls)
 
 function generateWallsFromString(walls, str)
 {
-    str = str.replace('    ', ' ');
-    str = str.replace('   ', ' ');
-    str = str.replace('  ', ' ');
-
     var values = str.split(' ');
     for(let i = 0; i < values.length;)
     {
@@ -277,6 +272,16 @@ function generateWallsFromString(walls, str)
             parseInt(values[i++] / 100.0)
         );
         newWall.type = parseInt(values[i++]);
+
+        var newWallAdd = getAlreadyMadeWall(newWall, walls);
+        if(typeof newWallAdd == "undefined")
+        {
+            walls.push(newWall);
+        }
+        else
+        {
+            newWall = newWallAdd;
+        }
 
         if(newWall.type == 0)
         {
@@ -294,13 +299,21 @@ function generateWallsFromString(walls, str)
                 );
                 sNewWall.type = parseInt(values[i++]);
 
-                newWall.sectorData.wallsLeft.push(sNewWall);
-                walls.push(sNewWall);
+                var wallToAdd = getAlreadyMadeWall(sNewWall, walls);
+                if(typeof wallToAdd == "undefined")
+                {
+                    newWall.sectorData.wallsLeft.push(sNewWall);
+                    walls.push(sNewWall);
+                }
+                else
+                {
+                    newWall.sectorData.wallsLeft.push(wallToAdd);
+                }
 
                 count--;
             }
 
-            var count = parseInt(values[i++]);
+            count = parseInt(values[i++]);
             if(count > 0) newWall.sectorData.wallsRight = [];
 
             while(count > 0)
@@ -314,13 +327,21 @@ function generateWallsFromString(walls, str)
                 );
                 sNewWall.type = parseInt(values[i++]);
 
-                newWall.sectorData.wallsRight.push(sNewWall);
-                walls.push(sNewWall);
+                var wallToAdd = getAlreadyMadeWall(sNewWall, walls);
+                if(typeof wallToAdd == "undefined")
+                {
+                    newWall.sectorData.wallsRight.push(sNewWall);
+                    walls.push(sNewWall);
+                }
+                else
+                {
+                    newWall.sectorData.wallsRight.push(wallToAdd);
+                }
 
                 count--;
             }
 
-            var count = parseInt(values[i++]);
+            count = parseInt(values[i++]);
             if(count > 0) newWall.sectorData.sectorsLeft = [];
 
             while(count > 0)
@@ -333,14 +354,23 @@ function generateWallsFromString(walls, str)
                     parseInt(values[i++] / 100.0)
                 );
                 sNewWall.type = parseInt(values[i++]);
+                i += 4; //sectors got 4 zeros in the end
 
-                newWall.sectorData.sectorsLeft.push(sNewWall);
-                walls.push(sNewWall);
+                var wallToAdd = getAlreadyMadeWall(sNewWall, walls);
+                if(typeof wallToAdd == "undefined")
+                {
+                    newWall.sectorData.sectorsLeft.push(sNewWall);
+                    walls.push(sNewWall);
+                }
+                else
+                {
+                    newWall.sectorData.sectorsLeft.push(wallToAdd);
+                }
 
                 count--;
             }
 
-            var count = parseInt(values[i++]);
+            count = parseInt(values[i++]);
             if(count > 0) newWall.sectorData.sectorsRight = [];
 
             while(count > 0)
@@ -353,25 +383,46 @@ function generateWallsFromString(walls, str)
                     parseInt(values[i++] / 100.0)
                 );
                 sNewWall.type = parseInt(values[i++]);
+                i += 4; //sectors got 4 zeros in the end
 
-                newWall.sectorData.sectorsRight.push(sNewWall);
-                walls.push(sNewWall);
+                var wallToAdd = getAlreadyMadeWall(sNewWall, walls);
+                if(typeof wallToAdd == "undefined")
+                {
+                    newWall.sectorData.sectorsRight.push(sNewWall);
+                    walls.push(sNewWall);
+                }
+                else
+                {
+                    newWall.sectorData.sectorsRight.push(wallToAdd);
+                }
 
                 count--;
             }
         }
 
-        walls.push(newWall);
-
         if(typeof activeSector == "undefined")
             activeSector = walls[walls.length-1];
-        
-        if(newWall.type > 0)
+    }
+
+    resetWallIndexes();
+
+    console.log(walls.length);
+}
+
+function getAlreadyMadeWall(nw, walls)
+{
+    for(let i = 0; i < walls.length; i++)
+    {
+        if(nw.p1.x == walls[i].p1.x
+        && nw.p1.y == walls[i].p1.y
+        && nw.p2.x == walls[i].p2.x
+        && nw.p2.y == walls[i].p2.y)
         {
-            resetWallIndexes();
-            break;
+            return walls[i];
         }
     }
+
+    return undefined;
 }
 
 function getPositionSideInSector(sec, _plPos)

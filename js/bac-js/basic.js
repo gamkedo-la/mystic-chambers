@@ -1,5 +1,4 @@
 const FULLSCREEN_ENABLED = true; // false for easy debugging
-// FIXME: doesn't block F11! and never could
 
 var lastUpdate = Date.now();
 
