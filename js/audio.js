@@ -75,14 +75,47 @@ function AudioGlobal() {
 	this.draw = function(off) {
 		let v1 = vec2(0,0);
 		let v2 = vec2(0,0);
+
 		for (var i in currentSoundSources) {
 			v1.x = currentSoundSources[i].pos.x - off.x;
 			v1.y = currentSoundSources[i].pos.y - off.y;
-			v2.x = plPos.x - off.x;
-			v2.y = plPos.y - off.y;
-			drawLine(renderer, v1, v2, "#FFFFFFFF");
-			drawRect(renderer, vec2(v1.x-2, v1.y-2), vec2(5, 5), true, "#FFFFFFFF", false);
+			v2.x = currentPlayerX - off.x;
+			v2.y = currentPlayerY - off.y;
+			drawLine(renderer, v1, v2, "#FFFFFF");
+			drawRect(renderer, vec2(v1.x-2, v1.y-2), vec2(5, 5), true, "#FFFFFF", false);
+		}
 
+		for (var i in currentAudGeo) {
+			v1.x = currentAudGeo[i].point.x - off.x;
+			v1.y = currentAudGeo[i].point.y - off.y;
+			v2.x = currentPlayerX - off.x;
+			v2.y = currentPlayerY - off.y;
+
+
+			var seePlayer = true;
+			for (var j in wall) {
+				if (isLineOnLine(
+						currentAudGeo[i].point.x, currentAudGeo[i].point.y, 
+						currentPlayerX, currentPlayerY, 
+						wall[j].p1.x, wall[j].p1.y, 
+						wall[j].p2.x, wall[j].p2.y)
+						&& !wall[j].type == 0) {
+					seePlayer = false;
+				}
+			}
+
+			if(seePlayer) {
+				drawLine(renderer, v1, v2, "#885088");
+			}
+
+			for (var j in currentAudGeo[i].connections) {
+				var index = currentAudGeo[i].connections[j];
+				v2.x = currentAudGeo[index].point.x - off.x;
+				v2.y = currentAudGeo[index].point.y - off.y;
+				drawLine(renderer, v1, v2, "#885088");
+			}
+
+			drawRect(renderer, vec2(v1.x-2, v1.y-2), vec2(5, 5), true, "#885088", false);
 		}
 	};
 
@@ -197,7 +230,7 @@ function AudioGlobal() {
 		source.start();
 
 		source.onended = function() {
-			source = null;
+			source.buffer = null;
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
@@ -237,7 +270,7 @@ function AudioGlobal() {
 		source.start();
 
 		source.onended = function() {
-			source = null;
+			source.buffer = null;
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
@@ -284,7 +317,7 @@ function AudioGlobal() {
 		source.start();
 
 		source.onended = function() {
-			source = null;
+			source.buffer = null;
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
@@ -328,7 +361,7 @@ function AudioGlobal() {
 		source.start();
 
 		source.onended = function() {
-			source = null;
+			source.buffer = null;
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
@@ -523,4 +556,43 @@ function AudioGlobal() {
 
 function rndAP(base = 1, width = 0.1) {
 	return Math.random()*width*2 + base - width;
+}
+
+var fauxAudGeo = [
+	vec2(602,224),
+	vec2(576,149),
+	vec2(594,127),
+	];
+
+var currentAudGeo = []; //{point: vec2, connections: [indexs]}
+function generateAudGeo() {
+	currentAudGeo = new Array();
+
+	for (var i = 0; i < fauxAudGeo.length; i++) {
+		console.log("Checking point " + i)
+		var connect = [];
+
+		for (var j = 0; j < fauxAudGeo.length; j++) {
+			if (i == j) continue;
+			console.log("--Against point " + j)
+			var clear = true;
+
+			for (var k = 0; k < wall.length; k++) {
+				if (isLineOnLine(fauxAudGeo[i].x, fauxAudGeo[i].y, 
+						fauxAudGeo[j].x, fauxAudGeo[j].y, 
+						wall[k].p1.x, wall[k].p1.y, 
+						wall[k].p2.x, wall[k].p2.y)
+						&& !wall[k].type == 0) {
+					console.log(wall[k])
+					clear = false;
+					}
+				}
+			if (clear) {
+				connect.push(j);
+			}
+		}
+
+		currentAudGeo.push({point: fauxAudGeo[i], connections: connect});
+	}
+
 }
