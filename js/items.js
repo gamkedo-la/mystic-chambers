@@ -10,20 +10,11 @@ class ItemManager {
         this.ents = [];
     }
 
-    add(x, y, id, offset)
+    add(x, y, id)
     {
         var ent = new Entity();
         ent.set(x, y, id);
-        if(typeof offset != "undefined") ent.renderOffset = offset;
-
-        if (id!=ENT_BARREL_RED
-        && id!=ENT_BARREL_STEEL
-        && id!=ENT_SPIKES
-        && id!=ENT_PILLAR
-        && id!=ENT_PILLAR_BROKEN) {
-            ent.ai = aiSpinningBobbing;
-        }1
-
+        ent.setIDProperties();
         this.ents.push(ent);
         entities.push(ent);
     }

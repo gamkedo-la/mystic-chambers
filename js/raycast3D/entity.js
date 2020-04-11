@@ -98,6 +98,27 @@ entDamageImg = [
 
 ];
 
+entRenderOffset = [
+    vec2(0,-100),
+    vec2(0,-100),
+
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+
+    vec2(),
+];
+
 //Requires Sprite
 class Entity
 {
@@ -106,11 +127,11 @@ class Entity
         this.p = vec2(0.0, 0.0);
         this.angle = 0.0;
         this.sprite = new Sprite(tr());
-        this.renderOffset = vec2(0.0, 0.0);
         this.id = -1;
         this.ai = undefined; // an optional function
         this.aimAngleRadians = 0; // the angle an entity is looking
         this.sector = undefined; //the sector in which this entity is present
+        this.bobbingFactor = 1.0;
     }
 
     set(x, y, id)
@@ -120,6 +141,71 @@ class Entity
         this.id = id;
 
         this.sprite.imageObject = entImg[this.id];
+    }
+
+    setIDProperties()
+    {
+        //decor are update-less entities
+        if(this.id >= decorStartType + decorTotalTypes)
+        {
+            switch(this.id)
+            {
+                case ENT_HEALTHBOX:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_REDKEY:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_GREENKEY:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_BLUEKEY:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_REVOLVERGUN:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_REVOLVERAMMO:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_WINCHESTERGUN:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_WINCHESTERAMMO:
+                    this.ai = aiSpinningBobbing;
+                    break;
+
+                case ENT_BARREL_RED:
+                    break;
+
+                case ENT_BARREL_STEEL:
+                    break;
+
+                case ENT_SPIKES:
+                    break;
+
+                case ENT_PILLAR:
+                    break;
+
+                case ENT_PILLAR_BROKEN:
+                    break;
+
+                case ENT_FIRESKULL:
+                    var no = Math.random() * 4.0;
+                    if(no > 3) this.ai = aiWaypointNavigation;
+                    else if(no > 2) this.ai = aiAvoid;
+                    else if(no > 1) this.ai = aiExplore;
+                    else if(no > 0) this.ai = aiSeek;
+                    break;
+            }
+        }
     }
 
     draw(renderer, plRay, circleOnly)
@@ -168,9 +254,9 @@ class Entity
 
                 this.sprite.transform.scale = vec2(entScaleFactor / dist, entScaleFactor / dist);
                 this.sprite.transform.position = vec2(
-                    (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * this.renderOffset.x))
+                    (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * entRenderOffset[this.id].x))
                     + posRatio * (window.innerWidth/entPosSegment)) + entXOffset,
-                    (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * this.renderOffset.y));
+                    (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * (entRenderOffset[this.id].y * this.bobbingFactor)));
                 this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), vec2(160, 160));
 
                 renderer.globalAlpha = 1.0;
@@ -228,6 +314,7 @@ function generateEntitiesFromString(entities, str)
             parseInt(values[i++]),
             parseInt(values[i++])
         );
+        newEntity.setIDProperties();
 
         if(newEntity.id >= decorStartType
         && newEntity.id < decorStartType + decorTotalTypes)
@@ -372,8 +459,8 @@ function removeEntityInAllSectors()
     {
         if(wall[s].type > 0) break;
 
-        walls[s].sectorData.entitiesLeft = [];
-        walls[s].sectorData.entitiesRight = [];
+        wall[s].sectorData.entitiesLeft = [];
+        wall[s].sectorData.entitiesRight = [];
     }
 }
 

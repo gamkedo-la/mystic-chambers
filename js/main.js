@@ -17,30 +17,6 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
-    /*
-    enemies.add(530, 140, ENT_FIRESKULL, "[Wander] Fire Skull", aiWander);
-    enemies.add(540, 140, ENT_FIRESKULL, "[Seek] Fire Skull", aiSeek);
-    enemies.add(550, 120, ENT_FIRESKULL, "[Avoid] Fire Skull", aiAvoid);
-    enemies.add(560, 120, ENT_FIRESKULL, "[Explore] Fire Skull", aiExplore);
-    enemies.add(560, 120, ENT_FIRESKULL, "[Waypoint] Fire Skull", aiWaypointNavigation);
-    
-    items.add(560, 290, ENT_REDKEY, vec2(1, -100));
-    items.add(630, 240, ENT_GREENKEY, vec2(1, -100));
-    items.add(500, 100, ENT_BLUEKEY, vec2(1, -100));
-    items.add(600, 200, ENT_HEALTHBOX, vec2(1, -100));
-    items.add(640, 170, ENT_REVOLVERGUN, vec2(1, -100));
-    items.add(520, 60, ENT_REVOLVERAMMO, vec2(1, -100));
-    items.add(610, 280, ENT_WINCHESTERGUN, vec2(1, -100));
-    items.add(590, 100, ENT_WINCHESTERAMMO, vec2(1, -100));
-    
-    items.add(572, 290, ENT_BARREL_RED, vec2(1, -100));
-    items.add(574, 302, ENT_BARREL_RED, vec2(1, -100));
-    items.add(576, 298, ENT_BARREL_STEEL, vec2(1, -100));
-    items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
-    items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
-    items.add(590, 293, ENT_SPIKES, vec2(1, -100));
-    */
-
     playerInit();
 
     editorInit(wall, area, entities);
@@ -190,7 +166,7 @@ function draw()
 
     ui.draw();
 
-    if(mapMode) drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
+    //if(mapMode) drawText(renderer, touchPos[0].x.toString() + ", " + touchPos[0].y.toString());
 
     if(itemPickupFlash > 0)
     {

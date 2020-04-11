@@ -206,6 +206,7 @@ function boxHandleEvent(offset)
                             else if(editorMode == 2)
                             {
                                 decor.ents[i].id = currentEntityType;
+                                decor.ents[i].setIDProperties();
                             }
                         }
                     }
@@ -225,6 +226,7 @@ function boxHandleEvent(offset)
                             else if(editorMode == 2)
                             {
                                 items.ents[i].id = currentEntityType;
+                                items.ents[i].setIDProperties();
                             }
                         }
                     }
@@ -244,6 +246,7 @@ function boxHandleEvent(offset)
                             else if(editorMode == 2)
                             {
                                 enemies.ents[i].id = currentEntityType;
+                                enemies.ents[i].setIDProperties();
                             }
                         }
                     }
@@ -660,6 +663,7 @@ function decorHandleEvents(decorEnts, offset)
                 else if(editorMode == 2)
                 {
                     selectedDecor.id = currentEntityType;
+                    selectedDecor.setIDProperties();
                     decorHandleTouchIndex = -1;
                     selectedDecor = null;
                     lastSelectedDecorIndex = -1;
@@ -781,6 +785,7 @@ function itemHandleEvents(itemEnts, offset)
                 else if(editorMode == 2)
                 {
                     selectedItem.id = currentEntityType;
+                    selectedItem.setIDProperties();
                     itemHandleTouchIndex = -1;
                     selectedItem = null;
                     lastSelectedItemIndex = -1;
@@ -902,6 +907,7 @@ function enemyHandleEvents(enemyEnts, offset)
                 else if(editorMode == 2)
                 {
                     selectedEnemy.id = currentEntityType;
+                    selectedEnemy.setIDProperties();
                     enemyHandleTouchIndex = -1;
                     selectedEnemy = null;
                     lastSelectedEnemyIndex = -1;

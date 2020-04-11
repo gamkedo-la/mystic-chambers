@@ -6,14 +6,11 @@ class EnemyManager {
         this.ents = [];
     }
 
-    add(x, y, id, name, ai, offset)
+    add(x, y, id)
     {
         var ent = new Entity();
         ent.set(x, y, id);
-        if(typeof offset != "undefined") ent.renderOffset = offset;
-        ent.name = name;
-        ent.ai = ai;
-
+        ent.setIDProperties();
         this.ents.push(ent);
         entities.push(ent);
     }

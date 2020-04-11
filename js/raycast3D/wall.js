@@ -405,8 +405,6 @@ function generateWallsFromString(walls, str)
     }
 
     resetWallIndexes();
-
-    console.log(walls.length);
 }
 
 function getAlreadyMadeWall(nw, walls)

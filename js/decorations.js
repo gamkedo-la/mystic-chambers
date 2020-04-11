@@ -8,11 +8,11 @@ class DecorationManager {
         this.ents = [];
     }
 
-    add(x, y, id, offset)
+    add(x, y, id)
     {
         var ent = new Entity();
         ent.set(x,y,id);
-        if(typeof offset != "undefined") ent.renderOffset = offset;
+        ent.setIDProperties();
         this.ents.push(ent);
         entities.push(ent);
     }

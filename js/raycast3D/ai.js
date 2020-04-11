@@ -134,13 +134,14 @@ function aiSpinning() {
 
 // spin around and bob up and down
 function aiSpinningBobbing() {
-    var speed = 0.05;
+    var speed = 0.025;
     var bobspeed = 350;
     var bobsize = 100;
     this.aimAngleRadians = this.aimAngleRadians + speed;
     validateRotation.call(this); // stay in 0..360 deg
     // up and down like a doom weapon
-    this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
+    this.bobbingFactor = (Math.floor(((Math.cos(performance.now()/bobspeed)+1)/2) * 15.0))/15;
+    //this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
 }
 
 // seeks any nearby entities like health, ammo, guns, and WAYPOINTS
