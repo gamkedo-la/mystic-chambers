@@ -110,6 +110,11 @@ class ItemManager {
                         shouldDestroy = false;
                         break;
 
+                    case ENT_GRAVESTONE:
+                        plPos = prevPlPos;
+                        shouldDestroy = false;
+                        break;
+
                     default:
                         //do nothing
                 }

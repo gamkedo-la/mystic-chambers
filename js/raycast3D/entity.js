@@ -35,10 +35,11 @@ const ENT_BARREL_STEEL = 11;
 const ENT_SPIKES = 12;
 const ENT_PILLAR = 13;
 const ENT_PILLAR_BROKEN = 14;
-const itemTotalTypes = 13;
+const ENT_GRAVESTONE = 15;
+const itemTotalTypes = 14;
 
-const enemyStartType = 15;
-const ENT_FIRESKULL = 15;
+const enemyStartType = 16;
+const ENT_FIRESKULL = 16;
 const enemyTotalTypes = 1;
 //Entity IDs --END--
 
@@ -59,35 +60,31 @@ entColor = [
     "#ffcc0090",
     "#cc00dd90",
     "#cc00dd90",
+    "#55dd2290",
 
     "#ee440090",
 ];
 
 entImg = [
-    //DECOR IMAGES START
-        new ImageObject("images/techTorch.png", vec2(160, 160)),
-        new ImageObject("images/grass1.png", vec2(1280, 160)),
-    //DECOR IMAGES END
+    new ImageObject("images/techTorch.png", vec2(160, 160)),
+    new ImageObject("images/grass1.png", vec2(1280, 160)),
 
-    //ITEM IMAGES START
-        new ImageObject("images/healthBox.png", vec2(1280, 160)),
-        new ImageObject("images/redKey.png", vec2(1280, 160)),
-        new ImageObject("images/greenKey.png", vec2(1280, 160)),
-        new ImageObject("images/blueKey.png", vec2(1280, 160)),
-        new ImageObject("images/revolverGun.png", vec2(1280, 160)),
-        new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
-        new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
-        new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
-        new ImageObject("images/barrelRed.png", vec2(160, 160)),
-        new ImageObject("images/barrelSteel.png", vec2(160, 160)),
-        new ImageObject("images/spikes.png", vec2(1280, 160)),
-        new ImageObject("images/pillar.png", vec2(1280, 160)),
-        new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
-    //ITEM IMAGES END
+    new ImageObject("images/healthBox.png", vec2(1280, 160)),
+    new ImageObject("images/redKey.png", vec2(1280, 160)),
+    new ImageObject("images/greenKey.png", vec2(1280, 160)),
+    new ImageObject("images/blueKey.png", vec2(1280, 160)),
+    new ImageObject("images/revolverGun.png", vec2(1280, 160)),
+    new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
+    new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
+    new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
+    new ImageObject("images/barrelRed.png", vec2(160, 160)),
+    new ImageObject("images/barrelSteel.png", vec2(160, 160)),
+    new ImageObject("images/spikes.png", vec2(1280, 160)),
+    new ImageObject("images/pillar.png", vec2(1280, 160)),
+    new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
+    new ImageObject("images/gravestone.png", vec2(1280, 160)),
 
-    //ENEMY IMAGES START
-        new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
-    //ENEMY IMAGES END
+    new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
 ];
 
 entAttackImg = [
@@ -115,6 +112,7 @@ entRenderOffset = [
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100),
+    vec2(0,-60),
 
     vec2(),
 ];
@@ -195,6 +193,9 @@ class Entity
                     break;
 
                 case ENT_PILLAR_BROKEN:
+                    break;
+
+                case ENT_GRAVESTONE:
                     break;
 
                 case ENT_FIRESKULL:
