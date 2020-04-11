@@ -412,7 +412,11 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (saveLvBtn.button.output == UIOUTPUT_SELECT)
     {
-        writeFile(getLevelName(), convertWallsToString(wall) + convertAreasToString(area));
+        writeFile(getLevelName(),
+            convertWallsToString(wall) +
+            convertAreasToString(area) +
+            convertEntitiesToString(entities)
+        );
         saveLvBtn.button.resetOutput();
     }
     else if (debugPlayBtn.button.output == UIOUTPUT_SELECT)

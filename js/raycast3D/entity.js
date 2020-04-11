@@ -196,9 +196,65 @@ class Entity
         this.p.x += vec2.x;
         this.p.y += vec2.y;
     }
+
+    toString()
+    {
+        return this.p.x + " " + this.p.y + " " + this.id + " ";
+    }
 }
 
 var entities = [];
+
+function convertEntitiesToString(entities)
+{
+    var str = "";
+    for(let i = 0; i < entities.length; i++)
+    {
+        str += entities[i].toString();
+    }
+    str += ".";
+    return str;
+}
+
+function generateEntitiesFromString(entities, str)
+{
+    var values = str.split(' ');
+    for(let i = 0; i < values.length;)
+    {
+        var newEntity = new Entity();
+
+        newEntity.set(
+            parseInt(values[i++]),
+            parseInt(values[i++]),
+            parseInt(values[i++])
+        );
+
+        if(newEntity.id >= decorStartType
+        && newEntity.id < decorStartType + decorTotalTypes)
+        {
+            decor.ents.push(newEntity);
+        }
+        if(newEntity.id >= itemStartType
+        && newEntity.id < itemStartType + itemTotalTypes)
+        {
+            items.ents.push(newEntity);
+        }
+        if(newEntity.id >= enemyStartType
+        && newEntity.id < enemyStartType + enemyTotalTypes)
+        {
+            enemies.ents.push(newEntity);
+        }
+
+        entities.push(newEntity);
+    }
+
+    entitiesInSectorSet = [];
+    setEntitiesInSectors();
+    deleteEntitiesOutsideSector();
+    decor.removeIfNotInEntities();
+    items.removeIfNotInEntities();
+    enemies.removeIfNotInEntities();
+}
 
 function drawEntities(renderer, plRay, line)
 {

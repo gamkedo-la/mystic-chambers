@@ -17,6 +17,7 @@ window.onload = function()
 
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
 
+    /*
     enemies.add(530, 140, ENT_FIRESKULL, "[Wander] Fire Skull", aiWander);
     enemies.add(540, 140, ENT_FIRESKULL, "[Seek] Fire Skull", aiSeek);
     enemies.add(550, 120, ENT_FIRESKULL, "[Avoid] Fire Skull", aiAvoid);
@@ -38,86 +39,14 @@ window.onload = function()
     items.add(578, 306, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(580, 296, ENT_BARREL_STEEL, vec2(1, -100));
     items.add(590, 293, ENT_SPIKES, vec2(1, -100));
+    */
 
     playerInit();
 
-    editorInit(wall, area);
+    editorInit(wall, area, entities);
 
     setupGameplayUI();
     setupMainMenuUI();
-
-    // Wall Sector TEST
-
-    /*
-    var s1_w1 = new Wall();
-    s1_w1.set(549.99, 350, 524.99, 275);
-    s1_w1.type = 3;
-    var s1_w2 = new Wall();
-    s1_w2.set(599.99, 225, 524.99, 275);
-    s1_w2.type = 3;
-    var s1_w3 = new Wall();
-    s1_w3.set(549.99, 350, 674.99, 225);
-    s1_w3.type = 3;
-
-    var s2_w1 = new Wall();
-    s2_w1.set(574.99, 150, 599.99, 225);
-    s2_w1.type = 1;
-    var s2_w2 = new Wall();
-    s2_w2.set(674.99, 175, 674.99, 225);
-    s2_w2.type = 1;
-    var s2_w3 = new Wall();
-    s2_w3.set(674.99, 175, 599.99, 125);
-    s2_w3.type = 1;
-
-    var s3_w1 = new Wall();
-    s3_w1.set(499.99, 150, 574.99, 150);
-    s3_w1.type = 3;
-    var s3_w2 = new Wall();
-    s3_w2.set(449.99, 100, 499.99, 150);
-    s3_w2.type = 3;
-    var s3_w3 = new Wall();
-    s3_w3.set(499.99, 50, 449.99, 100);
-    s3_w3.type = 3;
-    var s3_w4 = new Wall();
-    s3_w4.set(599.99, 75, 499.99, 50);
-    s3_w4.type = 3;
-    var s3_w5 = new Wall();
-    s3_w5.set(599.99, 125, 599.99, 75);
-    s3_w5.type = 3;
-
-    var s1_s2 = new Wall();
-    s1_s2.set(674.99, 225, 599.99, 225);
-    s1_s2.type = 0;
-    var s2_s3 = new Wall();
-    s2_s3.set(599.99, 125, 574.99, 150);
-    s2_s3.type = 0;
-
-    wall.push(s1_s2, s2_s3);
-    wall.push(s1_w1, s1_w2, s1_w3);
-    wall.push(s2_w1, s2_w2, s2_w3);
-    wall.push(s3_w1, s3_w2, s3_w3, s3_w4, s3_w5);
-
-    s1_s2.sectorData.wallsLeft = [s1_w1, s1_w2, s1_w3];
-    s1_s2.sectorData.wallsRight = [s2_w1, s2_w2, s2_w3];
-    s1_s2.sectorData.sectorsLeft = undefined;
-    s1_s2.sectorData.sectorsRight = [s2_s3];
-
-    s2_s3.sectorData.wallsLeft = [s2_w1, s2_w2, s2_w3];
-    s2_s3.sectorData.wallsRight = [s3_w1, s3_w2, s3_w3, s3_w4, s3_w5];
-    s2_s3.sectorData.sectorsLeft = [s1_s2];
-    s2_s3.sectorData.sectorsRight = undefined;
-
-    activeSector = s1_s2;
-
-    resetWallIndexes();
-    */
-
-    entitiesInSectorSet = [];
-    setEntitiesInSectors();
-    deleteEntitiesOutsideSector();
-    decor.removeIfNotInEntities();
-    items.removeIfNotInEntities();
-    enemies.removeIfNotInEntities();
 
     //wall[10].decal = entImg[0][0];
 

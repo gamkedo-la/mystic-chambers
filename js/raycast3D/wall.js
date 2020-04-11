@@ -401,7 +401,7 @@ function generateWallsFromString(walls, str)
         }
 
         if(typeof activeSector == "undefined")
-            activeSector = walls[walls.length-1];
+            activeSector = walls[0];
     }
 
     resetWallIndexes();
