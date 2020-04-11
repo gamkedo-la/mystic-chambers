@@ -36,10 +36,13 @@ const ENT_SPIKES = 12;
 const ENT_PILLAR = 13;
 const ENT_PILLAR_BROKEN = 14;
 const ENT_GRAVESTONE = 15;
-const itemTotalTypes = 14;
+const ENT_FIRE = 16;
+const ENT_FIRE_COLD = 17;
+const ENT_FIRE_MYSTIC = 18;
+const itemTotalTypes = 17;
 
-const enemyStartType = 16;
-const ENT_FIRESKULL = 16;
+const enemyStartType = 19;
+const ENT_FIRESKULL = 19;
 const enemyTotalTypes = 1;
 //Entity IDs --END--
 
@@ -48,7 +51,7 @@ entColor = [
     "#00aa0090",
 
     "#ee555590",
-    "#ff000090",
+    "#aa000090",
     "#00ff0090",
     "#0000ff90",
     "#B7410E90",
@@ -61,6 +64,9 @@ entColor = [
     "#cc00dd90",
     "#cc00dd90",
     "#55dd2290",
+    "#ff000090",
+    "#00ccff90",
+    "#ee00cc90",
 
     "#ee440090",
 ];
@@ -83,6 +89,9 @@ entImg = [
     new ImageObject("images/pillar.png", vec2(1280, 160)),
     new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
     new ImageObject("images/gravestone.png", vec2(1280, 160)),
+    new ImageObject("images/fire.png", vec2(640, 160)),
+    new ImageObject("images/coldFire.png", vec2(640, 160)),
+    new ImageObject("images/mysticFire.png", vec2(640, 160)),
 
     new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
 ];
@@ -113,6 +122,9 @@ entRenderOffset = [
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-60),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
 
     vec2(),
 ];
@@ -196,6 +208,18 @@ class Entity
                     break;
 
                 case ENT_GRAVESTONE:
+                    break;
+
+                case ENT_FIRE:
+                    this.ai = aiSpinning;
+                    break;
+
+                case ENT_FIRE_COLD:
+                    this.ai = aiSpinning;
+                    break;
+
+                case ENT_FIRE_MYSTIC:
+                    this.ai = aiSpinning;
                     break;
 
                 case ENT_FIRESKULL:

@@ -115,6 +115,21 @@ class ItemManager {
                         shouldDestroy = false;
                         break;
 
+                    case ENT_FIRE:
+                        playerHealth -= 1;
+                        shouldDestroy = false;
+                        break;
+    
+                    case ENT_FIRE_COLD:
+                        playerHealth -= 1;
+                        shouldDestroy = false;
+                        break;
+    
+                    case ENT_FIRE_MYSTIC:
+                        playerHealth -= 1;
+                        shouldDestroy = false;
+                        break;
+
                     default:
                         //do nothing
                 }
