@@ -107,7 +107,7 @@ function convertAreasToString(areas)
 {
     var str = "";
     for(let i = 0; i < areas.length; i++) str += areas[i].toString();
-    str += ".";
+    str += "&";
     return str;
 }
 

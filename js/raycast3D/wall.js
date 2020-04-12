@@ -253,7 +253,7 @@ function convertWallsToString(walls)
             str += walls[i].toString(true);
         }
     }
-    str += ".";
+    str += "&";
     return str;
 }
 

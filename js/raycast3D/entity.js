@@ -323,7 +323,7 @@ function convertEntitiesToString(entities)
     {
         str += entities[i].toString();
     }
-    str += ".";
+    str += "&";
     return str;
 }
 
