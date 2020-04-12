@@ -1,4 +1,5 @@
 var AUDIO_DEBUG = false;
+var audioTestLocation = vec2(0, 0);
 
 //Sound IDs
 const REVERB = 0;

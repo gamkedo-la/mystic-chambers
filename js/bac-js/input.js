@@ -109,8 +109,13 @@ function isPointerLocked()
 
 function onKeyDown(ev)
 {
+    if (AUDIO_DEBUG && ev.keyCode ==53) { //6 key for audio debugging
+        audioTestLocation.x = currentPlayerX;
+        audioTestLocation.y = currentPlayerY;
+        console.log("set sound location")
+    }
     if (AUDIO_DEBUG && ev.keyCode ==54) { //6 key for audio debugging
-        audio.play3DSound(sounds[0], vec2(plPos.x, plPos.y))
+        audio.play3DSound(sounds[1], audioTestLocation)
         console.log("play sound")
     }
     if(keysDown.indexOf(ev.key) == -1)
