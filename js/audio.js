@@ -1,4 +1,4 @@
-const AUDIO_DEBUG = true;
+var AUDIO_DEBUG = false;
 
 //Sound IDs
 const REVERB = 0;
@@ -15,8 +15,8 @@ var sounds = [];
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 20;
-const DROPOFF_MAX = 200;
-const REVERB_MAX = 3;
+const DROPOFF_MAX = 400;
+const REVERB_MAX = 5;
 const BEHIND_THE_HEAD = 0.5;
 
 var audio = new AudioGlobal();
@@ -190,7 +190,7 @@ function AudioGlobal() {
 	};
 
 	this.play3DSound = function(buffer, location,  mixVolume = 1, rate = 1) {
-		return play3DSound4(buffer, location,  mixVolume, rate);
+		return play3DSound5(buffer, location,  mixVolume, rate);
 	};
 
 	function play3DSound1(buffer, location,  mixVolume = 1, rate = 1) {//3d panning and volume
@@ -331,6 +331,46 @@ function AudioGlobal() {
 		}
 
 		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
+		currentSoundSources.push(referance);
+		return referance;
+	};
+
+	function play3DSound5(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation and reverb
+		if (!initialized) return;
+
+		var pos = calculatePropogationPosition(location);
+		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
+			return false;
+		}
+
+		var source = audioCtx.createBufferSource();
+		var gainNode = audioCtx.createGain();
+		var panNode = audioCtx.createStereoPanner();
+		var verbMixNode = audioCtx.createGain();
+		var verbNode = audioCtx.createConvolver();
+
+		source.connect(gainNode);
+		source.connect(verbMixNode);
+		verbMixNode.connect(verbNode);
+		verbNode.connect(gainNode);
+		gainNode.connect(panNode);
+		panNode.connect(soundEffectsBus);
+
+		gainNode.gain.value = calcuateVolumeDropoff(pos);
+		verbMixNode.gain.value = calcuateReverbPresence(pos);
+		panNode.pan.value = calcuatePan(pos);
+
+		source.buffer = buffer;
+		source.playbackRate.value = rate;
+		gainNode.gain.value *= Math.pow(mixVolume, 2);
+		verbNode.buffer = sounds[REVERB];
+		source.start();
+
+		source.onended = function() {
+			source.buffer = null;
+		}
+
+		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
@@ -545,6 +585,7 @@ function AudioGlobal() {
 		var newPointsChecked = pointsChecked;
 		newPointsChecked.push(pointToCheck);
 		var distance = DROPOFF_MAX;
+		var pos = location;
 		if (lineOfSight(currentAudGeo[pointToCheck].point, location)) {
 			return location.distance(currentAudGeo[pointToCheck].point);
 		}
@@ -561,10 +602,11 @@ function AudioGlobal() {
 			var newDistance = checkAudGeo(currentAudGeo[pointToCheck].connections[i], location, newPointsChecked);
 			if (newDistance < distance) {
 				distance = newDistance;
+				pos = currentAudGeo[currentAudGeo[pointToCheck].connections[i]].point;
 			}
 		}
 
-		return distance;
+		return distance + currentAudGeo[pointToCheck].point.distance(pos);
 	}
 
 	return this;
