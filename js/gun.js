@@ -15,7 +15,7 @@ var gunReloadKeyPress = "r";
 var previousGun = -1;
 var gunTransition = 0;
 var gunYPos = 0;
-var gunTransitionLerpFactor = 0.25;
+var gunTransitionLerpFactor = 0.0125;
 var gunTransitionSnap = 10;
 
 var gunsDisplayUI = new Sprite(tr(vec2(), vec2(0.5, 0.5)), undefined);
@@ -28,7 +28,7 @@ var gunDisplayTextSize = 0.03;
 var gunMaxY = screen.height + 240;
 var gunDefMinY = screen.height - 240;
 
-var playerShotAccuracyFactor = 5;
+var playerShotAccuracyFactor = 150;
 
 var gunImages = [
     new ImageObject("images/revolver.png", vec2(2880, 480)),
@@ -38,10 +38,13 @@ var currentGunFrame = 0;
 var gun = new Sprite(tr(vec2(screen.width/2, 0)), undefined);
 var gunBobbingCounter = 0;
 var gunBobbingRate = 250.0;
+var gunFireFrameTimer = 0;
+var gunFireFrameDelay = 100;
+var canFireAgain = true;
 
 var gunReloading = false;
 var gunReloadSound = {source:{buffer :null}}
-var gunReloadFrameDelay = 4;
+var gunReloadFrameDelay = 100;
 var gunReloadFrameTimer = gunReloadFrameDelay;
 
 function changeGun(gunI)
@@ -67,20 +70,59 @@ function totalGunsAvailable()
     return count;
 }
 
+function playerSectorWallCheck(dist)
+{
+    var x1 = ray[ray.length/2].p.x;
+    var y1 = ray[ray.length/2].p.y;
+    var x2 = ray[ray.length/2].p.x + (dist * Math.cos(degToRad(ray[ray.length/2].angle)));
+    var y2 = ray[ray.length/2].p.y + (dist * Math.sin(degToRad(ray[ray.length/2].angle)));
+
+    if(typeof activeSector.sectorData.wallsLeft != "undefined")
+    {
+        for(let i = 0; i < activeSector.sectorData.wallsLeft.length; i++)
+        {
+            if(isLineOnLine(x1,y1,x2,y2,
+            activeSector.sectorData.wallsLeft[i].p1.x,
+            activeSector.sectorData.wallsLeft[i].p1.y,
+            activeSector.sectorData.wallsLeft[i].p2.x,
+            activeSector.sectorData.wallsLeft[i].p2.y))
+                return true;
+        }
+    }
+    if(typeof activeSector.sectorData.wallsRight != "undefined")
+    {
+        for(let i = 0; i < activeSector.sectorData.wallsRight.length; i++)
+        {
+            if(isLineOnLine(x1,y1,x2,y2,
+            activeSector.sectorData.wallsRight[i].p1.x,
+            activeSector.sectorData.wallsRight[i].p1.y,
+            activeSector.sectorData.wallsRight[i].p2.x,
+            activeSector.sectorData.wallsRight[i].p2.y))
+                return true;
+        }
+    }
+
+    return false;
+}
+
 function checkPlayerToEnemyShot()
 {
     for(let i = 0; i < enemies.ents.length; i++)
     {
-        var ang1 = radToDeg(plPos.angle(enemies.ents[i].p));
-        var ang2 = ray[ray.length/2].angle + 180;
+        var angBtwPlEn = radToDeg(plPos.angle(enemies.ents[i].p));
+        var distBtwPlEn = plPos.distance(enemies.ents[i].p);
+        var angPl = ray[ray.length/2].angle + 180 + 5;
 
-        if(Math.abs(ang1-ang2) < playerShotAccuracyFactor)
+        if(Math.abs(angBtwPlEn-angPl) < playerShotAccuracyFactor/distBtwPlEn)
         {
-            removeEntityInAllSectors(enemies.ents[i]);
-            removeEntityInSector(enemies.ents[i]);
-            removeEntity(enemies.ents[i]);
-            enemies.ents.splice(i, 1);
-            break;
+            if(!playerSectorWallCheck(distBtwPlEn-10))
+            {
+                removeEntityInAllSectors(enemies.ents[i]);
+                removeEntityInSector(enemies.ents[i]);
+                removeEntity(enemies.ents[i]);
+                enemies.ents.splice(i, 1);
+                break;
+            }
         }
     }
 }
@@ -141,11 +183,11 @@ function gunEvent()
 
     if(currentGun >= 0)
     {
-        if(gunTransition == 0 && isTouched)
+        if(gunTransition == 0 && gunFireFrameTimer <= 0 && isTouched && canFireAgain)
         {
             if(currentGunFrame <= 0)
             {
-                if(ammoInGun[currentGun] > 0)
+                if(canFireAgain && ammoInGun[currentGun] > 0)
                 {
                     ammoInGun[currentGun]--;
 
@@ -153,6 +195,8 @@ function gunEvent()
                     checkPlayerToEnemyShot();
 
                     currentGunFrame = 1;
+                    gunFireFrameTimer = gunFireFrameDelay;
+                    canFireAgain = false;
                 }
                 else if(totalAmmo[currentGun] >= gunAmmoCapacity[currentGun])
                 {
@@ -178,15 +222,20 @@ function gunEvent()
             if(gunTransition <= -1 && previousGun > -1) gun.imageObject = gunImages[previousGun];
             else gun.imageObject = gunImages[currentGun];
 
-            currentGunFrame = 0;
+            if(gunFireFrameTimer <= 0)
+            {
+                currentGunFrame = 0;
+
+                if(gunFireFrameTimer < -gunFireFrameDelay)
+                    canFireAgain = true;
+            }
         }
-        //gunReloading = false;
     }
 }
 
 function drawAllGunsDisplay(renderer)
 {
-    var gunXImg = 0; // this var is never used
+    var gunXImg = 0;
     gunXImg = drawGunDisplay(renderer, GUN_REVOLVER, ENT_REVOLVERGUN, gunXImg);
     gunXImg = drawGunDisplay(renderer, GUN_WINCHESTER, ENT_WINCHESTERGUN, gunXImg);
 }
@@ -217,7 +266,7 @@ function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
     return gunXImg;
 }
 
-function drawGun()
+function drawGun(deltaTime)
 {
     gun.transform.position.x = screen.width/2 + (Math.sin(gunBobbingCounter) * 40.0);
 
@@ -225,7 +274,7 @@ function drawGun()
 
     if(gunTransition <= -1)
     {
-        gun.transform.position.y = lerp(gun.transform.position.y, gunMaxY, gunTransitionLerpFactor);
+        gun.transform.position.y = lerp(gun.transform.position.y, gunMaxY, gunTransitionLerpFactor * deltaTime);
         
         if(gun.transform.position.y >= gunMaxY - gunTransitionSnap)
         {
@@ -236,7 +285,7 @@ function drawGun()
     else if(gunTransition >= 1)
     {
         gunTransition = 1;
-        gun.transform.position.y = lerp(gun.transform.position.y, gunMinY, gunTransitionLerpFactor);
+        gun.transform.position.y = lerp(gun.transform.position.y, gunMinY, gunTransitionLerpFactor * deltaTime);
         
         if(gun.transform.position.y <= gunMinY + gunTransitionSnap)
         {
@@ -250,19 +299,22 @@ function drawGun()
         if(gunReloadFrameTimer <= 0)
         {
             if(currentGunFrame < 2) currentGunFrame = 2;
-            else if(currentGunFrame == 2) currentGunFrame = 3;
+            else if(currentGunFrame == 2) { currentGunFrame = 3; gunReloadFrameTimer += gunReloadFrameDelay*2; }
             else if(currentGunFrame == 3) currentGunFrame = 4;
             else if(currentGunFrame == 4) currentGunFrame = 5;
             else if(currentGunFrame == 5) gunReloading = false;
 
-            gunReloadFrameTimer = gunReloadFrameDelay;
+            gunReloadFrameTimer += gunReloadFrameDelay;
         }
         else
         {
-            gunReloadFrameTimer--;
+            gunReloadFrameTimer -= deltaTime;
         }
     }
-
+    else
+    {
+        gunFireFrameTimer -= deltaTime;
+    }
 
     if(currentGun >= 0)
         if(typeof gun.imageObject != "undefined") gun.drawScIn(vec2(currentGunFrame * 480, 0), vec2(480, 480));

@@ -96,7 +96,7 @@ function update(deltaTime) // FIXME: deltaTime is not used yet
     audio.update();
 }
 
-function draw()
+function draw(deltaTime)
 {
     renderer.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -158,7 +158,7 @@ function draw()
 
     if(!mapMode || renderEditorAndGameTogether >= 1) 
     {
-        drawGun();
+        drawGun(deltaTime);
         drawAllGunsDisplay(renderer);
         drawKeysDisplay(renderer);
         drawCrosshair(renderer);
@@ -184,6 +184,6 @@ function frame()
         var deltaTime = getDeltaTime();
         events(deltaTime);
         update(deltaTime);
-        draw();
+        draw(deltaTime);
     }
 }
