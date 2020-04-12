@@ -6,7 +6,6 @@ wallImages = [
     new ImageObject("images/wallBrickRed.png", vec2(160, 160)),
     new ImageObject("images/wallBrickRedCracked.png", vec2(160, 160)),
     new ImageObject("images/wallDanger.png", vec2(160, 160)),
-    // new walls with decorated variants
     new ImageObject("images/wallCarbon.png", vec2(160, 160)),
     new ImageObject("images/wallCarbonReinforced.png", vec2(160, 160)),
     new ImageObject("images/wallMarble.png", vec2(160, 160)),
@@ -31,7 +30,6 @@ wallColors = [
     "#ff000077",
     "#dd000077",
     "#bbbb0077",
-    // new walls with decorated variants
     "#dddddd77",
     "#dddddd77",
     "#dddddd77",

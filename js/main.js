@@ -19,7 +19,7 @@ window.onload = function()
 
     playerInit();
 
-    editorInit(wall, area, entities);
+    editorInit(wall, area);
 
     setupGameplayUI();
     setupMainMenuUI();

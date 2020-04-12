@@ -327,7 +327,7 @@ function convertEntitiesToString(entities)
     return str;
 }
 
-function generateEntitiesFromString(entities, str)
+function generateEntitiesFromString(str)
 {
     var values = str.split(' ');
     for(let i = 0; i < values.length;)

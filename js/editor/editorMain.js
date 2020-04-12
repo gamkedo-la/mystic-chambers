@@ -17,18 +17,18 @@ var editorSprite = new Sprite(tr(vec2A(window.innerWidth/10,0,vec2(window.innerW
 
 function getLevelName() { return levelPrefix + currentLevel.toString() + levelPostfix; }
 
-function loadLevel(walls, areas, entities)
+function loadLevel(walls, areas)
 {
     var lvStr = readFile(getLevelName());
-    generateWallsFromString(walls, lvStr.split(".")[0]);
-    generateAreasFromString(areas, lvStr.split(".")[1]);
-    generateEntitiesFromString(entities, lvStr.split(".")[2]);
+    generateWallsFromString(walls, lvStr.split("&")[0]);
+    generateAreasFromString(areas, lvStr.split("&")[1]);
+    generateEntitiesFromString(lvStr.split("&")[2]);
     resetWallIndexes();
 }
 
-function editorInit(walls, areas, entities)
+function editorInit(walls, areas)
 {
-    loadLevel(walls, areas, entities);
+    loadLevel(walls, areas);
 }
 
 function editorEvents(deltaTime, offset, walls, areas, decorEnts, itemEnts, enemyEnts)

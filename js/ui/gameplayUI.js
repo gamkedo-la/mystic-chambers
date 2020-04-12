@@ -406,6 +406,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
         activeSector = undefined;
         loadLevel(wall, area);
         reloadLvBtn.button.resetOutput();
@@ -447,6 +448,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
         activeSector = undefined;
         currentLevel--;
         if(currentLevel <= 0) currentLevel = totalLevels;
@@ -458,6 +460,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     {
         while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
+        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
         activeSector = undefined;
         currentLevel++;
         if(currentLevel >= totalLevels + 1) currentLevel = 1;
