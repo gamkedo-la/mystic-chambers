@@ -524,7 +524,7 @@ function AudioGlobal() {
 		var pos = location;
 		for (var i in currentAudGeo) {
 			if (lineOfSight(currentPlayerPos, currentAudGeo[i].point)) {
-				var newDistance = checkAudGeo(i, location, new Array())
+				var newDistance = checkAudGeo(i, location, [])
 				if (newDistance < distance) {
 					distance = newDistance;
 					pos = currentAudGeo[i].point;
@@ -538,12 +538,12 @@ function AudioGlobal() {
 		var newY = -Math.sin(direction) * distance + currentPlayerY;
 
 		var newLocation = vec2(newX, newY);
-		console.log(newLocation)
 		return newLocation;
 	}
 
-	function checkAudGeo(pointToCheck, location, pointsChecked = []) {
-		var newPointsChecked = pointsChecked.push(pointToCheck);
+	function checkAudGeo(pointToCheck, location, pointsChecked) {
+		var newPointsChecked = pointsChecked;
+		newPointsChecked.push(pointToCheck);
 		var distance = DROPOFF_MAX;
 		if (lineOfSight(currentAudGeo[pointToCheck].point, location)) {
 			return location.distance(currentAudGeo[pointToCheck].point);
