@@ -1,4 +1,4 @@
-const AUDIO_DEBUG = false;
+const AUDIO_DEBUG = true;
 
 //Sound IDs
 const REVERB = 0;
@@ -91,20 +91,7 @@ function AudioGlobal() {
 			v2.x = currentPlayerX - off.x;
 			v2.y = currentPlayerY - off.y;
 
-
-			var seePlayer = true;
-			for (var j in wall) {
-				if (isLineOnLine(
-						currentAudGeo[i].point.x, currentAudGeo[i].point.y, 
-						currentPlayerX, currentPlayerY, 
-						wall[j].p1.x, wall[j].p1.y, 
-						wall[j].p2.x, wall[j].p2.y)
-						&& !wall[j].type == 0) {
-					seePlayer = false;
-				}
-			}
-
-			if(seePlayer) {
+			if(lineOfSight(currentAudGeo[i].point, currentPlayerPos)) {
 				drawLine(renderer, v1, v2, "#885088");
 			}
 
@@ -202,14 +189,14 @@ function AudioGlobal() {
 		return {source: source, volume: gainNode};
 	};
 
-	this.play3DSound = function(buffer, vec2,  mixVolume = 1, rate = 1) {
-		return play3DSound3(buffer, vec2,  mixVolume, rate);
+	this.play3DSound = function(buffer, location,  mixVolume = 1, rate = 1) {
+		return play3DSound4(buffer, location,  mixVolume, rate);
 	};
 
-	function play3DSound1(buffer, vec2,  mixVolume = 1, rate = 1) {//3d panning and volume
+	function play3DSound1(buffer, location,  mixVolume = 1, rate = 1) {//3d panning and volume
 		if (!initialized) return;
 
-		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
+		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
 			return false;
 		}
 
@@ -221,8 +208,8 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		gainNode.gain.value = calcuateVolumeDropoff(vec2);
-		panNode.pan.value = calcuatePan(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff(location);
+		panNode.pan.value = calcuatePan(location);
 
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
@@ -233,23 +220,18 @@ function AudioGlobal() {
 			source.buffer = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
 
-	function play3DSound2(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion
+	function play3DSound2(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion
 		if (!initialized) return;
 
-		for (var i = 0; i < wall.length; i++) {
-			if (isLineOnLine(vec2.x, vec2.y, 
-					currentPlayerX, currentPlayerY, 
-					wall[i].p1.x, wall[i].p1.y, 
-					wall[i].p2.x, wall[i].p2.y)) {
-				return false;
-			}
+		if (lineOfSight(location, currentPlayerPos)) {
+			return false;
 		}
-		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
+		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
 			return false;
 		}
 
@@ -261,8 +243,8 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		gainNode.gain.value = calcuateVolumeDropoff(vec2);
-		panNode.pan.value = calcuatePan(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff(location);
+		panNode.pan.value = calcuatePan(location);
 
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
@@ -273,23 +255,18 @@ function AudioGlobal() {
 			source.buffer = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
 
-	function play3DSound3(buffer, vec2,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
+	function play3DSound3(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
 		if (!initialized) return;
 
-		for (var i = 0; i < wall.length; i++) {
-			if (isLineOnLine(vec2.x, vec2.y, 
-					currentPlayerX, currentPlayerY, 
-					wall[i].p1.x, wall[i].p1.y, 
-					wall[i].p2.x, wall[i].p2.y)) {
-				return false;
-			}
+		if (lineOfSight(location, currentPlayerPos)) {
+			return false;
 		}
-		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
+		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
 			return false;
 		}
 
@@ -306,9 +283,9 @@ function AudioGlobal() {
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
 
-		gainNode.gain.value = calcuateVolumeDropoff(vec2);
-		verbMixNode.gain.value = calcuateReverbPresence(vec2);
-		panNode.pan.value = calcuatePan(vec2);
+		gainNode.gain.value = calcuateVolumeDropoff(location);
+		verbMixNode.gain.value = calcuateReverbPresence(location);
+		panNode.pan.value = calcuatePan(location);
 
 		source.buffer = buffer;
 		source.playbackRate.value = rate;
@@ -320,15 +297,16 @@ function AudioGlobal() {
 			source.buffer = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: vec2, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
+		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
 		currentSoundSources.push(referance);
 		return referance;
 	};
 
-	function play3DSound4(buffer, vec2,  mixVolume = 1, rate = 1) {// +Propogation
+	function play3DSound4(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation
 		if (!initialized) return;
 
-		if (currentPlayerPos.distance(vec2) > DROPOFF_MAX) {
+		var pos = calculatePropogationPosition(location);
+		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
 			return false;
 		}
 
@@ -339,18 +317,6 @@ function AudioGlobal() {
 		source.connect(gainNode);
 		gainNode.connect(panNode);
 		panNode.connect(soundEffectsBus);
-
-		var pos = vec2;
-		var arrayOfOccludingWalls = [];
-		for (var i = 0; i < wall.length; i++) {
-			if (isLineOnLine(vec2.x, vec2.y, 
-					currentPlayerX, currentPlayerY, 
-					wall[i].p1.x, wall[i].p1.y, 
-					wall[i].p2.x, wall[i].p2.y)) {
-
-				arrayOfOccludingWalls.push(wall[i]);
-			}
-		}
 
 		gainNode.gain.value = calcuateVolumeDropoff(pos);
 		panNode.pan.value = calcuatePan(pos);
@@ -442,12 +408,12 @@ function AudioGlobal() {
 		return;
 	};
 
-	function calcuateVolumeDropoff(vec2) {
-		return calcuateVolumeDropoff2(vec2);
+	function calcuateVolumeDropoff(location) {
+		return calcuateVolumeDropoff2(location);
 	}
 
-	function calcuateVolumeDropoff1(vec2) {//Distance dropoff only
-		var distance = currentPlayerPos.distance(vec2);
+	function calcuateVolumeDropoff1(location) {//Distance dropoff only
+		var distance = currentPlayerPos.distance(location);
 
 		var newVolume = 1;
 		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
@@ -459,8 +425,8 @@ function AudioGlobal() {
 		return Math.pow(newVolume, 2);
 	}
 
-	function calcuateVolumeDropoff2(vec2) {// +Head shadow
-		var distance = currentPlayerPos.distance(vec2);
+	function calcuateVolumeDropoff2(location) {// +Head shadow
+		var distance = currentPlayerPos.distance(location);
 
 		var newVolume = 1;
 		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
@@ -469,7 +435,7 @@ function AudioGlobal() {
 			newVolume = 0;
 		}
 
-		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
 		}
@@ -486,12 +452,12 @@ function AudioGlobal() {
 		return Math.pow(newVolume, 2);
 	}
 
-	function calcuatePan(vec2) {
-		return calcuatePan2(vec2);
+	function calcuatePan(location) {
+		return calcuatePan2(location);
 	}
 
-	function calcuatePan1(vec2) {//360 pan
-		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+	function calcuatePan1(location) {//360 pan
+		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
 		}
@@ -513,8 +479,8 @@ function AudioGlobal() {
 		return pan;
 	}
 
-	function calcuatePan2(vec2) {// +proximity
-		var direction = currentPlayerAngleDegrees + radToDeg(vec2.angle(currentPlayerPos));
+	function calcuatePan2(location) {// +proximity
+		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
 		}
@@ -533,7 +499,7 @@ function AudioGlobal() {
 			pan = lerp(1, 0, (direction-270)/90);
 		}
 
-		var distance = currentPlayerPos.distance(vec2);
+		var distance = currentPlayerPos.distance(location);
 		if (distance <=  DROPOFF_MIN) {
 			var panReduction = distance/DROPOFF_MIN;
 			pan *= panReduction;
@@ -542,13 +508,63 @@ function AudioGlobal() {
 		return pan;
 	}
 
-	function calcuateReverbPresence(vec2) {
-		var distance = currentPlayerPos.distance(vec2);
+	function calcuateReverbPresence(location) {
+		var distance = currentPlayerPos.distance(location);
 
 		var mixVolume = 0;
 		mixVolume = Math.pow(distance/DROPOFF_MAX * REVERB_MAX, 1.5);
 
 		return mixVolume;
+	}
+
+	function calculatePropogationPosition(location) {
+		if (lineOfSight(location, currentPlayerPos)) return location;
+
+		var distance = DROPOFF_MAX;
+		var pos = location;
+		for (var i in currentAudGeo) {
+			if (lineOfSight(currentPlayerPos, currentAudGeo[i].point)) {
+				var newDistance = checkAudGeo(i, location, new Array())
+				if (newDistance < distance) {
+					distance = newDistance;
+					pos = currentAudGeo[i].point;
+				}
+			}
+		}
+		distance += currentPlayerPos.distance(pos);
+
+		var direction = currentPlayerPos.angle(pos);
+		var newX = -Math.cos(direction) * distance + currentPlayerX;
+		var newY = -Math.sin(direction) * distance + currentPlayerY;
+
+		var newLocation = vec2(newX, newY);
+		console.log(newLocation)
+		return newLocation;
+	}
+
+	function checkAudGeo(pointToCheck, location, pointsChecked = []) {
+		var newPointsChecked = pointsChecked.push(pointToCheck);
+		var distance = DROPOFF_MAX;
+		if (lineOfSight(currentAudGeo[pointToCheck].point, location)) {
+			return location.distance(currentAudGeo[pointToCheck].point);
+		}
+
+		for (var i in currentAudGeo[pointToCheck].connections) {
+			var oldPoint = false;
+			for (var j in pointsChecked) {
+				if (i == pointsChecked[j]) {
+					oldPoint = true;
+				}
+			}
+			if (oldPoint) continue;
+
+			var newDistance = checkAudGeo(currentAudGeo[pointToCheck].connections[i], location, newPointsChecked);
+			if (newDistance < distance) {
+				distance = newDistance;
+			}
+		}
+
+		return distance;
 	}
 
 	return this;
@@ -569,12 +585,12 @@ function generateAudGeo() {
 	currentAudGeo = new Array();
 
 	for (var i = 0; i < fauxAudGeo.length; i++) {
-		console.log("Checking point " + i)
+		//console.log("Checking point " + i);
 		var connect = [];
 
 		for (var j = 0; j < fauxAudGeo.length; j++) {
 			if (i == j) continue;
-			console.log("--Against point " + j)
+			//console.log("--Against point " + j);
 			var clear = true;
 
 			for (var k = 0; k < wall.length; k++) {
@@ -582,8 +598,8 @@ function generateAudGeo() {
 						fauxAudGeo[j].x, fauxAudGeo[j].y, 
 						wall[k].p1.x, wall[k].p1.y, 
 						wall[k].p2.x, wall[k].p2.y)
-						&& !wall[k].type == 0) {
-					console.log(wall[k])
+						&& wall[k].type != 0) {
+					//console.log(wall[k]);
 					clear = false;
 					}
 				}
@@ -594,5 +610,18 @@ function generateAudGeo() {
 
 		currentAudGeo.push({point: fauxAudGeo[i], connections: connect});
 	}
+}
 
+function lineOfSight(v1, v2) {
+	for (var i in wall) {
+		if (isLineOnLine(
+				v1.x, v1.y, 
+				v2.x, v2.y, 
+				wall[i].p1.x, wall[i].p1.y, 
+				wall[i].p2.x, wall[i].p2.y)
+				&& !wall[i].type == 0) {
+			return false;
+		}
+	}
+	return true;
 }
