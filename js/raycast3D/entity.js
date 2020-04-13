@@ -121,14 +121,15 @@ entImg = [
     // decorations ID 0-9
     new ImageObject("images/techTorch.png", vec2(160, 160)),
     new ImageObject("images/grass1.png", vec2(1280, 160)),
-    undefined, // add new art here
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
+    // add new art here
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
     // items ID 10-39
     new ImageObject("images/healthBox.png", vec2(1280, 160)),
     new ImageObject("images/redKey.png", vec2(1280, 160)),
@@ -149,23 +150,20 @@ entImg = [
     new ImageObject("images/mysticFire.png", vec2(640, 160)),
     new ImageObject("images/waterDrop.png", vec2(160, 160)),
     // add new art here
-    undefined,
-    undefined,
-    undefined, // ID 30
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
-    undefined,
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)), // ID 30
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
+    new ImageObject("images/unknown_id.png", vec2(160, 160)),
     // enemies ID 40+
     new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
-    undefined, // add new art here
-    undefined,
-    undefined, 
     // etc
 ];
 
