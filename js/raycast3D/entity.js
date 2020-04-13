@@ -1,56 +1,89 @@
-
 var entPosSegment = 45.0;
 var entScaleFactor = 40.0;
 var entAngleOffset = 270.0;
 var entXOffset = 0.0;
 var entMinRenderAngle = 155.0;
 var entMaxRenderAngle = 205.0;
-
 var entCircleDrawSize = 2;
-
 var maxEntityVisibilityDistance = 250.0;
-
 var entCollisionSize = 4.0;
 var entAfterCollisionGap = 0.25;
 var entCollisionAngleDiff = degToRad(-2.5);
 
-//Entity IDs (Order: Decor, Items, Enemies) --START--
-//remember to update this if adding new items
+//////////////////////////////////////////////////////
+// Entity IDs (Order: Decor, Items, Enemies) --START--
+//////////////////////////////////////////////////////
+// DECORATIONS: id 0..9
 const decorStartType = 0;
 const ENT_TECHTORCH = 0;
 const ENT_GRASS1 = 1;
-const decorTotalTypes = 2;
-
-const itemStartType = 2;
-const ENT_HEALTHBOX = 2;
-const ENT_REDKEY = 3;
-const ENT_GREENKEY = 4;
-const ENT_BLUEKEY = 5;
-const ENT_REVOLVERGUN = 6;
-const ENT_REVOLVERAMMO = 7;
-const ENT_WINCHESTERGUN = 8;
-const ENT_WINCHESTERAMMO = 9;
-const ENT_BARREL_RED = 10;
-const ENT_BARREL_STEEL = 11;
-const ENT_SPIKES = 12;
-const ENT_PILLAR = 13;
-const ENT_PILLAR_BROKEN = 14;
-const ENT_GRAVESTONE = 15;
-const ENT_FIRE = 16;
-const ENT_FIRE_COLD = 17;
-const ENT_FIRE_MYSTIC = 18;
-const itemTotalTypes = 17;
-
-const enemyStartType = 19;
-const ENT_FIRESKULL = 19;
+const ENT_DECORATION_3 = 2; // feel free to rename and start using
+const ENT_DECORATION_4 = 3;
+const ENT_DECORATION_5 = 4;
+const ENT_DECORATION_6 = 5;
+const ENT_DECORATION_7 = 6;
+const ENT_DECORATION_8 = 7;
+const ENT_DECORATION_9 = 8;
+const ENT_DECORATION_10 = 9;
+const decorTotalTypes = 10; // id 0-20
+//////////////////////////////////////////////////////
+// ITEMS: id 10..39
+const itemStartType = 10;
+const ENT_HEALTHBOX = 10;
+const ENT_REDKEY = 11;
+const ENT_GREENKEY = 12;
+const ENT_BLUEKEY = 13;
+const ENT_REVOLVERGUN = 14;
+const ENT_REVOLVERAMMO = 15;
+const ENT_WINCHESTERGUN = 16;
+const ENT_WINCHESTERAMMO = 17;
+const ENT_BARREL_RED = 18;
+const ENT_BARREL_STEEL = 19;
+const ENT_SPIKES = 20;
+const ENT_PILLAR = 21;
+const ENT_PILLAR_BROKEN = 22;
+const ENT_GRAVESTONE = 23;
+const ENT_FIRE = 24;
+const ENT_FIRE_COLD = 25;
+const ENT_FIRE_MYSTIC = 26;
+// free free to rename these for your use
+const ENT_UNUSED_0 = 27;
+const ENT_UNUSED_1 = 28;
+const ENT_UNUSED_2 = 29;
+const ENT_UNUSED_3 = 30;
+const ENT_UNUSED_4 = 31;
+const ENT_UNUSED_5 = 32;
+const ENT_UNUSED_6 = 33;
+const ENT_UNUSED_7 = 34;
+const ENT_UNUSED_8 = 35;
+const ENT_UNUSED_9 = 36;
+const ENT_UNUSED_10 = 37;
+const ENT_UNUSED_11 = 38;
+const ENT_UNUSED_12 = 39;
+const itemTotalTypes = 30; // id 10-39
+//////////////////////////////////////////////////////
+// ENEMIES: id 40..??
+const enemyStartType = 40;
+const ENT_FIRESKULL = 40;
 const enemyTotalTypes = 1;
+//////////////////////////////////////////////////////
 //Entity IDs --END--
+//////////////////////////////////////////////////////
 
 entColor = [
+    // decorations ID 0-9
     "#cccc0090",
     "#00aa0090",
-
-    "#ee555590",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    "#00aa0090",
+    // items ID 10-39
+    "#ee555590", // ID 10
     "#aa000090",
     "#00ff0090",
     "#0000ff90",
@@ -60,21 +93,43 @@ entColor = [
     "#85876890",
     "#85876890",
     "#85876890",
-    "#ffcc0090",
+    "#ffcc0090", // ID 20
     "#cc00dd90",
     "#cc00dd90",
     "#55dd2290",
     "#ff000090",
     "#00ccff90",
     "#ee00cc90",
-
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90", // ID 30
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    "#ee00cc90",
+    // enemies ID 40+
     "#ee440090",
 ];
 
 entImg = [
+    // decorations ID 0-9
     new ImageObject("images/techTorch.png", vec2(160, 160)),
     new ImageObject("images/grass1.png", vec2(1280, 160)),
-
+    undefined, // add new art here
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    // items ID 10-39
     new ImageObject("images/healthBox.png", vec2(1280, 160)),
     new ImageObject("images/redKey.png", vec2(1280, 160)),
     new ImageObject("images/greenKey.png", vec2(1280, 160)),
@@ -85,15 +140,32 @@ entImg = [
     new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
     new ImageObject("images/barrelRed.png", vec2(160, 160)),
     new ImageObject("images/barrelSteel.png", vec2(160, 160)),
-    new ImageObject("images/spikes.png", vec2(1280, 160)),
+    new ImageObject("images/spikes.png", vec2(1280, 160)), // 20
     new ImageObject("images/pillar.png", vec2(1280, 160)),
     new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
     new ImageObject("images/gravestone.png", vec2(1280, 160)),
     new ImageObject("images/fire.png", vec2(640, 160)),
     new ImageObject("images/coldFire.png", vec2(640, 160)),
     new ImageObject("images/mysticFire.png", vec2(640, 160)),
-
+    undefined, // add new art here
+    undefined,
+    undefined,
+    undefined, // ID 30
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    // enemies ID 40+
     new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
+    undefined, // add new art here
+    undefined,
+    undefined, 
+    // etc
 ];
 
 entAttackImg = [
@@ -105,10 +177,7 @@ entDamageImg = [
 ];
 
 entRenderOffset = [
-    vec2(0,-100),
-    vec2(0,-100),
-
-    vec2(0,-100),
+    // decorations ID 0-9
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100),
@@ -119,14 +188,40 @@ entRenderOffset = [
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100),
+    // items ID 10-39
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100), // ID 20
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-60),
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100),
-
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100), // ID 30
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    vec2(0,-100),
+    // enemies ID 40+
     vec2(),
+    // etc
 ];
 
 //Requires Sprite

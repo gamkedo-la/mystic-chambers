@@ -103,9 +103,11 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
             validateRotation.call(this); // stay in 0..360 deg
 
             if(typeof this.prev_p == "undefined") this.prev_p = vec2(0, 0);
-            this.prev_p = vec2(this.p.x, this.p.y);
+            this.prev_p = vec2(this.p.x, this.p.y); // FIXME: bad for GC, we create a new obj every frame
 
             // move toward target
+            // FIXME: this.p cannot be relied upon
+            // it changes somewhere else even if speed is 0
             this.p.x += speed * Math.cos(rad);
             this.p.y += speed * Math.sin(rad);
 
