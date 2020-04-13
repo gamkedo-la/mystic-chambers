@@ -379,6 +379,9 @@ class Entity
                 if (!entImg[this.id]) { // make sure we aren't missing a texture
                     // this gets galled a LOT for entities in the <10 range - maybe in old map data?    
                     if (entImg[this.id]==undefined) { // only complain once
+                        // this error happens when we add a new entity ID
+                        // but don't also add a LoadImage in the entImg array
+                        // see top of this file
                         console.log("ERROR: missing image in entImg[] for sprite id " + this.id);
                         entImg[this.id]=false; // keep ignoring, but don't report error again
                     }                  
