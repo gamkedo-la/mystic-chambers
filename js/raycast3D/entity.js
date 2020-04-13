@@ -147,7 +147,7 @@ entImg = [
     new ImageObject("images/fire.png", vec2(640, 160)),
     new ImageObject("images/coldFire.png", vec2(640, 160)),
     new ImageObject("images/mysticFire.png", vec2(640, 160)),
-    new ImageObject("images/waterDrop.png", vec2(80, 80)),
+    new ImageObject("images/waterDrop.png", vec2(160, 160)),
     // add new art here
     undefined,
     undefined,
