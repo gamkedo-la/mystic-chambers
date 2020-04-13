@@ -34,6 +34,9 @@ window.onload = function()
 
     ui = new UI(uistates, GAMEPLAYUI);
 
+    // test water drops
+    decor.scatter(ENT_WATERDROPS,60,400,0,700,400,0);
+
     inputSetup();
     setInterval(frame, 1000 / 60);
 };

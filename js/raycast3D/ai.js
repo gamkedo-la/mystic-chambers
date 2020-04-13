@@ -138,12 +138,22 @@ function aiSpinning() {
 function aiSpinningBobbing() {
     var speed = 0.025;
     var bobspeed = 350;
-    var bobsize = 100;
+    //var bobsize = 100;
     this.aimAngleRadians = this.aimAngleRadians + speed;
     validateRotation.call(this); // stay in 0..360 deg
     // up and down like a doom weapon
     this.bobbingFactor = (Math.floor(((Math.cos(performance.now()/bobspeed)+1)/2) * 15.0))/15;
     //this.renderOffset.y = ((Math.cos(performance.now()/bobspeed)+1)/2)*bobsize;
+}
+
+// falling from the ceiling to the floor
+function aiDripping() {
+    //console.log("yay, a dripping entity!");
+    var speed = 0.1;
+    var min = 0;
+    var max = 1;
+    this.bobbingFactor += speed; // height = renderOffset.y * this
+    if (this.bobbingFactor>max) this.bobbingFactor=min;
 }
 
 // seeks any nearby entities like health, ammo, guns, and WAYPOINTS

@@ -19,6 +19,7 @@ class DecorationManager {
 
     scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
+        console.log("scattering " + quantity + " entities with ID " + id);
         for (var num=0; num<quantity; num++)
         {
             var ent = new Entity();
@@ -27,6 +28,9 @@ class DecorationManager {
                 Math.round(minY+Math.random()*(maxY-minY)), 
                 id);
             if(typeof offset != "undefined") ent.renderOffset = offset;
+
+            
+            ent.setIDProperties(); // update!
 
             this.ents.push(ent);
             entities.push(ent);

@@ -47,7 +47,7 @@ const ENT_FIRE = 24;
 const ENT_FIRE_COLD = 25;
 const ENT_FIRE_MYSTIC = 26;
 // free free to rename these for your use
-const ENT_UNUSED_0 = 27;
+const ENT_WATERDROPS = 27;
 const ENT_UNUSED_1 = 28;
 const ENT_UNUSED_2 = 29;
 const ENT_UNUSED_3 = 30;
@@ -100,7 +100,7 @@ entColor = [
     "#ff000090",
     "#00ccff90",
     "#ee00cc90",
-    "#ee00cc90",
+    "#0000ff90", // 27 - water drops
     "#ee00cc90",
     "#ee00cc90",
     "#ee00cc90", // ID 30
@@ -147,7 +147,8 @@ entImg = [
     new ImageObject("images/fire.png", vec2(640, 160)),
     new ImageObject("images/coldFire.png", vec2(640, 160)),
     new ImageObject("images/mysticFire.png", vec2(640, 160)),
-    undefined, // add new art here
+    new ImageObject("images/waterDrop.png", vec2(80, 80)),
+    // add new art here
     undefined,
     undefined,
     undefined, // ID 30
@@ -206,7 +207,7 @@ entRenderOffset = [
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100),
-    vec2(0,-100),
+    vec2(0,-100), // watrdrops: y is the starting height (ceiling)
     vec2(0,-100),
     vec2(0,-100),
     vec2(0,-100), // ID 30
@@ -317,6 +318,11 @@ class Entity
                     this.ai = aiSpinning;
                     break;
 
+                case ENT_WATERDROPS:
+                    this.ai = aiDripping;
+                    this.ai = aiSpinningBobbing; // test
+                    break;
+
                 case ENT_FIRESKULL:
                     var no = Math.random() * 4.0;
                     if(no > 3) this.ai = aiWaypointNavigation;
@@ -334,6 +340,11 @@ class Entity
         
         if(circleOnly)
         {
+            if (!entColor[this.id]) {
+                console.log("ERROR: missing entColor for sprite id " + this.id);
+                return; // don't draw anything!                
+            }
+            
             drawCircle(renderer, this.p, entCircleDrawSize, false, entColor[this.id]);
             // used to debug AI
             if (debugEntities && this.debugTarget) {
@@ -365,6 +376,15 @@ class Entity
                 // 90 or 180 compared to movement vector
                 // watch explorer_fireSkullEnt in-game to check
             
+                if (!entImg[this.id]) { // make sure we aren't missing a texture
+                    // this gets galled a LOT for entities in the <10 range - maybe in old map data?    
+                    if (entImg[this.id]==undefined) { // only complain once
+                        console.log("ERROR: missing image in entImg[] for sprite id " + this.id);
+                        entImg[this.id]=false; // keep ignoring, but don't report error again
+                    }                  
+                    return; // don't draw anything!
+                } 
+                
                 var imageSide = radToDeg(spriteAngle) / (360.0 /
                     (entImg[this.id].size.x / 160.0));
 
