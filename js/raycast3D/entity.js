@@ -318,7 +318,6 @@ class Entity
 
                 case ENT_WATERDROPS:
                     this.ai = aiDripping;
-                    this.ai = aiSpinningBobbing; // test
                     break;
 
                 case ENT_FIRESKULL:

@@ -153,7 +153,8 @@ function aiDripping() {
     var min = 0;
     var max = 1;
     this.bobbingFactor += speed; // height = renderOffset.y * this
-    if (this.bobbingFactor>max) this.bobbingFactor=min;
+    if (this.bobbingFactor>max) 
+        this.bobbingFactor=min;
 }
 
 // seeks any nearby entities like health, ammo, guns, and WAYPOINTS
