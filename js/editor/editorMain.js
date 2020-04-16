@@ -135,19 +135,19 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
         if(cpEditTabs[2].selector.selected)
         {
             editorDrawDecorHandles(renderer, decorEnts);
-            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.imageObject = entProp[currentEntityType].idleImg;
             editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
         }
         if(cpEditTabs[3].selector.selected)
         {
             editorDrawItemHandles(renderer, itemEnts);
-            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.imageObject = entProp[currentEntityType].idleImg;
             editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
         }
         if(cpEditTabs[4].selector.selected)
         {
             editorDrawEnemyHandles(renderer, enemyEnts);
-            editorSprite.imageObject = entImg[currentEntityType];
+            editorSprite.imageObject = entProp[currentEntityType].idleImg;
             editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
         }
 

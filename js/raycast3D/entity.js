@@ -1,3 +1,17 @@
+class EntityIDProperties
+{
+    constructor()
+    {
+        this.color = "#ff00ff90";
+        this.idleImg = new ImageObject("images/unknown_id.png", vec2(160, 160));
+        this.attackImg = new ImageObject("images/unknown_id.png", vec2(160, 160));
+        this.damageImg = new ImageObject("images/unknown_id.png", vec2(160, 160));
+        this.renderOffset = vec2();
+        this.ai = function() {};
+    }
+}
+var entProp = [ new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties() ];
+
 var entPosSegment = 45.0;
 var entScaleFactor = 40.0;
 var entAngleOffset = 270.0;
@@ -13,215 +27,149 @@ var entCollisionAngleDiff = degToRad(-2.5);
 //////////////////////////////////////////////////////
 // Entity IDs (Order: Decor, Items, Enemies) --START--
 //////////////////////////////////////////////////////
-// DECORATIONS: id 0..9
+// DECORATIONS
+// ID 0 to 9
 const decorStartType = 0;
+
 const ENT_TECHTORCH = 0;
+entProp[ENT_TECHTORCH].color = "#cccc0090";
+entProp[ENT_TECHTORCH].idleImg = new ImageObject("images/techTorch.png", vec2(160, 160));
+entProp[ENT_TECHTORCH].renderOffset = vec2(0,-100);
+
 const ENT_GRASS1 = 1;
-const ENT_DECORATION_3 = 2; // feel free to rename and start using
-const ENT_DECORATION_4 = 3;
-const ENT_DECORATION_5 = 4;
-const ENT_DECORATION_6 = 5;
-const ENT_DECORATION_7 = 6;
-const ENT_DECORATION_8 = 7;
-const ENT_DECORATION_9 = 8;
-const ENT_DECORATION_10 = 9;
-const decorTotalTypes = 10; // id 0-20
+entProp[ENT_GRASS1].color = "#00aa0090";
+entProp[ENT_GRASS1].idleImg = new ImageObject("images/grass1.png", vec2(1280, 160));
+entProp[ENT_GRASS1].renderOffset = vec2(0,-100);
+
+const decorTotalTypes = 10;
 //////////////////////////////////////////////////////
-// ITEMS: id 10..39
+// ITEMS
+// ID 10 to 39
 const itemStartType = 10;
+
 const ENT_HEALTHBOX = 10;
+entProp[ENT_HEALTHBOX].color = "#ee555590";
+entProp[ENT_HEALTHBOX].idleImg = new ImageObject("images/healthBox.png", vec2(1280, 160));
+entProp[ENT_HEALTHBOX].renderOffset = vec2(0,-100);
+entProp[ENT_HEALTHBOX].ai = aiSpinningBobbing;
+
 const ENT_REDKEY = 11;
+entProp[ENT_REDKEY].color = "#aa000090";
+entProp[ENT_REDKEY].idleImg = new ImageObject("images/redKey.png", vec2(1280, 160));
+entProp[ENT_REDKEY].renderOffset = vec2(0,-100);
+entProp[ENT_REDKEY].ai = aiSpinningBobbing;
+
 const ENT_GREENKEY = 12;
+entProp[ENT_GREENKEY].color = "#00aa0090";
+entProp[ENT_GREENKEY].idleImg = new ImageObject("images/greenKey.png", vec2(1280, 160));
+entProp[ENT_GREENKEY].renderOffset = vec2(0,-100);
+entProp[ENT_GREENKEY].ai = aiSpinningBobbing;
+
 const ENT_BLUEKEY = 13;
+entProp[ENT_BLUEKEY].color = "#0000aa90";
+entProp[ENT_BLUEKEY].idleImg = new ImageObject("images/blueKey.png", vec2(1280, 160));
+entProp[ENT_BLUEKEY].renderOffset = vec2(0,-100);
+entProp[ENT_BLUEKEY].ai = aiSpinningBobbing;
+
 const ENT_REVOLVERGUN = 14;
+entProp[ENT_REVOLVERGUN].color = "#B7410E90";
+entProp[ENT_REVOLVERGUN].idleImg = new ImageObject("images/revolverGun.png", vec2(1280, 160));
+entProp[ENT_REVOLVERGUN].renderOffset = vec2(0,-100);
+entProp[ENT_REVOLVERGUN].ai = aiSpinningBobbing;
+
 const ENT_REVOLVERAMMO = 15;
+entProp[ENT_REVOLVERAMMO].color = "#A6300D90";
+entProp[ENT_REVOLVERAMMO].idleImg = new ImageObject("images/revolverAmmo.png", vec2(1280, 160));
+entProp[ENT_REVOLVERAMMO].renderOffset = vec2(0,-100);
+entProp[ENT_REVOLVERAMMO].ai = aiSpinningBobbing;
+
 const ENT_WINCHESTERGUN = 16;
+entProp[ENT_WINCHESTERGUN].color = "#96987990";
+entProp[ENT_WINCHESTERGUN].idleImg = new ImageObject("images/winchesterGun.png", vec2(1280, 160));
+entProp[ENT_WINCHESTERGUN].renderOffset = vec2(0,-100);
+entProp[ENT_WINCHESTERGUN].ai = aiSpinningBobbing;
+
 const ENT_WINCHESTERAMMO = 17;
+entProp[ENT_WINCHESTERAMMO].color = "#85876890";
+entProp[ENT_WINCHESTERAMMO].idleImg = new ImageObject("images/winchesterAmmo.png", vec2(1280, 160));
+entProp[ENT_WINCHESTERAMMO].renderOffset = vec2(0,-100);
+entProp[ENT_WINCHESTERAMMO].ai = aiSpinningBobbing;
+
 const ENT_BARREL_RED = 18;
+entProp[ENT_BARREL_RED].color = "#99222290";
+entProp[ENT_BARREL_RED].idleImg = new ImageObject("images/barrelRed.png", vec2(160, 160));
+entProp[ENT_BARREL_RED].renderOffset = vec2(0,-100);
+entProp[ENT_BARREL_RED].ai = function() {};
+
 const ENT_BARREL_STEEL = 19;
+entProp[ENT_BARREL_STEEL].color = "#66666690";
+entProp[ENT_BARREL_STEEL].idleImg = new ImageObject("images/barrelSteel.png", vec2(160, 160));
+entProp[ENT_BARREL_STEEL].renderOffset = vec2(0,-100);
+entProp[ENT_BARREL_STEEL].ai = function() {};
+
 const ENT_SPIKES = 20;
+entProp[ENT_SPIKES].color = "#88446690";
+entProp[ENT_SPIKES].idleImg = new ImageObject("images/spikes.png", vec2(1280, 160));
+entProp[ENT_SPIKES].renderOffset = vec2(0,-100);
+entProp[ENT_SPIKES].ai = function() {};
+
 const ENT_PILLAR = 21;
+entProp[ENT_PILLAR].color = "#ffcc0090";
+entProp[ENT_PILLAR].idleImg = new ImageObject("images/pillar.png", vec2(1280, 160));
+entProp[ENT_PILLAR].renderOffset = vec2(0,-100);
+entProp[ENT_PILLAR].ai = function() {};
+
 const ENT_PILLAR_BROKEN = 22;
+entProp[ENT_PILLAR_BROKEN].color = "#dd990090";
+entProp[ENT_PILLAR_BROKEN].idleImg = new ImageObject("images/pillarBroken.png", vec2(1280, 160));
+entProp[ENT_PILLAR_BROKEN].renderOffset = vec2(0,-100);
+entProp[ENT_PILLAR_BROKEN].ai = function() {};
+
 const ENT_GRAVESTONE = 23;
+entProp[ENT_GRAVESTONE].color = "#cc00dd90";
+entProp[ENT_GRAVESTONE].idleImg = new ImageObject("images/gravestone.png", vec2(1280, 160));
+entProp[ENT_GRAVESTONE].renderOffset = vec2(0,-100);
+entProp[ENT_GRAVESTONE].ai = function() {};
+
 const ENT_FIRE = 24;
+entProp[ENT_FIRE].color = "#ff444490";
+entProp[ENT_FIRE].idleImg = new ImageObject("images/fire.png", vec2(640, 160));
+entProp[ENT_FIRE].renderOffset = vec2(0,-100);
+entProp[ENT_FIRE].ai = aiSpinning;
+
 const ENT_FIRE_COLD = 25;
+entProp[ENT_FIRE_COLD].color = "#ff44ff90";
+entProp[ENT_FIRE_COLD].idleImg = new ImageObject("images/coldFire.png", vec2(640, 160));
+entProp[ENT_FIRE_COLD].renderOffset = vec2(0,-100);
+entProp[ENT_FIRE_COLD].ai = aiSpinning;
+
 const ENT_FIRE_MYSTIC = 26;
-// free free to rename these for your use
+entProp[ENT_FIRE_MYSTIC].color = "#44ffff90";
+entProp[ENT_FIRE_MYSTIC].idleImg = new ImageObject("images/mysticFire.png", vec2(640, 160));
+entProp[ENT_FIRE_MYSTIC].renderOffset = vec2(0,-100);
+entProp[ENT_FIRE_MYSTIC].ai = aiSpinning;
+
 const ENT_WATERDROPS = 27;
-const ENT_UNUSED_1 = 28;
-const ENT_UNUSED_2 = 29;
-const ENT_UNUSED_3 = 30;
-const ENT_UNUSED_4 = 31;
-const ENT_UNUSED_5 = 32;
-const ENT_UNUSED_6 = 33;
-const ENT_UNUSED_7 = 34;
-const ENT_UNUSED_8 = 35;
-const ENT_UNUSED_9 = 36;
-const ENT_UNUSED_10 = 37;
-const ENT_UNUSED_11 = 38;
-const ENT_UNUSED_12 = 39;
-const itemTotalTypes = 30; // id 10-39
+entProp[ENT_WATERDROPS].color = "#66666690";
+entProp[ENT_WATERDROPS].idleImg = new ImageObject("images/waterDrop.png", vec2(160, 160));
+entProp[ENT_WATERDROPS].renderOffset = vec2(0,-100);
+entProp[ENT_WATERDROPS].ai = aiDripping;
+
+const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
-// ENEMIES: id 40..??
+// ENEMIES: id 40 to 44
 const enemyStartType = 40;
+
 const ENT_FIRESKULL = 40;
-const enemyTotalTypes = 1;
+entProp[ENT_FIRESKULL].color = "#eecc0090";
+entProp[ENT_FIRESKULL].idleImg = new ImageObject("images/fireSkullIdle.png", vec2(1280, 160));
+entProp[ENT_FIRESKULL].renderOffset = vec2();
+entProp[ENT_FIRESKULL].ai = aiSeek;
+
+const enemyTotalTypes = 5;
 //////////////////////////////////////////////////////
 //Entity IDs --END--
 //////////////////////////////////////////////////////
-
-entColor = [
-    // decorations ID 0-9
-    "#cccc0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    "#00aa0090",
-    // items ID 10-39
-    "#ee555590", // ID 10
-    "#aa000090",
-    "#00ff0090",
-    "#0000ff90",
-    "#B7410E90",
-    "#A6300D90",
-    "#96987990",
-    "#85876890",
-    "#85876890",
-    "#85876890",
-    "#ffcc0090", // ID 20
-    "#cc00dd90",
-    "#cc00dd90",
-    "#55dd2290",
-    "#ff000090",
-    "#00ccff90",
-    "#ee00cc90",
-    "#0000ff90", // 27 - water drops
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90", // ID 30
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    "#ee00cc90",
-    // enemies ID 40+
-    "#ee440090",
-];
-
-entImg = [
-    // decorations ID 0-9
-    new ImageObject("images/techTorch.png", vec2(160, 160)),
-    new ImageObject("images/grass1.png", vec2(1280, 160)),
-    // add new art here
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    // items ID 10-39
-    new ImageObject("images/healthBox.png", vec2(1280, 160)),
-    new ImageObject("images/redKey.png", vec2(1280, 160)),
-    new ImageObject("images/greenKey.png", vec2(1280, 160)),
-    new ImageObject("images/blueKey.png", vec2(1280, 160)),
-    new ImageObject("images/revolverGun.png", vec2(1280, 160)),
-    new ImageObject("images/revolverAmmo.png", vec2(1280, 160)),
-    new ImageObject("images/winchesterGun.png", vec2(1280, 160)),
-    new ImageObject("images/winchesterAmmo.png", vec2(1280, 160)),
-    new ImageObject("images/barrelRed.png", vec2(160, 160)),
-    new ImageObject("images/barrelSteel.png", vec2(160, 160)),
-    new ImageObject("images/spikes.png", vec2(1280, 160)), // 20
-    new ImageObject("images/pillar.png", vec2(1280, 160)),
-    new ImageObject("images/pillarBroken.png", vec2(1280, 160)),
-    new ImageObject("images/gravestone.png", vec2(1280, 160)),
-    new ImageObject("images/fire.png", vec2(640, 160)),
-    new ImageObject("images/coldFire.png", vec2(640, 160)),
-    new ImageObject("images/mysticFire.png", vec2(640, 160)),
-    new ImageObject("images/waterDrop.png", vec2(160, 160)),
-    // add new art here
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)), // ID 30
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    new ImageObject("images/unknown_id.png", vec2(160, 160)),
-    // enemies ID 40+
-    new ImageObject("images/fireSkullIdle.png", vec2(1280, 160)),
-    // etc
-];
-
-entAttackImg = [
-
-];
-
-entDamageImg = [
-
-];
-
-entRenderOffset = [
-    // decorations ID 0-9
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    // items ID 10-39
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100), // ID 20
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-60),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100), // watrdrops: y is the starting height (ceiling)
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100), // ID 30
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    vec2(0,-100),
-    // enemies ID 40+
-    vec2(),
-    // etc
-];
 
 //Requires Sprite
 class Entity
@@ -244,92 +192,10 @@ class Entity
         this.p.y = y;
         this.id = id;
 
-        this.sprite.imageObject = entImg[this.id];
+        if(!isNaN(this.id)) this.sprite.imageObject = entProp[this.id].idleImg;
     }
 
-    setIDProperties()
-    {
-        //decor are update-less entities
-        if(this.id >= decorStartType + decorTotalTypes)
-        {
-            switch(this.id)
-            {
-                case ENT_HEALTHBOX:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_REDKEY:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_GREENKEY:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_BLUEKEY:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_REVOLVERGUN:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_REVOLVERAMMO:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_WINCHESTERGUN:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_WINCHESTERAMMO:
-                    this.ai = aiSpinningBobbing;
-                    break;
-
-                case ENT_BARREL_RED:
-                    break;
-
-                case ENT_BARREL_STEEL:
-                    break;
-
-                case ENT_SPIKES:
-                    break;
-
-                case ENT_PILLAR:
-                    break;
-
-                case ENT_PILLAR_BROKEN:
-                    break;
-
-                case ENT_GRAVESTONE:
-                    break;
-
-                case ENT_FIRE:
-                    this.ai = aiSpinning;
-                    break;
-
-                case ENT_FIRE_COLD:
-                    this.ai = aiSpinning;
-                    break;
-
-                case ENT_FIRE_MYSTIC:
-                    this.ai = aiSpinning;
-                    break;
-
-                case ENT_WATERDROPS:
-                    this.ai = aiDripping;
-                    break;
-
-                case ENT_FIRESKULL:
-                    var no = Math.random() * 4.0;
-                    if(no > 3) this.ai = aiWaypointNavigation;
-                    else if(no > 2) this.ai = aiAvoid;
-                    else if(no > 1) this.ai = aiExplore;
-                    else if(no > 0) this.ai = aiSeek;
-                    break;
-            }
-        }
-    }
+    setIDProperties() { this.ai = entProp[this.id].ai; }
 
     draw(renderer, plRay, circleOnly)
     {
@@ -337,12 +203,7 @@ class Entity
         
         if(circleOnly)
         {
-            if (!entColor[this.id]) {
-                console.log("ERROR: missing entColor for sprite id " + this.id);
-                return; // don't draw anything!                
-            }
-            
-            drawCircle(renderer, this.p, entCircleDrawSize, false, entColor[this.id]);
+            drawCircle(renderer, this.p, entCircleDrawSize, false, entProp[this.id].color);
             // used to debug AI
             if (debugEntities && this.debugTarget) {
                 drawLine(renderer, this.p, this.debugTarget, "rgba(255,0,0,0.5)");
@@ -372,31 +233,19 @@ class Entity
                 // FIXME: it looks like the art on the skull is rotated
                 // 90 or 180 compared to movement vector
                 // watch explorer_fireSkullEnt in-game to check
-            
-                if (!entImg[this.id]) { // make sure we aren't missing a texture
-                    // this gets galled a LOT for entities in the <10 range - maybe in old map data?    
-                    if (entImg[this.id]==undefined) { // only complain once
-                        // this error happens when we add a new entity ID
-                        // but don't also add a LoadImage in the entImg array
-                        // see top of this file
-                        console.log("ERROR: missing image in entImg[] for sprite id " + this.id);
-                        entImg[this.id]=false; // keep ignoring, but don't report error again
-                    }                  
-                    return; // don't draw anything!
-                } 
                 
                 var imageSide = radToDeg(spriteAngle) / (360.0 /
-                    (entImg[this.id].size.x / 160.0));
+                    (entProp[this.id].idleImg.size.x / 160.0));
 
-                this.sprite.imageObject = entImg[this.id];
+                this.sprite.imageObject = entProp[this.id].idleImg;
 
                 renderer.globalAlpha = round(1.0 - (dist / maxEntityVisibilityDistance), 0.2, 0);
 
                 this.sprite.transform.scale = vec2(entScaleFactor / dist, entScaleFactor / dist);
                 this.sprite.transform.position = vec2(
-                    (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * entRenderOffset[this.id].x))
+                    (((window.innerWidth/2) - ((this.sprite.transform.scale.x/2) * entProp[this.id].renderOffset.x))
                     + posRatio * (window.innerWidth/entPosSegment)) + entXOffset,
-                    (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * (entRenderOffset[this.id].y * this.bobbingFactor)));
+                    (window.innerHeight/2) - ((this.sprite.transform.scale.y/2) * (entProp[this.id].renderOffset.y * this.bobbingFactor)));
                 this.sprite.drawScIn(vec2(Math.floor(imageSide) * 160, 0), vec2(160, 160));
 
                 renderer.globalAlpha = 1.0;
@@ -454,7 +303,9 @@ function generateEntitiesFromString(str)
             parseInt(values[i++]),
             parseInt(values[i++])
         );
-        newEntity.setIDProperties();
+
+        if(!isNaN(newEntity.id))
+            newEntity.ai = entProp[newEntity.id].ai;
 
         if(newEntity.id >= decorStartType
         && newEntity.id < decorStartType + decorTotalTypes)

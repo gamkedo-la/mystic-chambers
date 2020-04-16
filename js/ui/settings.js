@@ -1,4 +1,15 @@
 
+function uiInit()
+{
+    uiSettings();
+    setupGameplayUI();
+    setupMainMenuUI();
+    uistates = [];
+    uistates.push(new UIState(mainMenuUI));
+    uistates.push(new UIState(gameplayUI));
+    ui = new UI(uistates, GAMEPLAYUI);
+}
+
 function uiSettings()
 {
     scrSizeFactor = (window.innerWidth > window.innerHeight ? window.innerWidth/2 : window.innerWidth);

@@ -6,33 +6,12 @@ debugEntities = false;
 
 window.onload = function()
 {
-    canvas = document.getElementById("gameCanvas");
-    renderer = canvas.getContext("2d");
-    renderer.canvas.width = window.innerWidth;
-    renderer.canvas.height = window.innerHeight;
-    platform = getPlatform();
-    spritesRenderer = renderer;
-    audio.init();
-    uiSettings();
-
-    audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
-
+    init();
     playerInit();
-
     editorInit(wall, area);
-
-    setupGameplayUI();
-    setupMainMenuUI();
-
-    //wall[10].decal = entImg[0][0];
-
+    uiInit();
+    audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
     floorAndCeiling = new floorClass();
-
-    uistates = [];
-    uistates.push(new UIState(mainMenuUI));
-    uistates.push(new UIState(gameplayUI));
-
-    ui = new UI(uistates, GAMEPLAYUI);
 
     // test water drops
     decor.scatter(ENT_WATERDROPS,60,400,0,700,400,0);
