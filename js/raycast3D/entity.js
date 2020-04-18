@@ -155,6 +155,12 @@ entProp[ENT_WATERDROPS].idleImg = new ImageObject("images/waterDrop.png", vec2(1
 entProp[ENT_WATERDROPS].renderOffset = vec2(0,-100);
 entProp[ENT_WATERDROPS].ai = aiDripping;
 
+const ENT_PEARL = 28;
+entProp[ENT_PEARL].color = "#dddd5090";
+entProp[ENT_PEARL].idleImg = new ImageObject("images/pearl.png", vec2(160, 160));
+entProp[ENT_PEARL].renderOffset = vec2(0,-100);
+entProp[ENT_PEARL].ai = aiSpinningBobbing;
+
 const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
 // ENEMIES: id 40 to 44
