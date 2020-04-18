@@ -202,12 +202,32 @@ function drawKeysDisplay(renderer)
 }
 
 var drawCrosshairIMG;
-function drawCrosshair(renderer) {
-    if (!drawCrosshairIMG) {
-        //console.log("Downloading crosshair...");
+function drawCrosshair(renderer)
+{
+    if (!drawCrosshairIMG)
+    {
         drawCrosshairIMG = new ImageObject("images/crosshair.png", vec2(32, 32));
     }
-    if (drawCrosshairIMG.loaded) {
+    if (drawCrosshairIMG.loaded)
+    {
         renderer.drawImage(drawCrosshairIMG.image,Math.round(screen.width/2)-16,Math.round(screen.height/2)-16);
+    }
+}
+
+function toggleGameplay()
+{
+    if(mapMode)
+    {
+        mapMode = false;
+        enableFullScreen(document.documentElement);
+        enablePointerLock(canvas);
+    }
+    else
+    {
+        mapMode = true;
+        disableFullscreen(document.documentElement);
+        disableFullscreen(canvas);
+        disableFullscreen(document);
+        disablePointerLock(document);
     }
 }

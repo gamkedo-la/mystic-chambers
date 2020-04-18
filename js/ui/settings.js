@@ -7,7 +7,7 @@ function uiInit()
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
     uistates.push(new UIState(gameplayUI));
-    ui = new UI(uistates, GAMEPLAYUI);
+    ui = new UI(uistates, MAINMENUUI);
 }
 
 function uiSettings()

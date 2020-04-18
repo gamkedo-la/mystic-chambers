@@ -265,6 +265,7 @@ function drawCircle(renderer, pos, radius, doFill, color, lineWidth)
   doFill = typeof doFill == "undefined" ? false : doFill;
 
   renderer.beginPath();
+  if(radius < 0) radius *= -1;
   renderer.arc(pos.x, pos.y, radius, 0, 2 * Math.PI, false);
   if(doFill)
   {
