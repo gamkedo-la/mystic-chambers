@@ -247,7 +247,7 @@ function drawGunDisplay(renderer, gunIndex, entIndex, gunXImg)
         if(currentGun != gunIndex) renderer.globalAlpha = gunDisplayInactiveAlpha;
 
         gunsDisplayUI.transform.position = gunDisplayUIOffset.add(vec2(gunXImg, 0));
-        gunsDisplayUI.imageObject = entImg[entIndex];
+        gunsDisplayUI.imageObject = entProp[entIndex].idleImg;
         gunsDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
 
         if(currentGun != gunIndex) renderer.globalAlpha = 1;

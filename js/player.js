@@ -194,7 +194,7 @@ function drawKeysDisplay(renderer)
         if(availableKeys[i])
         {
             keysDisplayUI.transform.position = keyDisplayUIOffset.add(vec2(keyXImg, 0));
-            keysDisplayUI.imageObject = entImg[getEntKey(i)];
+            keysDisplayUI.imageObject = entProp[getEntKey(i)].idleImg;
             keysDisplayUI.drawScIn(vec2(0, 0), vec2(160, 160));
             keyXImg += keyDisplayXIncrement;
         }
