@@ -43,7 +43,7 @@ var gunFireFrameDelay = 100;
 var canFireAgain = true;
 
 var gunReloading = false;
-var gunReloadSound = {source:{buffer :null}}
+var gunNoAmmoSound = {source:{buffer :null}}
 var gunReloadFrameDelay = 100;
 var gunReloadFrameTimer = gunReloadFrameDelay;
 
@@ -194,6 +194,11 @@ function gunEvent()
                     //SHOOTING!
                     checkPlayerToEnemyShot();
 
+                    if(currentGun == GUN_REVOLVER)
+                        audio.play1DSound(sounds[REVOLVER_SHOT]);
+                    else if(currentGun == GUN_WINCHESTER)
+                        audio.play1DSound(sounds[WINCHESTER_SHOT]);
+
                     currentGunFrame = 1;
                     gunFireFrameTimer = gunFireFrameDelay;
                     canFireAgain = false;
@@ -203,6 +208,11 @@ function gunEvent()
                     ammoInGun[currentGun] = gunAmmoCapacity[currentGun];
                     totalAmmo[currentGun] -= gunAmmoCapacity[currentGun];
 
+                    if(currentGun == GUN_REVOLVER)
+                        audio.play1DSound(sounds[REVOLVER_RELOAD]);
+                    else if(currentGun == GUN_WINCHESTER)
+                        audio.play1DSound(sounds[WINCHESTER_RELOAD]);
+
                     currentGunFrame = 2;
                 }
                 else if(totalAmmo[currentGun] > 0)
@@ -210,10 +220,16 @@ function gunEvent()
                     ammoInGun[currentGun] = totalAmmo[currentGun];
                     totalAmmo[currentGun] = 0;
 
+                    if(currentGun == GUN_REVOLVER)
+                        audio.play1DSound(sounds[REVOLVER_RELOAD]);
+                    else if(currentGun == GUN_WINCHESTER)
+                        audio.play1DSound(sounds[WINCHESTER_RELOAD]);
+
                     currentGunFrame = 0;
                 }
-                else if (gunReloadSound.source.buffer == null) {
-                    gunReloadSound = audio.play1DSound(sounds[SOUND_NOAMMO], rndAP(0.25, 0.2), rndAP(1, 0.01));
+                else if (gunNoAmmoSound.source.buffer == null)
+                {
+                    gunNoAmmoSound = audio.play1DSound(sounds[SOUND_NOAMMO], rndAP(0.25, 0.2), rndAP(1, 0.01));
                 }
             }
         }

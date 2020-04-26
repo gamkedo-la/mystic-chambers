@@ -45,6 +45,7 @@ function mainMenuUICustomEvents()
         ui.stateIndex = GAMEPLAYUI;
         if(mapMode) toggleGameplay();
 
+        audio.play1DSound(sounds[MENU_CLICK_BTN]);
         playButton.button.resetOutput();
     }
     else if(editorButton.button.output == UIOUTPUT_SELECT)
@@ -52,6 +53,7 @@ function mainMenuUICustomEvents()
         ui.stateIndex = GAMEPLAYUI;
         if(!mapMode) toggleGameplay();
 
+        audio.play1DSound(sounds[MENU_CLICK_BTN]);
         editorButton.button.resetOutput();
     }
     else if(loadButton.button.output == UIOUTPUT_SELECT)
@@ -60,6 +62,7 @@ function mainMenuUICustomEvents()
         //and loads that file for playing
         //  WIP!!!
 
+        audio.play1DSound(sounds[MENU_CLICK_BTN]);
         loadButton.button.resetOutput();
     }
     else if(settingsButton.button.output == UIOUTPUT_SELECT)
@@ -68,6 +71,7 @@ function mainMenuUICustomEvents()
         //(i.e no seperate state, within main menu)
         //  WIP!!!
 
+        audio.play1DSound(sounds[MENU_CLICK_BTN]);
         settingsButton.button.resetOutput();
     }
 }

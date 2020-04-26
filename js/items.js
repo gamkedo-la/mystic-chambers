@@ -33,21 +33,25 @@ class ItemManager {
                         playerHealth += 25;
                         if(playerHealth > playerMaxHealth)
                             playerHealth = playerMaxHealth;
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED HEALTH PACK");
                         break;
 
                     case ENT_REDKEY:
                         availableKeys[KEY_RED] = true;
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED RED KEY");
                         break;
 
                     case ENT_GREENKEY:
                         availableKeys[KEY_GREEN] = true;
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED GREEN KEY");
                         break;
 
                     case ENT_BLUEKEY:
                         availableKeys[KEY_BLUE] = true;
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED BLUE KEY");
                         break;
 
@@ -56,11 +60,13 @@ class ItemManager {
                         changeGun(GUN_REVOLVER);
                         totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_REVOLVER] = gunAmmoCapacity[GUN_REVOLVER];
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED REVOLVER GUN");
                         break;
 
                     case ENT_REVOLVERAMMO:
                         totalAmmo[GUN_REVOLVER] += ammoItemIncrement[GUN_REVOLVER];
+                        audio.play1DSound(sounds[TAKE_AMMO]);
                         subtitleManager.updateAndDisplayText("PICKED REVOLVER AMMO");
                         break;
 
@@ -69,11 +75,13 @@ class ItemManager {
                         changeGun(GUN_WINCHESTER);
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_REVOLVER];
                         ammoInGun[GUN_WINCHESTER] = gunAmmoCapacity[GUN_WINCHESTER];
+                        audio.play1DSound(sounds[ITEM_PICKUP]);
                         subtitleManager.updateAndDisplayText("PICKED WINCHESTER GUN");
                         break;
 
                     case ENT_WINCHESTERAMMO:
                         totalAmmo[GUN_WINCHESTER] += ammoItemIncrement[GUN_WINCHESTER];
+                        audio.play1DSound(sounds[TAKE_AMMO]);
                         subtitleManager.updateAndDisplayText("PICKED WINCHESTER AMMO");
                         break;
 

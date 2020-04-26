@@ -4,10 +4,24 @@ var audioTestLocation = vec2(0, 0);
 //Sound IDs
 const REVERB = 0;
 const SOUND_NOAMMO = 1;
+const TAKE_AMMO = 2;
+const ITEM_PICKUP = 3;
+const MENU_CLICK_BTN = 4;
+const REVOLVER_SHOT = 5;
+const REVOLVER_RELOAD = 6;
+const WINCHESTER_SHOT = 7;
+const WINCHESTER_RELOAD = 8;
 
 var soundsList = [
 	"audio/reverb3.wav",
 	"audio/noAmmo.mp3",
+	"audio/take-ammo.mp3",
+	"audio/itemPickup.wav",
+	"audio/menu-nav.mp3",
+	"audio/revolver-shot.mp3",
+	"audio/revolver-reload.mp3",
+	"audio/winchester-shot.mp3",
+	"audio/winchester-reload.mp3",
 ];
 
 var sounds = [];
