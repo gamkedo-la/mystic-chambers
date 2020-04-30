@@ -16,7 +16,7 @@ var soundsList = [
 	"audio/reverb3.wav",
 	"audio/noAmmo.mp3",
 	"audio/take-ammo.mp3",
-	"audio/itemPickup.mp3",
+	"audio/itemPickUp.mp3",
 	"audio/menu-nav.mp3",
 	"audio/revolver-shot.mp3",
 	"audio/revolver-reload.mp3",
