@@ -82,6 +82,7 @@ function draw(deltaTime)
     {
         mainMenuBackground.draw();
         mainMenuTitle.draw();
+        mainMenuFX.draw();
     }
     else if(ui.stateIndex == GAMEPLAYUI)
     {
