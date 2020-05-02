@@ -191,3 +191,13 @@ function aiWaypointNavigation() {
     aiSeek.call(this,this.wpTarget);
 
 }
+
+function fireSkullAI(plRay)
+{
+    aiSeek.call(this,plRay);
+}
+
+function evilDwarfAI(plRay)
+{
+    aiSeek.call(this,plRay);
+}

@@ -169,8 +169,18 @@ const enemyStartType = 40;
 const ENT_FIRESKULL = 40;
 entProp[ENT_FIRESKULL].color = "#eecc0090";
 entProp[ENT_FIRESKULL].idleImg = new ImageObject("images/fireSkullIdle.png", vec2(1280, 160));
+entProp[ENT_FIRESKULL].attackImg = new ImageObject("images/fireSkullAttack.png", vec2(1280, 160));
+entProp[ENT_FIRESKULL].damageImg = new ImageObject("images/fireSkullDamage.png", vec2(1280, 160));
 entProp[ENT_FIRESKULL].renderOffset = vec2();
-entProp[ENT_FIRESKULL].ai = aiSeek;
+entProp[ENT_FIRESKULL].ai = fireSkullAI;
+
+const ENT_EVILDWARF = 41;
+entProp[ENT_EVILDWARF].color = "#55cc3390";
+entProp[ENT_EVILDWARF].idleImg = new ImageObject("images/evilDwarfIdle.png", vec2(1280, 160));
+entProp[ENT_EVILDWARF].attackImg = new ImageObject("images/evilDwarfAttack.png", vec2(1280, 160));
+entProp[ENT_EVILDWARF].damageImg = new ImageObject("images/evilDwarfDamage.png", vec2(1280, 160));
+entProp[ENT_EVILDWARF].renderOffset = vec2();
+entProp[ENT_EVILDWARF].ai = evilDwarfAI;
 
 const enemyTotalTypes = 5;
 //////////////////////////////////////////////////////
