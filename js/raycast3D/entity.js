@@ -200,6 +200,7 @@ class Entity
         this.aimAngleRadians = 0; // the angle an entity is looking
         this.sector = undefined; //the sector in which this entity is present
         this.bobbingFactor = 1.0;
+        this.speed = 0.25;
     }
 
     set(x, y, id)

@@ -156,7 +156,7 @@ function draw(deltaTime)
             itemPickupFlash--;
         }
 
-        subtitleManager.draw();
+        subtitleManager.draw(deltaTime);
     }
 
     ui.draw();

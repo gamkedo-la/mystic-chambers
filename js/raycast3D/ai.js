@@ -33,18 +33,16 @@ function validateRotation() {
 
 // move back and forth
 function aiWander() {
-    var speed = 5000;
     var size = 0.1;
     
     if (DEBUGAI) console.log("aiWander for entity id " + this.id + " named " + this.name);
     if (DEBUGAI) console.log("pos: " + this.p.x+","+this.p.y+" angle: "+this.angle);
     
-    this.p.x += Math.cos(performance.now()/speed)*size;
+    this.p.x += Math.cos(performance.now()/this.speed)*size;
 }
 
 // move randomly using car-like turns!
 function aiExplore() {
-    var speed = 0.25;
     var turnspeed = 0.05;
     
     // choose a random direction to travel from time to time
@@ -69,8 +67,8 @@ function aiExplore() {
     this.prev_p = vec2(this.p.x, this.p.y);
 
     // move in the direction we are facing
-    this.p.x += speed * Math.cos(this.aimAngleRadians);
-    this.p.y += speed * Math.sin(this.aimAngleRadians);
+    this.p.x += this.speed * Math.cos(this.aimAngleRadians);
+    this.p.y += this.speed * Math.sin(this.aimAngleRadians);
 
     validatePosition.call(this); // collide with walls
 }
@@ -83,9 +81,6 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
 
     // this is recorded here only for debug red line display in entity draw
     this.debugTarget = plRay.p.subtract(aiOffset);
-    
-    var speed = 0.25;
-    if (backwards) speed *= -1;
 
     var dist = plRay.p.distance(this.p);
 
@@ -108,8 +103,16 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
             // move toward target
             // FIXME: this.p cannot be relied upon
             // it changes somewhere else even if speed is 0
-            this.p.x += speed * Math.cos(rad);
-            this.p.y += speed * Math.sin(rad);
+            if(backwards)
+            {
+                this.p.x -= this.speed * Math.cos(rad);
+                this.p.y -= this.speed * Math.sin(rad);
+            }
+            else
+            {
+                this.p.x += this.speed * Math.cos(rad);
+                this.p.y += this.speed * Math.sin(rad);
+            }
 
             validatePosition.call(this); // collide with walls
 
@@ -129,17 +132,17 @@ function aiAvoid(plRay) {
 
 // spin around and bob up and down
 function aiSpinning() {
-    var speed = 0.1;
-    this.aimAngleRadians = this.aimAngleRadians + speed;
+    var spd = 0.1;
+    this.aimAngleRadians = this.aimAngleRadians + spd;
     validateRotation.call(this); // stay in 0..360 deg
 }
 
 // spin around and bob up and down
 function aiSpinningBobbing() {
-    var speed = 0.025;
+    var spd = 0.025;
     var bobspeed = 350;
     //var bobsize = 100;
-    this.aimAngleRadians = this.aimAngleRadians + speed;
+    this.aimAngleRadians = this.aimAngleRadians + spd;
     validateRotation.call(this); // stay in 0..360 deg
     // up and down like a doom weapon
     this.bobbingFactor = (Math.floor(((Math.cos(performance.now()/bobspeed)+1)/2) * 15.0))/15;
@@ -148,13 +151,18 @@ function aiSpinningBobbing() {
 
 // falling from the ceiling to the floor
 function aiDripping() {
-    //console.log("yay, a dripping entity!");
-    var speed = 0.1;
-    var min = 0;
-    var max = 1;
-    this.bobbingFactor += speed; // height = renderOffset.y * this
-    if (this.bobbingFactor>max) 
-        this.bobbingFactor=min;
+    var preparing = 0.25;
+    var min = -2.5;
+    var max = 2.5;
+    var spd = 0.25;
+    if(this.bobbingFactor < min)
+        spd = 0.002;
+    this.bobbingFactor += spd; // height = renderOffset.y * this
+    if (this.bobbingFactor > max)
+    {
+        this.bobbingFactor = min - preparing;
+        this.delay = 200;
+    }
 }
 
 // seeks any nearby entities like health, ammo, guns, and WAYPOINTS
@@ -194,10 +202,32 @@ function aiWaypointNavigation() {
 
 function fireSkullAI(plRay)
 {
-    aiSeek.call(this,plRay);
+    var dist = plRay.p.distance(this.p);
+
+    if(dist > 100)
+    {
+        aiExplore.call(this,plRay);
+    }
+    else
+    {
+        //this.angle = plRay.angle;
+        aiSeek.call(this,plRay);
+
+        if(dist > 30)
+        {
+            this.speed = 0.15;
+        }
+        else
+        {
+            //this.speed = 0; //stop for a moment
+            //this.speed = 0.5; //go for attack
+            //this.speed = 0.15; //get normal for some time
+        }
+    }
 }
 
 function evilDwarfAI(plRay)
 {
-    aiSeek.call(this,plRay);
+    aiExplore.call(this,plRay);
+    //aiSeek.call(this,plRay);
 }

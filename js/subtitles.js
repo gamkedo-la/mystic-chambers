@@ -1,4 +1,4 @@
-const MAX_DISPLAY_TIME = 60 * 4;
+const MAX_DISPLAY_TIME = 1500; //1.5 sec
 
 class SubtitleManager 
 {
@@ -18,7 +18,7 @@ class SubtitleManager
             this.transform = transform;
     }
 
-    draw()
+    draw(deltaTime)
     {
         if (!mapMode && this.displayTimer < MAX_DISPLAY_TIME)
         {
@@ -32,7 +32,7 @@ class SubtitleManager
             );
         }
 
-        this.displayTimer += 1;
+        this.displayTimer += deltaTime;
     }
 }
 
