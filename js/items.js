@@ -1,8 +1,4 @@
 
-var itemPickupFlashFrames = 5;
-var itemPickupFlash = 0;
-var itemPickupFlashColor = "#FFFFFF15";
-
 class ItemManager {
 
     constructor()
@@ -105,6 +101,8 @@ class ItemManager {
 
                     case ENT_SPIKES:
                         playerHealth -= 1;
+                        flash = flashTime;
+                        flashColor = playerDamageFlashColor;
                         shouldDestroy = false;
                         break;
 
@@ -125,16 +123,22 @@ class ItemManager {
 
                     case ENT_FIRE:
                         playerHealth -= 1;
+                        flash = flashTime;
+                        flashColor = playerDamageFlashColor;
                         shouldDestroy = false;
                         break;
     
                     case ENT_FIRE_COLD:
                         playerHealth -= 1;
+                        flash = flashTime;
+                        flashColor = playerDamageFlashColor;
                         shouldDestroy = false;
                         break;
     
                     case ENT_FIRE_MYSTIC:
                         playerHealth -= 1;
+                        flash = flashTime;
+                        flashColor = playerDamageFlashColor;
                         shouldDestroy = false;
                         break;
 
@@ -149,7 +153,8 @@ class ItemManager {
                     this.ents.splice(i, 1);
                     i--;
 
-                    itemPickupFlash += itemPickupFlashFrames;
+                    flash = flashTime;
+                    flashColor = itemPickupFlashColor;
                 }
             }
         }

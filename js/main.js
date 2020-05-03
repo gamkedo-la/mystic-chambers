@@ -150,10 +150,10 @@ function draw(deltaTime)
             drawCrosshair(renderer);
         }
 
-        if(itemPickupFlash > 0)
+        if(flash > 0)
         {
-            drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, itemPickupFlashColor);
-            itemPickupFlash--;
+            drawRect(renderer, vec2(0, 0), vec2(window.innerWidth, window.innerHeight), true, flashColor);
+            flash -= deltaTime;
         }
 
         subtitleManager.draw(deltaTime);
