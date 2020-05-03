@@ -12,10 +12,6 @@ window.onload = function()
     uiInit();
     audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
     floorAndCeiling = new floorClass();
-
-    // test water drops
-    decor.scatter(ENT_WATERDROPS,60,400,0,700,400,0);
-
     inputSetup();
     setInterval(frame, 1000 / 60);
 };
@@ -63,13 +59,10 @@ function update(deltaTime) // FIXME: deltaTime is not used yet
     if(ui.stateIndex == GAMEPLAYUI)
     {
         loadRoofAndFloorTextureDataOnce();
-
         gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
             -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
-
         floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
     }
-
     ui.update();
     audio.update();
 }
@@ -95,7 +88,7 @@ function draw(deltaTime)
                 ray[ray.length/2].angle);
             renderRaycast3D(renderer, ray, wall,
                 ray[ray.length/2], vec2(ray[ray.length/2].p.x,
-                ray[ray.length/2].p.y));
+                ray[ray.length/2].p.y), deltaTime);
             sectorsMap(plPos);
             for (let i = 0; i < ray.length; i++)
                 ray[i].p = vec2(plPos.x, plPos.y);
@@ -121,7 +114,7 @@ function draw(deltaTime)
                 ray[i].p = vec2(plPos.x, plPos.y);
             }
 
-            drawEntities(renderer, ray[ray.length/2], true);
+            drawEntities(renderer, ray[ray.length/2], true, deltaTime);
 
             for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors, 12);
             drawSectorsMap(renderer, vec2(window.innerWidth/2, window.innerHeight/2), vec2(0,0));

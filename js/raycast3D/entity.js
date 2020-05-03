@@ -214,7 +214,7 @@ class Entity
 
     setIDProperties() { this.ai = entProp[this.id].ai; }
 
-    draw(renderer, plRay, circleOnly)
+    draw(renderer, plRay, circleOnly, deltaTime)
     {
         if (this.ai && (!mapMode || debugEntities)) this.ai(plRay);
         
@@ -254,7 +254,41 @@ class Entity
                 var imageSide = radToDeg(spriteAngle) / (360.0 /
                     (entProp[this.id].idleImg.size.x / 160.0));
 
-                this.sprite.imageObject = entProp[this.id].idleImg;
+                if(this.id == ENT_FIRESKULL)
+                {
+                    if(typeof this.hp != "undefined"
+                    && typeof this.prevHp == "undefined")
+                    {
+                        this.prevHp = this.hp;
+                    }
+                    else if(typeof this.hp != "undefined"
+                    && typeof this.prevHp != "undefined"
+                    && this.prevHp != this.hp)
+                    {
+                        this.sprite.imageObject = entProp[this.id].damageImg;
+                        this.prevHp = this.hp;
+
+                        if(typeof this.damageDelay == "undefined") this.damageDelay = 0;
+                        this.damageDelay = 160;
+                    }
+                    else if(typeof this.damageDelay != "undefined" && this.damageDelay > 0)
+                    {
+                        this.damageDelay -= deltaTime;
+                    }
+                    else if(this.speed > 0.3)
+                    {
+                        this.sprite.imageObject = entProp[this.id].attackImg;
+                        imageSide = 0;
+                    }
+                    else
+                    {
+                        this.sprite.imageObject = entProp[this.id].idleImg;
+                    }
+                }
+                else
+                {
+                    this.sprite.imageObject = entProp[this.id].idleImg;
+                }
 
                 renderer.globalAlpha = round(1.0 - (dist / maxEntityVisibilityDistance), 0.2, 0);
 
@@ -351,7 +385,7 @@ function generateEntitiesFromString(str)
     enemies.removeIfNotInEntities();
 }
 
-function drawEntities(renderer, plRay, line)
+function drawEntities(renderer, plRay, line, deltaTime)
 {
     entities.sort(
         function(entA, entB) {
@@ -362,12 +396,12 @@ function drawEntities(renderer, plRay, line)
     for (var num = 0, max = this.entities.length; num < max; num++) 
     {
         if(line) entities[num].addOffset(vec2(-plRay.p.x + (window.innerWidth/2), -plRay.p.y + (window.innerHeight/2)));
-        entities[num].draw(renderer, plRay, line);
+        entities[num].draw(renderer, plRay, line, deltaTime);
         if(line) entities[num].addOffset(vec2(plRay.p.x - (window.innerWidth/2), plRay.p.y - (window.innerHeight/2)));
     }
 }
 
-function drawEntitiesInSector(sector, pos, renderer, plRay)
+function drawEntitiesInSector(sector, pos, renderer, plRay, deltaTime)
 {
     if(typeof sector != "undefined")
     {
@@ -383,7 +417,7 @@ function drawEntitiesInSector(sector, pos, renderer, plRay)
 
                 for(let i = 0; i < sector.sectorData.entitiesLeft.length; i++)
                 {
-                    sector.sectorData.entitiesLeft[i].draw(renderer, plRay, false);
+                    sector.sectorData.entitiesLeft[i].draw(renderer, plRay, false, deltaTime);
                 }
             }
         }
@@ -399,7 +433,7 @@ function drawEntitiesInSector(sector, pos, renderer, plRay)
 
                 for(let i = 0; i < sector.sectorData.entitiesRight.length; i++)
                 {
-                    sector.sectorData.entitiesRight[i].draw(renderer, plRay, false);
+                    sector.sectorData.entitiesRight[i].draw(renderer, plRay, false, deltaTime);
                 }
             }
         }

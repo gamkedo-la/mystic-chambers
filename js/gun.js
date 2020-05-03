@@ -117,10 +117,18 @@ function checkPlayerToEnemyShot()
         {
             if(!playerSectorWallCheck(distBtwPlEn-10))
             {
-                removeEntityInAllSectors(enemies.ents[i]);
-                removeEntityInSector(enemies.ents[i]);
-                removeEntity(enemies.ents[i]);
-                enemies.ents.splice(i, 1);
+                if(typeof enemies.ents[i].hp != "undefined" && enemies.ents[i].hp > 0)
+                {
+                    enemies.ents[i].hp -= 1;
+                }
+                else
+                {
+                    removeEntityInAllSectors(enemies.ents[i]);
+                    removeEntityInSector(enemies.ents[i]);
+                    removeEntity(enemies.ents[i]);
+                    enemies.ents.splice(i, 1);
+                }
+
                 break;
             }
         }

@@ -202,6 +202,8 @@ function aiWaypointNavigation() {
 
 function fireSkullAI(plRay)
 {
+    if(typeof this.hp == "undefined") this.hp = 5;
+
     var dist = plRay.p.distance(this.p);
 
     if(dist > 100)
@@ -219,11 +221,25 @@ function fireSkullAI(plRay)
         }
         else
         {
+            //WIP!!!
             //this.speed = 0; //stop for a moment
             //this.speed = 0.5; //go for attack
             //this.speed = 0.15; //get normal for some time
+
+            this.speed = 0.5;
+
+            if(dist < 5)
+            {
+                playerHealth -= 1;
+                flash = flashTime;
+                flashColor = playerDamageFlashColor;
+                plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle));
+                plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
+            }
         }
     }
+
+    if(typeof this.damageDelay != "undefined" && this.damageDelay > 0) this.speed = -1.0;
 }
 
 function evilDwarfAI(plRay)

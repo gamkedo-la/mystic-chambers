@@ -113,7 +113,7 @@ function drawRenderDataPiece(renderer, i, data, ray)
     }
 }
 
-function renderRaycast3D(renderer, ray, w, plRay, plPos)
+function renderRaycast3D(renderer, ray, w, plRay, plPos, deltaTime)
 {
     prevDepth = -1.0;
     noOfWallsCheckedForRendering = 0;
@@ -151,7 +151,7 @@ function renderRaycast3D(renderer, ray, w, plRay, plPos)
             drawRenderDataPiece(renderer, i, (renderDataGroup[g])[i], ray);
         drawEntitiesInSector(entitySectors[g],
         (g >= entitySectors.length - 1 ? -1 : 1) * getPositionSideInSector(entitySectors[g], plPos),
-        renderer, plRay);
+        renderer, plRay, deltaTime);
     }
 }
 
