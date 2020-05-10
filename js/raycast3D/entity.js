@@ -216,7 +216,7 @@ class Entity
 
     draw(renderer, plRay, circleOnly, deltaTime)
     {
-        if (this.ai && (!mapMode || debugEntities)) this.ai(plRay);
+        if (this.ai && (!mapMode || debugEntities)) this.ai(plRay, deltaTime);
         
         if(circleOnly)
         {
@@ -275,7 +275,7 @@ class Entity
                     {
                         this.damageDelay -= deltaTime;
                     }
-                    else if(this.speed > 0.3)
+                    else if(this.speed > 0.3 || this.speed == 0.0)
                     {
                         this.sprite.imageObject = entProp[this.id].attackImg;
                         imageSide = 0;

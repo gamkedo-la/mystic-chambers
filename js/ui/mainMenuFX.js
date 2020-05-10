@@ -8,7 +8,7 @@ var mainMenuFX = new function() {
     var mainMenuFXsize = 128;
     var mainMenuFXsprites = [ // can be more than one
         new ImageObject("images/smoke.png", vec2(160, 160)),
-        new ImageObject("images/fire.png", vec2(160, 160))
+        new ImageObject("images/fire_menubg.png", vec2(160, 160))
     ];
 
     this.draw = function() {
