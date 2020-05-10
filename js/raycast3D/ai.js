@@ -95,7 +95,7 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
             var rad = plRay.p.angle(this.p);
 
             // actually face the direction of travel
-            //this.aimAngleRadians = rad;
+            this.aimAngleRadians = rad;
             /*if (this.aimAngleRadians>rad) this.aimAngleRadians -= turnspeed;
             if (this.aimAngleRadians<rad) this.aimAngleRadians += turnspeed;*/
 
@@ -255,7 +255,7 @@ function fireSkullAI(plRay,deltaTime)
             else if(this.attackTimer > 0) { this.speed = 0.9; this.attackTimer -= deltaTime; }
             else if(this.normalTimer > 0) { this.speed = 0.3; this.normalTimer -= deltaTime; }
 
-            if(dist < 5 && attackTimer > 0)
+            if(dist < 5 && this.attackTimer > 0)
             {
                 playerHealth -= 20;
                 flash = flashTime;
