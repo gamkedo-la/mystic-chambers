@@ -218,6 +218,10 @@ function fireSkullAI(plRay,deltaTime)
     if(dist > 100)
     {
         aiExplore.call(this,plRay);
+        if (Math.random() < 0.1 * deltaTime) 
+        {
+        	audio.play3DSound(sounds[FIRESKULL_IDLE], this.p, rndAP(), rndAP());
+        }
     }
     else
     {
@@ -263,6 +267,8 @@ function fireSkullAI(plRay,deltaTime)
                 plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle));
                 plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
                 this.attackTimer = 0;
+
+                audio.play1DSound(sounds[PLAYER_HURT+rndOff()])
             }
         }
     }
@@ -274,4 +280,9 @@ function evilDwarfAI(plRay)
 {
     aiExplore.call(this,plRay);
     //aiSeek.call(this,plRay);
+
+    if (Math.random() < 0.0005) 
+    {
+    	audio.play3DSound(sounds[DWARF_IDLE], this.p, rndAP(), rndAP());
+    }
 }

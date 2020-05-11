@@ -11,6 +11,13 @@ const REVOLVER_SHOT = 5;
 const REVOLVER_RELOAD = 6;
 const WINCHESTER_SHOT = 7;
 const WINCHESTER_RELOAD = 8;
+const PLAYER_HURT = 8;
+const PLAYER_HURT2 = 9;
+const FIRESKULL_IDLE = 10;
+const FIRESKULL_DASH = 11;
+const FIRESKULL_ATTACK = 12;
+const DWARF_IDLE = 13;
+const DWARF_ATTACK = 14;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -22,6 +29,13 @@ var soundsList = [
 	"audio/revolver-reload.mp3",
 	"audio/winchester-shot.mp3",
 	"audio/winchester-reload.mp3",
+	"audio/Hurt1.mp3",
+	"audio/Hurt2.mp3",
+	"audio/dwarf-idle-01.mp3",//temporarally borrowing, replace with fireskul sound
+	"audio/dash.mp3",
+	"audio/fireball-03.mp3",//temporarally borrowing, replace with fireskul sound
+	"audio/dwarf-idle-01.mp3",
+	"audio/dwarf-attack-01.mp3",
 ];
 
 var sounds = [];
@@ -629,6 +643,10 @@ function AudioGlobal() {
 
 function rndAP(base = 1, width = 0.1) {
 	return Math.random()*width*2 + base - width;
+}
+
+function rndOff(quantity = 2) {
+	return Math.floor(Math.random()*quantity);
 }
 
 var fauxAudGeo = [
