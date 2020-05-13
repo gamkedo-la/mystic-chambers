@@ -268,7 +268,7 @@ function fireSkullAI(plRay,deltaTime)
                 plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
                 this.attackTimer = 0;
 
-                audio.play1DSound(sounds[PLAYER_HURT+rndOff()])
+                audio.play1DSound(sounds[PLAYER_HURT+rndOff()]);
             }
         }
     }
