@@ -101,13 +101,24 @@
     }
 
 
-    .container {
+    #mainMenuCube {
+        transform: scale(0.5);
         width: 200px;
         height: 200px;
         position: absolute;
         perspective: 1000px;
         top:200px;
-        right:200px;
+        right:300px;
+    }
+    #mainMenuDoor {
+        transform: scale(1.5);
+        display:block;
+        position:absolute;
+        top:-150px;
+        left:-220px;
+        width:640px;
+        height:576px;
+        background:url(images/huge_door.png);
     }
     #cube {
         width: 100%;
@@ -135,6 +146,8 @@
     #cube .left { background: url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 100px ); }
     #cube .top { background: url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 100px ); }
     #cube .bottom { background: url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 100px ); }
+    .ooone { transform: translateX(-100px); }
+    .ootwo { transform: translateX(100px); }
     @keyframes rotatecube {
         0% { transform: rotateX(0deg) rotateY(360deg) rotateZ(90deg); }
         25% { transform: rotateX(90deg) rotateY(270deg) rotateZ(180deg); }
@@ -187,8 +200,9 @@
   <script src="js/main.js"></script>
 
 
-  <div id="mainMenuCube" class="container">
-    <div id="cube">
+  <div id="mainMenuCube">
+    <div id="mainMenuDoor"></div>
+    <div id="cube" style="margin-left:-350px">
       <div class="front"></div>
       <div class="back"></div>
       <div class="right"></div>
@@ -196,7 +210,15 @@
       <div class="top"></div>
       <div class="bottom"></div>
     </div>
-  </div>
+    <div id="cube" style="margin-left:350px">
+        <div class="front"></div>
+        <div class="back"></div>
+        <div class="right"></div>
+        <div class="left"></div>
+        <div class="top"></div>
+        <div class="bottom"></div>
+      </div>
+    </div>
 
 
 </body>
