@@ -89,15 +89,15 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
     // move if not too close
     if (dist>mindist) {
         if (dist<maxdist) {
-            //var turnspeed = 0.1;
+            var turnspeed = 0.05;
 
             // determine target direction
             var rad = plRay.p.angle(this.p);
 
             // actually face the direction of travel
             this.aimAngleRadians = rad;
-            /*if (this.aimAngleRadians>rad) this.aimAngleRadians -= turnspeed;
-            if (this.aimAngleRadians<rad) this.aimAngleRadians += turnspeed;*/
+            //if (this.aimAngleRadians>spriteAngle) this.aimAngleRadians -= turnspeed;
+            //if (this.aimAngleRadians<spriteAngle) this.aimAngleRadians += turnspeed;
 
             validateRotation.call(this); // stay in 0..360 deg
 
@@ -237,7 +237,7 @@ function fireSkullAI(plRay,deltaTime)
         {
             if(this.aiStage <= -1 && this.stopTimer <= 0)
             {
-                this.stopTimer = 1000;
+                this.stopTimer = 500;
                 this.aiStage = 0;
             }
             else if(this.aiStage == 0 && this.attackTimer <= 0)
@@ -256,7 +256,7 @@ function fireSkullAI(plRay,deltaTime)
             }
 
             if(this.stopTimer > 0) { this.speed = 0.0; this.stopTimer -= deltaTime; }
-            else if(this.attackTimer > 0) { this.speed = 0.9; this.attackTimer -= deltaTime; }
+            else if(this.attackTimer > 0) { this.speed = 1.25; this.attackTimer -= deltaTime; }
             else if(this.normalTimer > 0) { this.speed = 0.3; this.normalTimer -= deltaTime; }
 
             if(dist < 5 && this.attackTimer > 0)

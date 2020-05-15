@@ -8,6 +8,7 @@ class EntityIDProperties
         this.damageImg = new ImageObject("images/unknown_id.png", vec2(160, 160));
         this.renderOffset = vec2();
         this.ai = function() {};
+        this.effectFrame = 0;
     }
 }
 var entProp = [ new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties(), new EntityIDProperties() ];
@@ -40,6 +41,22 @@ const ENT_GRASS1 = 1;
 entProp[ENT_GRASS1].color = "#00aa0090";
 entProp[ENT_GRASS1].idleImg = new ImageObject("images/grass1.png", vec2(1280, 160));
 entProp[ENT_GRASS1].renderOffset = vec2(0,-100);
+
+const ENT_EFFECT1 = 2;
+entProp[ENT_EFFECT1].idleImg = new ImageObject("images/effect1.png", vec2(800, 160));
+entProp[ENT_EFFECT1].effectFrame = 100;
+
+const ENT_EFFECT2 = 3;
+entProp[ENT_EFFECT2].idleImg = new ImageObject("images/effect2.png", vec2(800, 160));
+entProp[ENT_EFFECT2].effectFrame = 50;
+
+const ENT_EFFECT3 = 4;
+entProp[ENT_EFFECT3].idleImg = new ImageObject("images/effect2.png", vec2(800, 160));
+entProp[ENT_EFFECT3].effectFrame = 50;
+
+const ENT_DESTROY1 = 5;
+entProp[ENT_DESTROY1].idleImg = new ImageObject("images/destroy1.png", vec2(1280, 160));
+entProp[ENT_DESTROY1].effectFrame = 40;
 
 const decorTotalTypes = 10;
 //////////////////////////////////////////////////////
@@ -243,7 +260,7 @@ class Entity
 
                 // added this.angle to account for entity look angle
                 // to draw sprites with a rotational offset from player
-                var spriteAngle = ang + this.aimAngleRadians + Math.PI;
+                var spriteAngle = ang + this.aimAngleRadians - Math.PI;
                 // cap to 0..360
                 if (spriteAngle>Math.PI*2) spriteAngle -= Math.PI*2;
                 if (spriteAngle<0) spriteAngle += Math.PI*2;
@@ -277,12 +294,41 @@ class Entity
                     }
                     else if(this.speed > 0.3 || this.speed == 0.0)
                     {
+                        if(this.sprite.imageObject != entProp[this.id].attackImg)
+                        {
+                            decor.addUsingAnotherEntity(this, ENT_EFFECT1);
+                        }
+                        
                         this.sprite.imageObject = entProp[this.id].attackImg;
                         imageSide = 0;
                     }
                     else
                     {
                         this.sprite.imageObject = entProp[this.id].idleImg;
+                    }
+                }
+                else if(entProp[this.id].effectFrame > 0)
+                {
+                    if(typeof this.effectTimer == "undefined")
+                    {
+                        this.effectTimer = 0.0;
+                        imageSide = 0;
+                    }
+                    else
+                    {
+                        var totalFrames = (entProp[this.id].idleImg.size.x / 160.0);
+                        var totalDuration = totalFrames * entProp[this.id].effectFrame;
+                        imageSide = (this.effectTimer / totalDuration) * totalFrames;
+                        this.effectTimer += deltaTime;
+
+                        if(this.effectTimer > totalDuration)
+                        {
+                            removeEntityInAllSectors(this);
+                            removeEntityInSector(this);
+                            removeEntity(this);
+                            decor.ents.remove(this);
+                            return;
+                        }
                     }
                 }
                 else

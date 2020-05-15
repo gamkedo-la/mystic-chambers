@@ -28,7 +28,7 @@ var gunDisplayTextSize = 0.03;
 var gunMaxY = screen.height + 240;
 var gunDefMinY = screen.height - 240;
 
-var playerShotAccuracyFactor = 150;
+var playerShotAccuracyFactor = 75;
 
 var gunImages = [
     new ImageObject("images/revolver.png", vec2(2880, 480)),
@@ -111,7 +111,7 @@ function checkPlayerToEnemyShot()
     {
         var angBtwPlEn = radToDeg(plPos.angle(enemies.ents[i].p));
         var distBtwPlEn = plPos.distance(enemies.ents[i].p);
-        var angPl = ray[ray.length/2].angle + 180 + 5;
+        var angPl = ray[ray.length/2].angle + 180;
 
         if(Math.abs(angBtwPlEn-angPl) < playerShotAccuracyFactor/distBtwPlEn)
         {
@@ -120,9 +120,16 @@ function checkPlayerToEnemyShot()
                 if(typeof enemies.ents[i].hp != "undefined" && enemies.ents[i].hp > 0)
                 {
                     enemies.ents[i].hp -= 1;
+
+                    if(Math.random() < 0.5)
+                        decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT2);
+                    else
+                        decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT3);
                 }
                 else
                 {
+                    decor.addUsingAnotherEntity(enemies.ents[i], ENT_DESTROY1);
+
                     removeEntityInAllSectors(enemies.ents[i]);
                     removeEntityInSector(enemies.ents[i]);
                     removeEntity(enemies.ents[i]);
