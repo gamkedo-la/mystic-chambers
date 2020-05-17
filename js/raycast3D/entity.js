@@ -326,7 +326,7 @@ class Entity
                             removeEntityInAllSectors(this);
                             removeEntityInSector(this);
                             removeEntity(this);
-                            decor.ents.remove(this);
+                            decor.remove(this);
                             return;
                         }
                     }

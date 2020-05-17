@@ -134,9 +134,10 @@ function checkPlayerToEnemyShot()
                     removeEntityInSector(enemies.ents[i]);
                     removeEntity(enemies.ents[i]);
                     enemies.ents.splice(i, 1);
+                    i--;
                 }
 
-                break;
+                //break;
             }
         }
     }

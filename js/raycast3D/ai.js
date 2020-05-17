@@ -218,7 +218,7 @@ function fireSkullAI(plRay,deltaTime)
     if(dist > 100)
     {
         aiExplore.call(this,plRay);
-        if (Math.random() < 0.1 * deltaTime) 
+        if (Math.random() < 0.0005 * deltaTime) 
         {
         	audio.play3DSound(sounds[FIRESKULL_IDLE], this.p, rndAP(), rndAP());
         }
