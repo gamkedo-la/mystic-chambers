@@ -28,7 +28,11 @@ class EnemyManager {
                         playerHealth -= 1;
                         break;
 
-                    default:
+                    case ENT_EVILDWARF:
+                        playerHealth -= 1;
+                        break;
+
+                        default:
                         //do nothing
                 }
             }

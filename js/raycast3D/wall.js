@@ -621,7 +621,8 @@ function collisionWithWallsInSector(currentPos, previousPos, sec)
 //For moving entities; to keep them inside the sectors
 function collisionWithSectorsInSector(currentPos, previousPos, sec)
 {
-    if(currentPos == previousPos) return currentPos;
+    if (!sec) return currentPos; // can be undefined here
+    if (currentPos == previousPos) return currentPos;
 
     currentPos = sec.getCollValue(currentPos, previousPos, true);
     if(currentPos == previousPos) return currentPos;

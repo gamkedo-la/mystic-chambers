@@ -35,13 +35,15 @@ function setupMainMenuUI()
     mainMenuUI.push(new FlexGroup(tr(vec2(50, 350), vec2(window.innerWidth, window.innerHeight-350)),
         new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3, 20), vec2(1, 5), true));
 
-    mainMenuUI.push(new Label(tr(vec2(window.innerWidth/2+200, window.innerHeight/2), vec2(400, 100)), "Background Door will be here"));
+    //mainMenuUI.push(new Label(tr(vec2(window.innerWidth/2+200, window.innerHeight/2), vec2(400, 100)), "Background Door will be here"));
 }
 
 function mainMenuUICustomEvents()
 {
     if(playButton.button.output == UIOUTPUT_SELECT)
     {
+        hideMainMenuCube();
+        //console.log("Play button pressed!");
         ui.stateIndex = GAMEPLAYUI;
         if(mapMode) toggleGameplay();
 
@@ -50,6 +52,7 @@ function mainMenuUICustomEvents()
     }
     else if(editorButton.button.output == UIOUTPUT_SELECT)
     {
+        hideMainMenuCube();
         ui.stateIndex = GAMEPLAYUI;
         if(!mapMode) toggleGameplay();
 
@@ -58,6 +61,7 @@ function mainMenuUICustomEvents()
     }
     else if(loadButton.button.output == UIOUTPUT_SELECT)
     {
+        hideMainMenuCube();
         //will get the file that you give it
         //and loads that file for playing
         //  WIP!!!
@@ -67,6 +71,7 @@ function mainMenuUICustomEvents()
     }
     else if(settingsButton.button.output == UIOUTPUT_SELECT)
     {
+        hideMainMenuCube();
         //will toggle settings substate
         //(i.e no seperate state, within main menu)
         //  WIP!!!
@@ -74,4 +79,9 @@ function mainMenuUICustomEvents()
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         settingsButton.button.resetOutput();
     }
+}
+
+function hideMainMenuCube() {
+    var div = document.getElementById("mainMenuCube");
+    if (div) div.style.display = "none";
 }

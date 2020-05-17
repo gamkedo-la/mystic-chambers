@@ -17,6 +17,30 @@ class DecorationManager {
         entities.push(ent);
     }
 
+    addUsingAnotherEntity(anoent, id)
+    {
+        var ent = new Entity();
+
+        ent.set(anoent.p.x, anoent.p.y, id);
+        ent.setIDProperties();
+
+        this.ents.push(ent);
+        entities.push(ent);
+
+        var pos = getPositionSideInSector(anoent.sector, plPos);
+
+        if(pos < 0)
+        {
+            anoent.sector.sectorData.entitiesLeft.push(ent);
+        }
+        else if(pos > 0)
+        {
+            anoent.sector.sectorData.entitiesRight.push(ent);
+        }
+
+        ent.sector = anoent.sector;
+    }
+
     scatter(id, quantity, minX, minY, maxX, maxY, offset)
     {
         console.log("scattering " + quantity + " entities with ID " + id);
@@ -55,6 +79,18 @@ class DecorationManager {
             {
                 this.ents.splice(d, 1);
                 d--;
+            }
+        }
+    }
+
+    remove(ent)
+    {
+        for (let d = 0; d < this.ents.length; d++)
+        {
+            if(this.ents[d] == ent)
+            {
+                this.ents.splice(d, 1);
+                break;
             }
         }
     }
