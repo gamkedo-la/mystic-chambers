@@ -12,22 +12,22 @@ function setupMainMenuUI()
 {
     menuButtons = [];
     playButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  PLAY",
+        new Label(tr(), "  PLAY        P",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(playButton);
     editorButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  LEVEL EDITOR",
+        new Label(tr(), "  LEVEL EDITOR        E",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(editorButton);
     loadButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  LOAD LEVEL",
+        new Label(tr(), "  LOAD LEVEL        L",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(loadButton);
     settingsButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  SETTINGS",
+        new Label(tr(), "  SETTINGS        S",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(settingsButton);
@@ -40,7 +40,8 @@ function setupMainMenuUI()
 
 function mainMenuUICustomEvents()
 {
-    if(playButton.button.output == UIOUTPUT_SELECT)
+    if(playButton.button.output == UIOUTPUT_SELECT
+        || keysDown.indexOf('p') != -1)
     {
         hideMainMenuCube();
         //console.log("Play button pressed!");
@@ -50,7 +51,8 @@ function mainMenuUICustomEvents()
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         playButton.button.resetOutput();
     }
-    else if(editorButton.button.output == UIOUTPUT_SELECT)
+    else if(editorButton.button.output == UIOUTPUT_SELECT
+        || keysDown.indexOf('e') != -1)
     {
         hideMainMenuCube();
         ui.stateIndex = GAMEPLAYUI;
@@ -59,7 +61,8 @@ function mainMenuUICustomEvents()
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         editorButton.button.resetOutput();
     }
-    else if(loadButton.button.output == UIOUTPUT_SELECT)
+    else if(loadButton.button.output == UIOUTPUT_SELECT
+        || keysDown.indexOf('l') != -1)
     {
         hideMainMenuCube();
         //will get the file that you give it
@@ -69,7 +72,8 @@ function mainMenuUICustomEvents()
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         loadButton.button.resetOutput();
     }
-    else if(settingsButton.button.output == UIOUTPUT_SELECT)
+    else if(settingsButton.button.output == UIOUTPUT_SELECT
+        || keysDown.indexOf('s') != -1)
     {
         hideMainMenuCube();
         //will toggle settings substate

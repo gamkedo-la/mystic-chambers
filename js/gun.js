@@ -11,6 +11,7 @@ var ammoItemIncrement = [24, 12];
 var currentGun = -1;
 var gunSwitchKeyPress = "q";
 var gunReloadKeyPress = "r";
+var gunShootKeyPress = "e";
 
 var previousGun = -1;
 var gunTransition = 0;
@@ -199,7 +200,10 @@ function gunEvent()
 
     if(currentGun >= 0)
     {
-        if(gunTransition == 0 && gunFireFrameTimer <= 0 && isTouched && canFireAgain)
+        if(gunTransition == 0
+            && gunFireFrameTimer <= 0
+            && (isTouched || keysDown.indexOf(gunShootKeyPress) != -1)
+            && canFireAgain)
         {
             if(currentGunFrame <= 0)
             {

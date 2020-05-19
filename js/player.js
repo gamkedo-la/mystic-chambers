@@ -22,6 +22,8 @@ var speedThreshold = 0.16;
 
 var playerAngleMovement = true;
 var playerCalculatedAngleMovement = 0.0;
+var playerAngleKeyPresses = [/*for left rot*/ '\\', 'z', /*for right rot*/ 'x', 'c'];
+var playerAngleKeyPressIncrement = 1.0;
 
 var jumpKeyPress = 'f';
 var jumpOffset = 0.0;
@@ -113,6 +115,17 @@ function playerEvents(deltaTime)
                     ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x * PLAYER_EDITOR_ROTATION_SPEED, 0.5 );
                 else
                     ray[i].angle = lerp(ray[i].angle, ray[i].angle + relTouchPos[0].x * PLAYER_ROTATION_SPEED, 0.5 );
+            }
+
+            if(keysDown.indexOf(playerAngleKeyPresses[0]) != -1
+            || keysDown.indexOf(playerAngleKeyPresses[1]) != -1)
+            {
+                ray[i].angle -= playerAngleKeyPressIncrement;
+            }
+            else if(keysDown.indexOf(playerAngleKeyPresses[2]) != -1
+            || keysDown.indexOf(playerAngleKeyPresses[3]) != -1)
+            {
+                ray[i].angle += playerAngleKeyPressIncrement;
             }
 
             if (ray[i].angle >= 0.0)
