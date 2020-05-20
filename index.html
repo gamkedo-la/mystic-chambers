@@ -103,26 +103,25 @@
 
     #mainMenuCube {
         OMITtransform: scale(0.5);
-        width: 100px;
-        height: 100px;
+        width: 640px;
+        height: 576px;
         position: absolute;
         perspective: 1000px;
-        top:260px;
-        left:860px;
+        top:36px;
+        left:600px;
+        overflow:hidden;
     }
     #mainMenuDoor {
         OMITtransform: scale(1.5);
         display:block;
         position:absolute;
-        top:-225px;
-        left:-220px;
         width:640px;
         height:576px;
         background:url(images/huge_door.png);
     }
     #cube {
-        width: 100%;
-        height: 100%;
+        width: 100px;
+        height: 100px;
         position: absolute;
         transform-style: preserve-3d;
         animation: rotatecube 10s infinite;
@@ -146,8 +145,6 @@
     #cube .left { background: url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 50px ); }
     #cube .top { background: url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 50px ); }
     #cube .bottom { background: url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 50px ); }
-    .ooone { transform: translateX(-50px); }
-    .ootwo { transform: translateX(50px); }
     @keyframes rotatecube {
         0% { transform: rotateX(0deg) rotateY(360deg) rotateZ(90deg); }
         25% { transform: rotateX(90deg) rotateY(270deg) rotateZ(180deg); }
@@ -161,13 +158,21 @@
         top:102px;
         width:206px;
         height:282px;
-        background:url(images/huge_door.png);
+        background:url(images/huge_door_closed.png);
         background-position:-114px -102px;
         transition:all ease-out 1s;
     }
     #rightdoor {
         left:320px;
         background-position:-320px -102px;
+    }
+    #behindthedoor {
+        position:absolute;
+        left:114px;
+        top:102px;
+        width:412px;
+        height:282px;
+        background:url(images/behind-the-door.png);
     }
     /*
     #leftdoor:hover {
@@ -223,11 +228,11 @@
 
 
   <div id="mainMenuCube">
-    <div id="mainMenuDoor">
-        <div id="leftdoor"></div>
-        <div id="rightdoor"></div>
-    </div>
-    <div id="cube" style="margin-left:-250px">
+    <div id="behindthedoor"></div>
+    <div id="leftdoor"></div>
+    <div id="rightdoor"></div>
+    <div id="mainMenuDoor"></div>
+    <div id="cube" style="margin-top:200px; margin-left:50px">
       <div class="front"></div>
       <div class="back"></div>
       <div class="right"></div>
@@ -235,7 +240,7 @@
       <div class="top"></div>
       <div class="bottom"></div>
     </div>
-    <div id="cube" style="margin-left:350px">
+    <div id="cube" style="margin-top:200px; margin-left:500px">
         <div class="front"></div>
         <div class="back"></div>
         <div class="right"></div>
