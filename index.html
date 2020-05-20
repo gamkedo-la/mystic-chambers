@@ -102,19 +102,19 @@
 
 
     #mainMenuCube {
-        transform: scale(0.5);
-        width: 200px;
-        height: 200px;
+        OMITtransform: scale(0.5);
+        width: 100px;
+        height: 100px;
         position: absolute;
         perspective: 1000px;
-        top:200px;
-        right:300px;
+        top:260px;
+        left:860px;
     }
     #mainMenuDoor {
-        transform: scale(1.5);
+        OMITtransform: scale(1.5);
         display:block;
         position:absolute;
-        top:-150px;
+        top:-225px;
         left:-220px;
         width:640px;
         height:576px;
@@ -130,24 +130,24 @@
         animation-direction: alternate;
     }
     #cube div {
-        width: 200px;
-        height: 200px;
+        width: 100px;
+        height: 100px;
         display: block;
         position: absolute;
         border: none;
-        line-height: 200px;
+        line-height: 100px;
         text-align: center;
         font-size: 50px;
         font-weight: bold;
     }
-    #cube .front { background: url(images/wallCarbonReinforced.png); transform: rotateY(0deg ) translateZ( 100px ); }
-    #cube .back { background: url(images/wallObsidianLight.png); transform: rotateX( 180deg ) translateZ( 100px ); }
-    #cube .right { background: url(images/wallDanger.png); transform: rotateY(  90deg ) translateZ( 100px ); }
-    #cube .left { background: url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 100px ); }
-    #cube .top { background: url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 100px ); }
-    #cube .bottom { background: url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 100px ); }
-    .ooone { transform: translateX(-100px); }
-    .ootwo { transform: translateX(100px); }
+    #cube .front { background: url(images/wallCarbonReinforced.png); transform: rotateY(0deg ) translateZ( 50px ); }
+    #cube .back { background: url(images/wallObsidianLight.png); transform: rotateX( 180deg ) translateZ( 50px ); }
+    #cube .right { background: url(images/wallDanger.png); transform: rotateY(  90deg ) translateZ( 50px ); }
+    #cube .left { background: url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 50px ); }
+    #cube .top { background: url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 50px ); }
+    #cube .bottom { background: url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 50px ); }
+    .ooone { transform: translateX(-50px); }
+    .ootwo { transform: translateX(50px); }
     @keyframes rotatecube {
         0% { transform: rotateX(0deg) rotateY(360deg) rotateZ(90deg); }
         25% { transform: rotateX(90deg) rotateY(270deg) rotateZ(180deg); }
@@ -202,7 +202,7 @@
 
   <div id="mainMenuCube">
     <div id="mainMenuDoor"></div>
-    <div id="cube" style="margin-left:-350px">
+    <div id="cube" style="margin-left:-250px">
       <div class="front"></div>
       <div class="back"></div>
       <div class="right"></div>
