@@ -155,6 +155,28 @@
         75% { transform: rotateX(270deg) rotateY(90deg) rotateZ(360deg); }
         100% { transform: rotateX(360deg) rotateY(0deg) rotateZ(270deg); }
     }
+    #leftdoor, #rightdoor {
+        position:absolute;
+        left:114px;
+        top:102px;
+        width:206px;
+        height:282px;
+        background:url(images/huge_door.png);
+        background-position:-114px -102px;
+        transition:all ease-out 1s;
+    }
+    #rightdoor {
+        left:320px;
+        background-position:-320px -102px;
+    }
+    /*
+    #leftdoor:hover {
+        left:-92px;
+    }
+    #rightdoor:hover {
+        left:526px;
+    }
+    */
 
   </style>
 </head>
@@ -201,7 +223,10 @@
 
 
   <div id="mainMenuCube">
-    <div id="mainMenuDoor"></div>
+    <div id="mainMenuDoor">
+        <div id="leftdoor"></div>
+        <div id="rightdoor"></div>
+    </div>
     <div id="cube" style="margin-left:-250px">
       <div class="front"></div>
       <div class="back"></div>

@@ -8,8 +8,14 @@ mainMenuUI = [];
 
 var mainMenuFontSize = 20;
 
+var leftdoor;
+var rightdoor;
+
+
 function setupMainMenuUI()
 {
+    leftdoor = document.getElementById("leftdoor");
+    rightdoor = document.getElementById("rightdoor");
     menuButtons = [];
     playButton = new TextButton(tr(vec2(), btnSize),
         new Label(tr(), "  PLAY        P",
@@ -40,6 +46,18 @@ function setupMainMenuUI()
 
 function mainMenuUICustomEvents()
 {
+    
+    // open the main menu doors
+    if(playButton.button.output == UIOUTPUT_HOVER) {
+        console.log("Play button hovered!");
+        leftdoor.style.left = "-92px";
+        rightdoor.style.left = "526px";
+    } else {
+        leftdoor.style.left = "114px";
+        rightdoor.style.left = "320px";
+    }
+
+    
     if(playButton.button.output == UIOUTPUT_SELECT
         || keysDown.indexOf('p') != -1)
     {
