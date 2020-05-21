@@ -9,6 +9,7 @@ var editorNoTouchWidth = screen.width * 0.15;
 var editorNoTouchColor = "#ff000010";
 
 var currentLevel = 1;
+var levelStartingPlayerPos = vec2(window.innerWidth/2, window.innerHeight/2);
 var totalLevels = 10;
 const levelPrefix = "levels/lv";
 const levelPostfix = ".txt";
@@ -121,10 +122,12 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
         drawRect(renderer, vec2(0,0), vec2(editorNoTouchWidth, window.innerHeight),
             true, editorNoTouchColor, 0);
 
+        levelStartingPlayerPos = levelStartingPlayerPos.add(offset.negative());
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset.negative());
 
         editorDrawBox(renderer);
         editorDrawGrid(renderer);
+        editorDrawLevelStartingPlayerPosition(renderer);
         if(cpEditTabs[0].selector.selected)
         {
             editorDrawWallHandles(renderer, walls);
@@ -152,6 +155,7 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
         }
 
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset);
+        levelStartingPlayerPos = levelStartingPlayerPos.add(offset);
     }
 }
 

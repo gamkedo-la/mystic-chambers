@@ -6,6 +6,9 @@ var gridCellSize = 10;
 var gridColor = "#ffffff20";
 var gridOffset = vec2(0, 0);
 
+var levelStartingPlayerPosSize = 6;
+var levelStartingPlayerPosColor = "#ffffff88";
+
 var boxPos = vec2(0, 0);
 var boxSize = vec2(0, 0);
 var boxColor = "#2200ff33";
@@ -18,7 +21,7 @@ var wallActiveSectorHandleColor = "#ff000044";
 
 var areaHandleSize = 14;
 var areaHandleColor = "#00aaaaff";
-var areaMidlineColor = "#00aaaa40";
+var areaMidlineColor = "#00aaaa44";
 
 var itemHandleSize = 10;
 var itemHandleColor = "#00ddaaff";
@@ -38,6 +41,18 @@ function editorDrawGrid(renderer)
         for(let y = gridOffset.y; y < window.innerHeight; y += gridCellSize)
             drawLine(renderer, vec2(0, y), vec2(window.innerWidth, y), gridColor);
     }
+}
+
+function editorDrawLevelStartingPlayerPosition(renderer)
+{
+    drawLine(renderer,
+        levelStartingPlayerPos.subtract(vec2(levelStartingPlayerPosSize, 0)),
+        levelStartingPlayerPos.add(vec2(levelStartingPlayerPosSize, 0)),
+        levelStartingPlayerPosColor);
+    drawLine(renderer,
+        levelStartingPlayerPos.subtract(vec2(0, levelStartingPlayerPosSize)),
+        levelStartingPlayerPos.add(vec2(0, levelStartingPlayerPosSize)),
+        levelStartingPlayerPosColor);
 }
 
 function editorDrawWallHandles(renderer, walls)

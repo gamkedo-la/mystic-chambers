@@ -234,7 +234,8 @@ function setupGameplayUI()
         ]
         ), vec2(0, 60), vec2(0, 60));
 
-    resetPosBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the\nplayer position to defaults.");
+    setPosBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Set Pl. Pos."),undefined,"Click here to set the\nlevel starting player position.");
+    resetPosBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reset Pl. Pos."),undefined,"Click here to reset the player position\nto the level starting player position.");
     reloadLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Reload Level"),undefined,"Click here to discard changes\nand reload the lavel as last saved.");
     saveLvBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Save Level"),undefined,"Click here to download the\nlevel data to save locally.");
     debugPlayBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(vec2(), btnSize), "Debug Play"),undefined,"Click to play in editor\nwithout pointer lock.");
@@ -249,7 +250,7 @@ function setupGameplayUI()
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpEditPanel], undefined, new TextButton(tr(), new Label(tr(), "Edit"),undefined,"Click to toggle the \nLEVEL EDITING menu.")));
     cpStartObjects.push(new Tab(tr(vec2(), tabSize), [cpRenderPanel], [cpStartObjects[0]], new TextButton(tr(), new Label(tr(), "Render"),undefined,"Click to toggle the \nrendering STATS display."), true));
     cpStartObjects.push(new FlexGroup(tr(vec2(), btnSize.add(btnSize)), new SubState(tr(), [
-        resetPosBtn, reloadLvBtn, saveLvBtn, debugPlayBtn, debugEntBtn, prevLvBtn, lvLabel, nextLvBtn, hideUIBtn ]), false, vec2(5, 5), vec2(5, 2), false));
+        setPosBtn, resetPosBtn, reloadLvBtn, saveLvBtn, debugPlayBtn, debugEntBtn, prevLvBtn, lvLabel, nextLvBtn, hideUIBtn ]), false, vec2(5, 5), vec2(5, 2), false));
 
     var tooltipLabelSize = vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.05);
     var toolTipBackground = new TextButton(tr(vec2(),vec2(scrSizeFactor * 0.6, scrSizeFactor * 0.08)), undefined, undefined, "Welcome to the Mystic Chambers Level Editor!\nPress " + PLAY_BUTTON + " to Toggle between Play and Editor");
@@ -403,9 +404,14 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         enemies.removeIfNotInEntities();
         fixBtn.button.resetOutput();
     }
+    else if (setPosBtn.button.output == UIOUTPUT_SELECT)
+    {
+        levelStartingPlayerPos = plPos;
+        setPosBtn.button.resetOutput();
+    }
     else if (resetPosBtn.button.output == UIOUTPUT_SELECT)
     {
-        for(let i = 0; i < ray.length; i++) ray[i].p = vec2(window.innerWidth/2, window.innerHeight/2);
+        for(let i = 0; i < ray.length; i++) ray[i].p = levelStartingPlayerPos; //vec2(window.innerWidth/2, window.innerHeight/2);
         resetPosBtn.button.resetOutput();
     }
     else if (reloadLvBtn.button.output == UIOUTPUT_SELECT)
