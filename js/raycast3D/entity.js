@@ -234,6 +234,8 @@ class Entity
     draw(renderer, plRay, circleOnly, deltaTime)
     {
         if (this.ai && (!mapMode || debugEntities)) this.ai(plRay, deltaTime);
+
+        if (typeof this.dontRender != "undefined") return;
         
         if(circleOnly)
         {

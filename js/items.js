@@ -142,6 +142,10 @@ class ItemManager {
                         shouldDestroy = false;
                         break;
 
+                    case ENT_WATERDROPS:
+                        shouldDestroy = false;
+                        break;
+
                     default:
                         //do nothing
                 }

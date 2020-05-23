@@ -112,6 +112,7 @@ function editorEvents(deltaTime, offset, walls, areas, decorEnts, itemEnts, enem
         if(cpEditTabs[2].selector.selected) decorHandleEvents(decorEnts, offset);
         if(cpEditTabs[3].selector.selected) itemHandleEvents(itemEnts, offset);
         if(cpEditTabs[4].selector.selected) enemyHandleEvents(enemyEnts, offset);
+        if(cpEditTabs[5].selector.selected) sectorHandleEvents(activeSector, walls, offset);
 
         if(walls.length <= 0 || typeof activeSector == "undefined")
         {
@@ -171,7 +172,7 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
         }
         if(cpEditTabs[5].selector.selected)
         {
-            editorDrawSectorHandles(renderer, activeSector);
+            editorDrawSectorHandles(renderer, activeSector, walls);
             editorSprite.imageObject = wallImages[currentWallType];
             editorSprite.drawSc();
         }

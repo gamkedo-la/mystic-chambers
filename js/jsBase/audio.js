@@ -18,6 +18,7 @@ const FIRESKULL_DASH = 11;
 const FIRESKULL_ATTACK = 12;
 const DWARF_IDLE = 13;
 const DWARF_ATTACK = 14;
+const DRIP = 16;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -36,6 +37,7 @@ var soundsList = [
 	"audio/fireball-03.mp3",//temporarally borrowing, replace with fireskul sound
 	"audio/dwarf-idle-01.mp3",
 	"audio/dwarf-attack-01.mp3",
+	"audio/drip-02.mp3",
 ];
 
 var sounds = [];
@@ -44,8 +46,8 @@ var sounds = [];
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 20;
-const DROPOFF_MAX = 400;
-const REVERB_MAX = 5;
+const DROPOFF_MAX = 200;//400;
+const REVERB_MAX = 3;//5;
 const BEHIND_THE_HEAD = 0.5;
 
 var audio = new AudioGlobal();

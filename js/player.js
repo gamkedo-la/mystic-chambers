@@ -22,7 +22,7 @@ var speedThreshold = 0.16;
 
 var playerAngleMovement = true;
 var playerCalculatedAngleMovement = 0.0;
-var playerAngleKeyPresses = [/*for left rot*/ '\\', 'z', /*for right rot*/ 'x', 'c'];
+var playerAngleKeyPresses = [/*for left rot*/ 'u', 'i', /*for right rot*/ 'o', 'p'];
 var playerAngleKeyPressIncrement = 1.0;
 
 var jumpKeyPress = 'f';

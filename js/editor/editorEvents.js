@@ -961,3 +961,8 @@ function enemyHandleEvents(enemyEnts, offset)
         }
     }
 }
+
+function sectorHandleEvents(activeSector, walls, offset)
+{
+    //WIP!!!
+}

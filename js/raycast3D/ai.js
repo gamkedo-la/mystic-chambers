@@ -156,17 +156,25 @@ function aiSpinningBobbing() {
 
 // falling from the ceiling to the floor
 function aiDripping() {
-    var preparing = 0.25;
+    var preparingMin = 0.25;
+    var preparingMax = 0.6;
     var min = -2.5;
     var max = 2.5;
     var spd = 0.25;
     if(this.bobbingFactor < min)
-        spd = 0.002;
+        spd = 0.00025 + ((min - this.bobbingFactor) * 0.025);
+    if(this.bobbingFactor > min - preparingMin)
+        this.dontRender = undefined;
+    
     this.bobbingFactor += spd; // height = renderOffset.y * this
+
     if (this.bobbingFactor > max)
     {
-        this.bobbingFactor = min - preparing;
+        this.bobbingFactor = min - (preparingMin + (Math.random() * preparingMax));
         this.delay = 200;
+        this.dontRender = true;
+
+        audio.play3DSound(sounds[DRIP], this.p, rndAP(), rndAP());
     }
 }
 
