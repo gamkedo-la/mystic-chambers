@@ -118,6 +118,28 @@ function editorDrawEnemyHandles(renderer, enemyEnts)
     }
 }
 
+function editorDrawSectorHandles(renderer, sector)
+{
+    if(typeof sector != "undefined")
+    {
+        //WIP!!!
+        //draw handles of walls and sectors included in the current active sector
+
+        drawRect(renderer, lerpVec2(sector.p1, sector.p2, 0.5).subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
+            vec2(wallHandleSize, wallHandleSize), false,
+            currentWallType == sector.type ? editorTypeHighlightColor : wallHandleColor, 0);
+
+        drawRect(renderer, sector.p1.subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
+            vec2(wallHandleSize/2, wallHandleSize/2), true, wallActiveSectorHandleColor, 0);
+        drawRect(renderer, sector.p2.subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
+            vec2(wallHandleSize/2, wallHandleSize/2), true, wallActiveSectorHandleColor, 0);
+        drawRect(renderer, sector.p1.subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
+            vec2(wallHandleSize/2, wallHandleSize/2), false, "red", 0);
+        drawRect(renderer, sector.p2.subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
+            vec2(wallHandleSize/2, wallHandleSize/2), false, "red", 0);
+    }
+}
+
 function editorDrawBox(renderer)
 {
     if(boxActive)

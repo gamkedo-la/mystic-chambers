@@ -18,12 +18,27 @@ var editorSprite = new Sprite(tr(vec2A(window.innerWidth/10,0,vec2(window.innerW
 
 function getLevelName() { return levelPrefix + currentLevel.toString() + levelPostfix; }
 
+function saveLevel(walls, areas, _entities)
+{
+    writeFile(getLevelName(),
+            levelStartingPlayerPos.x.toString() + " " +
+            levelStartingPlayerPos.y.toString() + " &" +
+            convertWallsToString(walls) +
+            convertAreasToString(areas) +
+            convertEntitiesToString(_entities)
+        );
+}
+
 function loadLevel(walls, areas)
 {
     var lvStr = readFile(getLevelName());
-    generateWallsFromString(walls, lvStr.split("&")[0]);
-    generateAreasFromString(areas, lvStr.split("&")[1]);
-    generateEntitiesFromString(lvStr.split("&")[2]);
+    var stPosStr = (lvStr.split("&")[0]).split(' ');
+    levelStartingPlayerPos = vec2(parseInt(stPosStr[0]), parseInt(stPosStr[1]));
+    plPos = vec2(levelStartingPlayerPos.x, levelStartingPlayerPos.y);
+    for (let i = 0; i < ray.length; i++) ray[i].p = plPos;
+    generateWallsFromString(walls, lvStr.split("&")[1]);
+    generateAreasFromString(areas, lvStr.split("&")[2]);
+    generateEntitiesFromString(lvStr.split("&")[3]);
     resetWallIndexes();
 }
 
@@ -134,7 +149,8 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
             editorSprite.imageObject = wallImages[currentWallType];
             editorSprite.drawSc();
         }
-        if(cpEditTabs[1].selector.selected) editorDrawAreaHandles(renderer, areas);
+        if(cpEditTabs[1].selector.selected)
+            editorDrawAreaHandles(renderer, areas);
         if(cpEditTabs[2].selector.selected)
         {
             editorDrawDecorHandles(renderer, decorEnts);
@@ -152,6 +168,12 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
             editorDrawEnemyHandles(renderer, enemyEnts);
             editorSprite.imageObject = entProp[currentEntityType].idleImg;
             editorSprite.drawScIn(vec2(0, 0), vec2(160, 160));
+        }
+        if(cpEditTabs[5].selector.selected)
+        {
+            editorDrawSectorHandles(renderer, activeSector);
+            editorSprite.imageObject = wallImages[currentWallType];
+            editorSprite.drawSc();
         }
 
         addOffsetToLists([walls, areas, decorEnts, itemEnts, enemyEnts], offset);

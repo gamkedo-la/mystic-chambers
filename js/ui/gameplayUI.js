@@ -58,6 +58,11 @@ function setupGameplayUI()
         new Button(tr(), "#992222"));
     enemiesEditorObjects.push(enemiesDelAllBtn);
 
+    sectorEditorObjects = [];
+    sectorRemoveAllBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "REMOVE ALL"),
+    new Button(tr(), "#992222"));
+    sectorEditorObjects.push(sectorRemoveAllBtn);
+
     cpEditTabs = [];
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), wallEditorObjects, undefined,
         new TextButton(tr(), new Label(tr(), "WALLS"),undefined,
@@ -71,10 +76,13 @@ function setupGameplayUI()
     cpEditTabs.push(new Tab(tr(vec2(), tabSize), itemsEditorObjects, undefined,
         new TextButton(tr(), new Label(tr(), "ITEMS"),undefined,
         "Click to switch into\nITEM EDITING MODE"), false, "#024050", "#000000"));
-    cpEditTabs.push(new Tab(tr(vec2(), tabSize), enemiesEditorObjects,
-        [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2], cpEditTabs[3]],
+    cpEditTabs.push(new Tab(tr(vec2(), tabSize), enemiesEditorObjects, undefined,
         new TextButton(tr(), new Label(tr(), "ENEMIES"),undefined,
         "Click to switch into\nENEMY EDITING MODE"), false, "#024050", "#000000"));
+    cpEditTabs.push(new Tab(tr(vec2(), tabSize), sectorEditorObjects,
+        [cpEditTabs[0], cpEditTabs[1], cpEditTabs[2], cpEditTabs[3], cpEditTabs[4]],
+        new TextButton(tr(), new Label(tr(), "SECTOR"),undefined,
+        "Click to switch into\nSECTOR EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
     toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + (showGrid ? "ON" : "OFF"), undefined, showGrid ? toggleONColor : toggleOFFColor),
@@ -95,13 +103,14 @@ function setupGameplayUI()
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
         new SubState(tr(), [cpEditTabs[2], cpEditTabs[3]]), false, vec2(5, 0), vec2(2, 1), true));
     cpEditObjects.push(new FlexGroup(tr(vec2(), tabSize),
-        new SubState(tr(), [cpEditTabs[4]]), false, vec2(5, 0), vec2(2, 1), true));
+        new SubState(tr(), [cpEditTabs[4], cpEditTabs[5]]), false, vec2(5, 0), vec2(2, 1), true));
 
     cpEditObjects = pushArr(cpEditObjects, wallEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, areasEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, decorEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, itemsEditorObjects);
     cpEditObjects = pushArr(cpEditObjects, enemiesEditorObjects);
+    cpEditObjects = pushArr(cpEditObjects, sectorEditorObjects);
     
     cpEditGrid = new FlexGroup(
         tr(vec2(10, 5), panelSize),
@@ -425,11 +434,7 @@ function gameplayUICustomEvents(deltaTime, wall, area)
     }
     else if (saveLvBtn.button.output == UIOUTPUT_SELECT)
     {
-        writeFile(getLevelName(),
-            convertWallsToString(wall) +
-            convertAreasToString(area) +
-            convertEntitiesToString(entities)
-        );
+        saveLevel(wall, area, entities);
         saveLvBtn.button.resetOutput();
     }
     else if (debugPlayBtn.button.output == UIOUTPUT_SELECT)
@@ -532,6 +537,13 @@ function gameplayUICustomEvents(deltaTime, wall, area)
         }
         enemies.ents = new Array();
         enemiesDelAllBtn.button.resetOutput();
+    }
+    else if(sectorRemoveAllBtn.button.output == UIOUTPUT_SELECT)
+    {
+        //WIP!!!
+        //remove all the walls and sectors from the current active sector
+
+        sectorRemoveAllBtn.button.resetOutput();
     }
     else if(fpsResetBtn.button.output == UIOUTPUT_SELECT)
     {

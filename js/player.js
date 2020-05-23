@@ -51,7 +51,10 @@ var keyDisplayXIncrement = 40.0;
 
 function playerInit()
 {
-    plPos = vec2(window.innerWidth / 2, window.innerHeight / 2);
+    if(typeof levelStartingPlayerPos == "undefined")
+        plPos = vec2(window.innerWidth / 2, window.innerHeight / 2);
+    else
+        plPos = vec2(levelStartingPlayerPos.x, levelStartingPlayerPos.y);
     prevPlPos = vec2(plPos.x, plPos.y);
 
     ray = [];
@@ -164,9 +167,7 @@ function playerEvents(deltaTime)
         }
 
         for (let i = 0; i < ray.length; i++)
-        {
             ray[i].p = plPos;
-        }
     }
 
     // plPos is never defined and used as a temp: it can't be trusted
