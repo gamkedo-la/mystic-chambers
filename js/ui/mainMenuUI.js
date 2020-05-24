@@ -1,8 +1,15 @@
 
 const MAINMENUUI = 0;
 
-mainMenuBackground = new Sprite(tr(vec2(0, 0)), new ImageObject("images/BG.png", vec2(1920*2, 1080*2)));
-mainMenuTitle = new Sprite(tr(vec2(320, 180)), new ImageObject("images/mysticChambers.png", vec2(600, 300)));
+mainMenuBackground = new Sprite(tr(vec2(0, 0)),
+    new ImageObject("images/BG.png", vec2(1920*2, 1080*2)));
+mainMenuTitle = new Sprite(tr(vec2(320, 180)),
+    new ImageObject("images/mysticChambers.png", vec2(600, 300)));
+
+hugeDoorSpr = new Sprite(tr(vec2(920, 325), vec2(640, 576)),
+    new ImageObject("images/huge_door.png", vec2(640, 576)));
+behindTheDoorSpr = new Sprite(tr(vec2(920, 280), vec2(412, 282)),
+    new ImageObject("images/behind-the-door.png", vec2(412, 282)));
 
 mainMenuUI = [];
 
@@ -62,6 +69,7 @@ function mainMenuUICustomEvents()
     {
         hideMainMenuCube();
         ui.stateIndex = GAMEPLAYUI;
+        ui.transitionAnimation();
         if(mapMode) toggleGameplay();
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
@@ -72,6 +80,7 @@ function mainMenuUICustomEvents()
     {
         hideMainMenuCube();
         ui.stateIndex = GAMEPLAYUI;
+        ui.transitionAnimation();
         if(!mapMode) toggleGameplay();
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);

@@ -74,6 +74,10 @@ function draw(deltaTime)
     if(ui.stateIndex == MAINMENUUI)
     {
         mainMenuBackground.draw();
+        
+        hugeDoorSpr.draw();
+        behindTheDoorSpr.draw();
+
         mainMenuTitle.draw();
         mainMenuFX.draw();
     }
@@ -152,7 +156,7 @@ function draw(deltaTime)
         subtitleManager.draw(deltaTime);
     }
 
-    ui.draw();
+    ui.draw(deltaTime);
 }
 
 function frame()

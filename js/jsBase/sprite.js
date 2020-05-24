@@ -4,66 +4,73 @@ const AUTOSCALE_SPRITES = false; // WIP
 imagesLoadingLeft = 0;
 class ImageObject
 {
-    constructor(imageSrc, size)
+    constructor(imageSrc, size, img)
     {
         var me = this; // because onload events have a different "this"
 
-        this.image = document.createElement("img");
+        if(typeof img == "undefined") this.image = document.createElement("img");
+        else this.image = img;
 
         imagesLoadingLeft++;
         
-        this.image.onload = function()
+        if(typeof img == "undefined")
         {
-            me.loaded = true;
-            if (AUTOSCALE_SPRITES) {
-                // optionally scale up if it is tiny, note: this won't be "this"
-                // FIXME: outputs blank, is the loop wrong?
-                var oldW = me.image.width;
-                var oldH = me.image.height;
-                var scale = 10;
-                if (oldW < 100 && oldH < 100) {
-                    var newW = oldW * scale;
-                    var newH = oldH * scale;
-                    console.log("We need to scale up a "+oldW+"x"+oldH+" sprite to "+newW+"x"+newH);
-                    // let's edit the imagedata
-                    //var smallData = me.image.getImageData(0, 0, oldW, oldH); // image can't do this, only a canvas
-                    renderer.drawImage(me.image, 0, 0);
-                    var smallData = renderer.getImageData(0, 0, oldW, oldH);
-                    var bigData = new ImageData(newW,newH);
-                    me.image.width = newW;
-                    me.image.height = newH;
-                    for (var i=0; i<bigData.length/4; i++) {
-                        for (var n=0; n<scale; n++) {
-                            bigData[((i+n)*4)*scale+0] = smallData[i/scale+0]; // r
-                            bigData[((i+n)*4)*scale+1] = smallData[i/scale+1]; // g
-                            bigData[((i+n)*4)*scale+2] = smallData[i/scale+2]; // b
-                            bigData[((i+n)*4)*scale+3] = smallData[i/scale+3]; // a
+            this.image.onload = function()
+            {
+                me.loaded = true;
+                if (AUTOSCALE_SPRITES) {
+                    // optionally scale up if it is tiny, note: this won't be "this"
+                    // FIXME: outputs blank, is the loop wrong?
+                    var oldW = me.image.width;
+                    var oldH = me.image.height;
+                    var scale = 10;
+                    if (oldW < 100 && oldH < 100) {
+                        var newW = oldW * scale;
+                        var newH = oldH * scale;
+                        console.log("We need to scale up a "+oldW+"x"+oldH+" sprite to "+newW+"x"+newH);
+                        // let's edit the imagedata
+                        //var smallData = me.image.getImageData(0, 0, oldW, oldH); // image can't do this, only a canvas
+                        renderer.drawImage(me.image, 0, 0);
+                        var smallData = renderer.getImageData(0, 0, oldW, oldH);
+                        var bigData = new ImageData(newW,newH);
+                        me.image.width = newW;
+                        me.image.height = newH;
+                        for (var i=0; i<bigData.length/4; i++) {
+                            for (var n=0; n<scale; n++) {
+                                bigData[((i+n)*4)*scale+0] = smallData[i/scale+0]; // r
+                                bigData[((i+n)*4)*scale+1] = smallData[i/scale+1]; // g
+                                bigData[((i+n)*4)*scale+2] = smallData[i/scale+2]; // b
+                                bigData[((i+n)*4)*scale+3] = smallData[i/scale+3]; // a
+                            }
                         }
-                    }
-                    //me.image.putImageData(bigData,0,0); // not allowed on an Image
-                    // convert imagedata to image:
-                    var _canvas = document.createElement('canvas');
-                    var _ctx = _canvas.getContext('2d');
-                    _canvas.width = bigData.width;
-                    _canvas.height = bigData.height;
-                    _ctx.putImageData(bigData, 0, 0);
-                    var _image = new Image();
-                    _image.src = _canvas.toDataURL();
+                        //me.image.putImageData(bigData,0,0); // not allowed on an Image
+                        // convert imagedata to image:
+                        var _canvas = document.createElement('canvas');
+                        var _ctx = _canvas.getContext('2d');
+                        _canvas.width = bigData.width;
+                        _canvas.height = bigData.height;
+                        _ctx.putImageData(bigData, 0, 0);
+                        var _image = new Image();
+                        _image.src = _canvas.toDataURL();
 
-                    // replace old small image with new large one!
-                    me.image = _image; 
-                } // if AUTOSCALE_SPRITES
+                        // replace old small image with new large one!
+                        me.image = _image; 
+                    } // if AUTOSCALE_SPRITES
+                }
+
+                imagesLoadingLeft--;
+            };
+        }
+        
+        if(typeof img == "undefined")
+        {
+            this.image.src = imageSrc;
+            this.size = size;
+        
+            if (!AUTOSCALE_SPRITES) { // resize the image in a blurry simple way
+                this.image.width = size.x;
+                this.image.height = size.y;
             }
-
-            imagesLoadingLeft--;
-        };
-        
-        this.image.src = imageSrc;
-        this.size = size;
-        
-        if (!AUTOSCALE_SPRITES) { // resize the image in a blurry simple way
-            this.image.width = size.x;
-            this.image.height = size.y;
         }
     }
 

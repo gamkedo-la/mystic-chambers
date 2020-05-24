@@ -43,6 +43,13 @@ class UI
     {
         this.uiStates = uiStates;
         this.stateIndex = stateIndex;
+
+        this.prevState = this.uiStates;
+
+        this.takeScreenshot = false;
+        this.screenshotSpr = new Sprite(tr(vec2(), vec2(window.innerWidth, window.innerHeight)),
+            new ImageObject("images/unknown_id.png", vec2()));
+        this.stateAnimationTimer = 0;
     }
 
     getActiveState()
@@ -62,9 +69,32 @@ class UI
         this.getActiveState().update();
     }
 
-    draw()
+    transitionAnimation()
+    {
+        var screenshot = new Image();
+        screenshot.src = canvas.toDataURL("image/png", 1);
+        this.screenshotSpr.imageObject.image = screenshot;
+        this.screenshotSpr.transform.position = vec2(window.innerWidth/2, window.innerHeight/2);
+        this.screenshotSpr.transform.rotation = -Math.PI/2;
+        this.stateAnimationTimer = 800;
+        this.takeScreenshot = false;
+    }
+
+    draw(deltaTime)
     {
         this.getActiveState().draw();
+
+        if(this.stateAnimationTimer > 0)
+        {
+            this.screenshotSpr.drawRot();
+            this.screenshotSpr.transform.position.y = lerp(this.screenshotSpr.transform.position.y, window.innerHeight*2, 0.06);
+            this.screenshotSpr.transform.rotation += deltaTime * 0.00025;
+            this.stateAnimationTimer -= deltaTime;
+        }
+        else
+        {
+            this.screenshotSpr.imageObject.image = undefined;
+        }
     }
     
     debugDraw(color)
