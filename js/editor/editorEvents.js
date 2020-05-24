@@ -57,7 +57,7 @@ var lastSelectedEnemyIndex = -1;
 
 function switchTabAccordingToType(dir)
 {
-    if(cpEditTabs[0].selector.selected)
+    if(cpEditTabs[0].selector.selected || cpEditTabs[5].selector.selected)
     {
         if(dir > 0 && currentWallType >= wallImages.length)
         {
@@ -964,5 +964,24 @@ function enemyHandleEvents(enemyEnts, offset)
 
 function sectorHandleEvents(activeSector, walls, offset)
 {
+    var oldType = currentWallType;
+    currentWallType += (wheelScroll != 0 ? (wheelScroll > 0 ? 1 : -1) : 0);
+
+    if(keysDown.indexOf(editorTypeIncKey) != -1) {
+        if(!isKeyPressed(editorTypeIncKey)) currentWallType++; }
+    else
+        removeKeyPressed(editorTypeIncKey);
+    
+    if(keysDown.indexOf(editorTypeDecKey) != -1) {
+        if(!isKeyPressed(editorTypeDecKey)) currentWallType--; }
+    else
+        removeKeyPressed(editorTypeDecKey);
+
+    if(oldType != currentWallType)
+        switchTabAccordingToType(currentWallType - oldType);
+
+    //if(currentWallType >= wallImages.length) currentWallType = 0;
+    //else if(currentWallType <= -1) currentWallType = wallImages.length - 1;
+
     //WIP!!!
 }

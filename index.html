@@ -102,7 +102,6 @@
 
 
     #mainMenuCube {
-        OMITtransform: scale(0.5);
         width: 640px;
         height: 576px;
         position: absolute;
@@ -131,12 +130,12 @@
         font-size: 50px;
         font-weight: bold;
     }
-    #cube .front { background: url(images/wallCarbonReinforced.png); transform: rotateY(0deg ) translateZ( 50px ); }
-    #cube .back { background: url(images/wallObsidianLight.png); transform: rotateX( 180deg ) translateZ( 50px ); }
-    #cube .right { background: url(images/wallDanger.png); transform: rotateY(  90deg ) translateZ( 50px ); }
-    #cube .left { background: url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 50px ); }
-    #cube .top { background: url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 50px ); }
-    #cube .bottom { background: url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 50px ); }
+    #cube .front { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallCarbonReinforced.png); transform: rotateY(0deg ) translateZ( 50px ); }
+    #cube .back { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallObsidianLight.png); transform: rotateX( 180deg ) translateZ( 50px ); }
+    #cube .right { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallDanger.png); transform: rotateY(  90deg ) translateZ( 50px ); }
+    #cube .left { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallSteelGreenlight.png); transform: rotateY( -90deg ) translateZ( 50px ); }
+    #cube .top { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallTech2.png); transform: rotateX(  90deg ) translateZ( 50px ); }
+    #cube .bottom { background-image: radial-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url(images/wallTechServer.png); transform: rotateX( -90deg ) translateZ( 50px ); }
     @keyframes rotatecube {
         0% { transform: rotateX(0deg) rotateY(360deg) rotateZ(90deg); }
         25% { transform: rotateX(90deg) rotateY(270deg) rotateZ(180deg); }
@@ -158,14 +157,6 @@
         left:320px;
         background-position:-320px -102px;
     }
-    /*
-    #leftdoor:hover {
-        left:-92px;
-    }
-    #rightdoor:hover {
-        left:526px;
-    }
-    */
 
   </style>
 </head>

@@ -125,13 +125,59 @@ function editorDrawSectorHandles(renderer, sector, walls)
         for(let i = 0; i < walls.length; i++)
         {
             var isWallIncludedInSector = false;
+            
+            if(!isWallIncludedInSector && typeof sector.sectorData.wallsLeft != "undefined")
+            {
+                for(let sw = 0; sw < sector.sectorData.wallsLeft.length; sw++)
+                {
+                    if(walls[i] == sector.sectorData.wallsLeft[sw])
+                    {
+                        isWallIncludedInSector = true;
+                        break;
+                    }
+                }
+            }
+            if(!isWallIncludedInSector && typeof sector.sectorData.sectorsLeft != "undefined")
+            {
+                for(let sw = 0; sw < sector.sectorData.sectorsLeft.length; sw++)
+                {
+                    if(walls[i] == sector.sectorData.sectorsLeft[sw])
+                    {
+                        isWallIncludedInSector = true;
+                        break;
+                    }
+                }
+            }
+            if(!isWallIncludedInSector && typeof sector.sectorData.wallsRight != "undefined")
+            {
+                for(let sw = 0; sw < sector.sectorData.wallsRight.length; sw++)
+                {
+                    if(walls[i] == sector.sectorData.wallsRight[sw])
+                    {
+                        isWallIncludedInSector = true;
+                        break;
+                    }
+                }
+            }
+            if(!isWallIncludedInSector && typeof sector.sectorData.sectorsRight != "undefined")
+            {
+                for(let sw = 0; sw < sector.sectorData.sectorsRight.length; sw++)
+                {
+                    if(walls[i] == sector.sectorData.sectorsRight[sw])
+                    {
+                        isWallIncludedInSector = true;
+                        break;
+                    }
+                }
+            }
 
-            //WIP!!!
-            //check all sector walls and sectors to see if the wall is included in sector
-
-            drawRect(renderer, lerpVec2(walls[i].p1, walls[i].p2, 0.5).subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
-                vec2(wallHandleSize, wallHandleSize), isWallIncludedInSector,
-                currentWallType == walls[i].type ? editorTypeHighlightColor : wallHandleColor, 0);
+            if(walls[i] != sector)
+                drawRect(renderer, lerpVec2(walls[i].p1, walls[i].p2, 0.5).subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
+                    vec2(wallHandleSize, wallHandleSize), isWallIncludedInSector,
+                    currentWallType == walls[i].type ? editorTypeHighlightColor : wallHandleColor, 0);
+            else
+                drawRect(renderer, lerpVec2(walls[i].p1, walls[i].p2, 0.5).subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
+                    vec2(wallHandleSize/2, wallHandleSize/2), true, "red", 0);
         }
         
         drawRect(renderer, sector.p1.subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
