@@ -75,8 +75,9 @@ function draw(deltaTime)
     {
         mainMenuBackground.draw();
         
-        hugeDoorSpr.draw();
         behindTheDoorSpr.draw();
+        hugeDoorSpr.draw();
+        hugeDoorAbvSpr.draw();
 
         mainMenuTitle.draw();
         mainMenuFX.draw();

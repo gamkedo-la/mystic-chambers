@@ -8,7 +8,9 @@ mainMenuTitle = new Sprite(tr(vec2(320, 180)),
 
 hugeDoorSpr = new Sprite(tr(vec2(920, 325), vec2(640, 576)),
     new ImageObject("images/huge_door.png", vec2(640, 576)));
-behindTheDoorSpr = new Sprite(tr(vec2(920, 280), vec2(412, 282)),
+hugeDoorAbvSpr = new Sprite(tr(vec2(920, 325), vec2(640+80, 576+80)),
+    new ImageObject("images/huge_door_abv.png", vec2(640+80, 576+80)));
+behindTheDoorSpr = new Sprite(tr(vec2(920, 279), vec2(412, 282)),
     new ImageObject("images/behind-the-door.png", vec2(412, 282)));
 
 mainMenuUI = [];
