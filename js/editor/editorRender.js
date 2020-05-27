@@ -1,4 +1,3 @@
-
 var editorTypeHighlightColor = "yellow";
 
 var showGrid = true;

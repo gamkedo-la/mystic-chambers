@@ -1,6 +1,6 @@
 
-class ItemManager {
-
+class ItemManager
+{
     constructor()
     {
         this.ents = [];

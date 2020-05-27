@@ -1,4 +1,3 @@
-
 const MAINMENUUI = 0;
 
 mainMenuBackground = new Sprite(tr(vec2(0, 0)),
@@ -53,9 +52,20 @@ function setupMainMenuUI()
     //mainMenuUI.push(new Label(tr(vec2(window.innerWidth/2+200, window.innerHeight/2), vec2(400, 100)), "Background Door will be here"));
 }
 
+function mainMenuUICustomDraw()
+{
+    mainMenuBackground.draw();
+        
+    behindTheDoorSpr.draw();
+    hugeDoorSpr.draw();
+    hugeDoorAbvSpr.draw();
+
+    mainMenuTitle.draw();
+    mainMenuFX.draw();
+}
+
 function mainMenuUICustomEvents()
 {
-    
     // open the main menu doors
     if(playButton.button.output == UIOUTPUT_HOVER) {
         leftdoor.style.left = "-92px";

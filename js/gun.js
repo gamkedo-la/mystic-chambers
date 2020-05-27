@@ -1,4 +1,3 @@
-
 const GUN_REVOLVER = 0;
 const GUN_WINCHESTER = 1;
 

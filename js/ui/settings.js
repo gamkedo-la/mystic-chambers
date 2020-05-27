@@ -1,4 +1,3 @@
-
 function uiInit()
 {
     uiSettings();

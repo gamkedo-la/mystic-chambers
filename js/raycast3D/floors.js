@@ -1,9 +1,7 @@
 // an infinite plane effect, used for floors and ceilings
 // because affine texture mode7 style pixel-by-pixel raycasting was too slow
 // this "fakes" a similar effect using two DIVs and a 3d CSS xform
-
 const DEBUGFLOORS = false;
-
 // thse are hacky magic numbers
 // FIXME remove all of these! use math instead
 var floorScrollScale = 42; // pixels scrolled per game units travelled

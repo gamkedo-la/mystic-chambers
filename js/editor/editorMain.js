@@ -1,3 +1,7 @@
+const EDITOR_BG_COLOUR = "black";
+
+var renderEditorAndGameTogether = 0;
+var debugEntities = false;
 
 var editorMode = 0; //0 move, -1 delete, 1 add, 2 change
 var editorMoveKey = "z";

@@ -1,8 +1,5 @@
-// designed for non-interactive props - they never update
-// such as grass, greebles, rocks, debris, cracks, crates
-
-class DecorationManager {
-
+class DecorationManager
+{
     constructor()
     {
         this.ents = [];

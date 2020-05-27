@@ -1,4 +1,3 @@
-
 var mainMenuFX = new function() {
 
     var mainMenuFXparticle = [];

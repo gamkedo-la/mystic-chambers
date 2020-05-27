@@ -1,4 +1,3 @@
-
 wallImages = [
     new ImageObject("images/sector.png", vec2(160, 160)),
     new ImageObject("images/wallBrickGreen.png", vec2(160, 160)),

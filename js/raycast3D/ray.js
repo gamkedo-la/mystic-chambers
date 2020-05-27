@@ -1,4 +1,3 @@
-
 class RaycastData
 {
     constructor(px, py, pdist, index)

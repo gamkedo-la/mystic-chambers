@@ -1,4 +1,3 @@
-
 var wallX = 0.0;
 var maxDepth = 250.0;
 var prevType = -1;

@@ -1,4 +1,3 @@
-
 //Screen = (left) 0 to (right) WIDTH, (top) 0 to (bottom) HEIGHT
 //Viewport = (left) 0 to (right) 1, (top) 0 to (bottom) 1
 //World = (left) -WORLD_WIDTH to (right) WORLD_WIDTH, (top) -WORLD_HEIGHT to (right) WORLD_HEIGHT

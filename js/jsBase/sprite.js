@@ -1,6 +1,5 @@
 const AUTOSCALE_SPRITES = false; // WIP
 
-//requires Vector2
 imagesLoadingLeft = 0;
 class ImageObject
 {

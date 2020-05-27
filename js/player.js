@@ -1,4 +1,3 @@
-
 var playerMaxHealth = 100;
 var playerHealth = playerMaxHealth;
 const PLAYER_ROTATION_SPEED = 0.11; // scale the raw mouse deltas to rotate a normal speed

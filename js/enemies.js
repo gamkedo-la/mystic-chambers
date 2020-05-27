@@ -1,6 +1,5 @@
-
-class EnemyManager {
-
+class EnemyManager
+{
     constructor()
     {
         this.ents = [];

@@ -1,4 +1,3 @@
-
 var editorAddCheck = false;
 var editorTemp = undefined;
 
