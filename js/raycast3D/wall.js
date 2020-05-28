@@ -761,3 +761,83 @@ function deleteWallFromAllSectors(w)
             //break;
     }
 }
+
+function isWallInActiveSector(w)
+{
+    if(typeof activeSector == "undefined") return true;
+
+    if(typeof activeSector.sectorData.wallsLeft != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.wallsLeft.length; n++)
+        {
+            if(activeSector.sectorData.wallsLeft[n] == w)
+            {
+                return true;
+            }
+        }
+    }
+    else if(typeof activeSector.sectorData.wallsRight != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.wallsRight.length; n++)
+        {
+            if(activeSector.sectorData.wallsRight[n] == w)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+function addWallToActiveSector(w)
+{
+    if(typeof activeSector == "undefined") return;
+
+    var pos = getPositionSideInSector(sec, _plPos)
+
+    if(pos < 0)
+    {
+        if(typeof activeSector.sectorData.wallsLeft == "undefined")
+            activeSector.sectorData.wallsLeft = [];
+
+        activeSector.sectorData.wallsLeft.push(w);
+    }
+    else if(pos > 0)
+    {
+        if(typeof activeSector.sectorData.wallsRight == "undefined")
+            activeSector.sectorData.wallsRight = [];
+
+        activeSector.sectorData.wallsRight.push(w);
+    }
+}
+
+function deleteWallFromActiveSector(w)
+{
+    if(typeof activeSector == "undefined") return;
+
+    if(typeof activeSector.sectorData.wallsLeft != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.wallsLeft.length; n++)
+        {
+            if(activeSector.sectorData.wallsLeft[n] == w)
+            {
+                activeSector.sectorData.wallsLeft.splice(n, 1);
+                break;
+                //n--;
+            }
+        }
+    }
+    else if(typeof activeSector.sectorData.wallsRight != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.wallsRight.length; n++)
+        {
+            if(activeSector.sectorData.wallsRight[n] == w)
+            {
+                activeSector.sectorData.wallsRight.splice(n, 1);
+                break;
+                //n--;
+            }
+        }
+    }
+}

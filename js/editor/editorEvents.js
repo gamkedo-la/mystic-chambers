@@ -250,6 +250,10 @@ function boxHandleEvent(offset)
                         }
                     }
                 }
+                else if(cpEditTabs[5].selector.selected)
+                {
+                    //SECTOR WIP!!!
+                }
             }
 
             boxPos = vec2(0, 0);
@@ -982,5 +986,43 @@ function sectorHandleEvents(activeSector, walls, offset)
     //if(currentWallType >= wallImages.length) currentWallType = 0;
     //else if(currentWallType <= -1) currentWallType = wallImages.length - 1;
 
-    //WIP!!!
+    if(editorSelectionCurrentDelay > 0)
+    {
+        editorSelectionCurrentDelay--;
+    }
+    else
+    {
+        if(editorMode != 0)
+        {
+            editorAddCheck = true;
+
+            if(selectedWall == null)
+            {
+                for(let i = 0; i < walls.length; i++)
+                {
+                    wallHandleTr = tr(lerpVec2(walls[i].p1, walls[i].p2, 0.5)
+                        .subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
+                        vec2(wallHandleSize, wallHandleSize));
+                    wallHandleTouchIndex = touched(wallHandleTr, 1.0);
+
+                    if(wallHandleTouchIndex > -1)
+                    {
+                        editorSelectionCurrentDelay = editorSelectionDelay;
+                        if(editorMode == -1 || editorMode == 1)
+                        {
+                            if(isWallInActiveSector(walls[i]))
+                                deleteWallFromActiveSector(walls[i]);
+                            else
+                                addWallToActiveSector(walls[i]);
+                        }
+                        else if(editorMode == 2)
+                        {
+                            walls[i].type = currentWallType;
+                        }
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }
