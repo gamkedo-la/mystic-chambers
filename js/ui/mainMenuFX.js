@@ -3,8 +3,8 @@ var mainMenuFX = new function() {
     var mainMenuFXparticle = [];
     var mainMenuFXcount = 256;
     var mainMenuFXdecay = 0.01;
-    var mainMenuFXmaxspeed = -6;
-    var mainMenuFXsize = 128;
+    var mainMenuFXmaxspeed = -4;
+    var mainMenuFXsize = 120;
     var mainMenuFXsprites = [ // can be more than one
         new ImageObject("images/smoke.png", vec2(160, 160)),
         new ImageObject("images/fire_menubg.png", vec2(160, 160))
@@ -30,7 +30,7 @@ var mainMenuFX = new function() {
                 mainMenuFXparticle[i].y = gameCanvas.height + 64 + Math.random()*256;
                 mainMenuFXparticle[i].s = Math.random() * mainMenuFXmaxspeed;
                 imgnum = Math.floor(Math.random() * mainMenuFXsprites.length);
-                if (imgnum==1) mainMenuFXparticle[i].s *= 0.5; // fire moves slower than smoke
+                if (imgnum==1) mainMenuFXparticle[i].s *= 0.6; // fire moves slower than smoke
                 mainMenuFXparticle[i].i = mainMenuFXsprites[imgnum].image;
             }
 

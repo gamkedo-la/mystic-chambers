@@ -776,7 +776,17 @@ function isWallInActiveSector(w)
             }
         }
     }
-    else if(typeof activeSector.sectorData.wallsRight != "undefined")
+    if(typeof activeSector.sectorData.sectorsLeft != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.sectorsLeft.length; n++)
+        {
+            if(activeSector.sectorData.sectorsLeft[n] == w)
+            {
+                return true;
+            }
+        }
+    }
+    if(typeof activeSector.sectorData.wallsRight != "undefined")
     {
         for(let n = 0; n < activeSector.sectorData.wallsRight.length; n++)
         {
@@ -786,30 +796,18 @@ function isWallInActiveSector(w)
             }
         }
     }
+    if(typeof activeSector.sectorData.sectorsRight != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.sectorsRight.length; n++)
+        {
+            if(activeSector.sectorData.sectorsRight[n] == w)
+            {
+                return true;
+            }
+        }
+    }
 
     return false;
-}
-
-function addWallToActiveSector(w)
-{
-    if(typeof activeSector == "undefined") return;
-
-    var pos = getPositionSideInSector(sec, _plPos)
-
-    if(pos < 0)
-    {
-        if(typeof activeSector.sectorData.wallsLeft == "undefined")
-            activeSector.sectorData.wallsLeft = [];
-
-        activeSector.sectorData.wallsLeft.push(w);
-    }
-    else if(pos > 0)
-    {
-        if(typeof activeSector.sectorData.wallsRight == "undefined")
-            activeSector.sectorData.wallsRight = [];
-
-        activeSector.sectorData.wallsRight.push(w);
-    }
 }
 
 function deleteWallFromActiveSector(w)
@@ -823,20 +821,44 @@ function deleteWallFromActiveSector(w)
             if(activeSector.sectorData.wallsLeft[n] == w)
             {
                 activeSector.sectorData.wallsLeft.splice(n, 1);
-                break;
-                //n--;
+                //break;
+                n--;
             }
         }
     }
-    else if(typeof activeSector.sectorData.wallsRight != "undefined")
+    if(typeof activeSector.sectorData.sectorsLeft != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.sectorsLeft.length; n++)
+        {
+            if(activeSector.sectorData.sectorsLeft[n] == w)
+            {
+                activeSector.sectorData.sectorsLeft.splice(n, 1);
+                //break;
+                n--;
+            }
+        }
+    }
+    if(typeof activeSector.sectorData.wallsRight != "undefined")
     {
         for(let n = 0; n < activeSector.sectorData.wallsRight.length; n++)
         {
             if(activeSector.sectorData.wallsRight[n] == w)
             {
                 activeSector.sectorData.wallsRight.splice(n, 1);
-                break;
-                //n--;
+                //break;
+                n--;
+            }
+        }
+    }
+    if(typeof activeSector.sectorData.sectorsRight != "undefined")
+    {
+        for(let n = 0; n < activeSector.sectorData.sectorsRight.length; n++)
+        {
+            if(activeSector.sectorData.sectorsRight[n] == w)
+            {
+                activeSector.sectorData.sectorsRight.splice(n, 1);
+                //break;
+                n--;
             }
         }
     }

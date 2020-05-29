@@ -173,7 +173,7 @@ function editorDrawSectorHandles(renderer, sector, walls)
             if(walls[i] != sector)
                 drawRect(renderer, lerpVec2(walls[i].p1, walls[i].p2, 0.5).subtract(vec2(wallHandleSize/2, wallHandleSize/2)),
                     vec2(wallHandleSize, wallHandleSize), isWallIncludedInSector,
-                    currentWallType == walls[i].type ? editorTypeHighlightColor : wallHandleColor, 0);
+                    currentWallType == walls[i].type ? editorTypeHighlightColor : (walls[i].type == 0 ? "red" : wallHandleColor), 0);
             else
                 drawRect(renderer, lerpVec2(walls[i].p1, walls[i].p2, 0.5).subtract(vec2(wallHandleSize/4, wallHandleSize/4)),
                     vec2(wallHandleSize/2, wallHandleSize/2), true, "red", 0);

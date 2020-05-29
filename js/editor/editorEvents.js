@@ -60,7 +60,7 @@ function switchTabAccordingToType(dir)
     {
         if(dir > 0 && currentWallType >= wallImages.length)
         {
-            cpEditTabs[0].selector.selected = false;
+            cpEditTabs[0].selector.selected = cpEditTabs[5].selector.selected = false;
             cpEditTabs[2].selector.selected = true;
             currentEditTabIndex = 2;
             currentWallType = wallImages.length - 1;
@@ -68,7 +68,7 @@ function switchTabAccordingToType(dir)
         }
         else if(dir < 0 && currentWallType <= 0)
         {
-            cpEditTabs[0].selector.selected = false;
+            cpEditTabs[0].selector.selected = cpEditTabs[5].selector.selected = false;
             cpEditTabs[4].selector.selected = true;
             currentEditTabIndex = 4;
             currentEntityType = enemyStartType + enemyTotalTypes - 1 + 1;
@@ -252,14 +252,30 @@ function boxHandleEvent(offset)
                 }
                 else if(cpEditTabs[5].selector.selected)
                 {
-                    //SECTOR WIP!!!
+                    for(let i = 0; i < wall.length; i++)
+                    {
+                        if(tempArea.isPointInside(lerpVec2(wall[i].p1, wall[i].p2, 0.5)))
+                        {
+                            if(editorMode == -1 || editorMode == 1)
+                            {
+                                if(isWallInActiveSector(wall[i]))
+                                    deleteWallFromActiveSector(wall[i]);
+                                else
+                                    addWallToSector(wall[i]);
+                            }
+                            else if(editorMode == 2)
+                            {
+                                wall[i].type = currentWallType;
+                            }
+                        }
+                    }
                 }
             }
 
             boxPos = vec2(0, 0);
             boxSize = vec2(0, 0);
 
-            //Reset box selection event function after using it once!?
+            //Reset box selection event function after using it once
             //boxSelectionEvent = function(offset) {};
         }
         boxActive = false;
@@ -1013,7 +1029,7 @@ function sectorHandleEvents(activeSector, walls, offset)
                             if(isWallInActiveSector(walls[i]))
                                 deleteWallFromActiveSector(walls[i]);
                             else
-                                addWallToActiveSector(walls[i]);
+                                addWallToSector(walls[i]);
                         }
                         else if(editorMode == 2)
                         {
