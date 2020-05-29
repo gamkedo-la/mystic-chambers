@@ -32,29 +32,33 @@ var entCollisionAngleDiff = degToRad(-2.5);
 // ID 0 to 9
 const decorStartType = 0;
 
-const ENT_TECHTORCH = 0;
+const ENT_WAYPOINT = 0;
+entProp[ENT_WAYPOINT].color = "#666666ff";
+entProp[ENT_WAYPOINT].idleImg = new ImageObject("images/waypoint.png", vec2(160, 160));
+
+const ENT_TECHTORCH = 1;
 entProp[ENT_TECHTORCH].color = "#cccc0090";
 entProp[ENT_TECHTORCH].idleImg = new ImageObject("images/techTorch.png", vec2(160, 160));
 entProp[ENT_TECHTORCH].renderOffset = vec2(0,-100);
 
-const ENT_GRASS1 = 1;
+const ENT_GRASS1 = 2;
 entProp[ENT_GRASS1].color = "#00aa0090";
 entProp[ENT_GRASS1].idleImg = new ImageObject("images/grass1.png", vec2(1280, 160));
 entProp[ENT_GRASS1].renderOffset = vec2(0,-100);
 
-const ENT_EFFECT1 = 2;
+const ENT_EFFECT1 = 3;
 entProp[ENT_EFFECT1].idleImg = new ImageObject("images/effect1.png", vec2(800, 160));
 entProp[ENT_EFFECT1].effectFrame = 100;
 
-const ENT_EFFECT2 = 3;
+const ENT_EFFECT2 = 4;
 entProp[ENT_EFFECT2].idleImg = new ImageObject("images/effect2.png", vec2(800, 160));
 entProp[ENT_EFFECT2].effectFrame = 50;
 
-const ENT_EFFECT3 = 4;
+const ENT_EFFECT3 = 5;
 entProp[ENT_EFFECT3].idleImg = new ImageObject("images/effect2.png", vec2(800, 160));
 entProp[ENT_EFFECT3].effectFrame = 50;
 
-const ENT_DESTROY1 = 5;
+const ENT_DESTROY1 = 6;
 entProp[ENT_DESTROY1].idleImg = new ImageObject("images/destroy1.png", vec2(1280, 160));
 entProp[ENT_DESTROY1].effectFrame = 40;
 
@@ -260,6 +264,8 @@ class Entity
 
     draw(renderer, plRay, circleOnly, deltaTime)
     {
+        if (this.id == ENT_WAYPOINT && !circleOnly) return;
+
         if (this.ai && (!mapMode || debugEntities)) this.ai(plRay, deltaTime);
 
         if (typeof this.dontRender != "undefined") return;
