@@ -178,6 +178,12 @@ entProp[ENT_PEARL].idleImg = new ImageObject("images/pearl.png", vec2(160, 160))
 entProp[ENT_PEARL].renderOffset = vec2(0,-100);
 entProp[ENT_PEARL].ai = aiSpinningBobbing;
 
+const ENT_PORTAL = 29;
+entProp[ENT_PORTAL].color = "#9900bb90";
+entProp[ENT_PORTAL].idleImg = new ImageObject("images/portal.png", vec2(800, 160));
+entProp[ENT_PORTAL].renderOffset = vec2(0,0);
+entProp[ENT_PORTAL].ai = aiSpinning;
+
 const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
 // ENEMIES: id 40 to 44
@@ -204,7 +210,8 @@ const enemyTotalTypes = 5;
 //Entity IDs --END--
 //////////////////////////////////////////////////////
 
-//Requires Sprite
+var prevPortal = undefined;
+
 class Entity
 {
     constructor()
@@ -227,9 +234,29 @@ class Entity
         this.id = id;
 
         if(!isNaN(this.id)) this.sprite.imageObject = entProp[this.id].idleImg;
+
+        //PORTAL CODE
+        if(this.id == ENT_PORTAL)
+        {
+            if(typeof prevPortal == "undefined")
+            {
+                prevPortal = this;
+                this.connectionPortal = this;
+            }
+            else
+            {
+                this.connectionPortal = prevPortal;
+                prevPortal.connectionPortal = this;
+
+                prevPortal = undefined;
+            }
+        }
     }
 
-    setIDProperties() { this.ai = entProp[this.id].ai; }
+    setIDProperties()
+    {
+        this.ai = entProp[this.id].ai;
+    }
 
     draw(renderer, plRay, circleOnly, deltaTime)
     {

@@ -3,8 +3,12 @@ const PLAY_BUTTON = '1';
 var flashTime = 160;
 var flash = 0;
 var flashColor = "#00000000";
+
 var itemPickupFlashColor = "#FFFFFF15";
 var playerDamageFlashColor = "#FF000050";
+
+var portalFlashColor = "#FF44BBAA";
+var portalSpawnDistance = 6.0;
 
 var showControlPanel = true;
 var currentEditTabIndex = -1;

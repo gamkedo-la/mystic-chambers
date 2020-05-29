@@ -105,6 +105,8 @@ function editorDrawItemHandles(renderer, itemEnts)
     {
         drawRect(renderer, itemEnts[i].p.subtract(vec2(itemHandleSize/2, itemHandleSize/2)),
             vec2(itemHandleSize, itemHandleSize), selectedItemIndex == i, currentEntityType == itemEnts[i].id ? editorTypeHighlightColor : itemHandleColor, 0);
+
+        if(itemEnts[i].id == ENT_PORTAL) drawLine(renderer, itemEnts[i].p, itemEnts[i].connectionPortal.p, portalFlashColor);
     }
 }
 

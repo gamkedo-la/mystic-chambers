@@ -1,4 +1,3 @@
-
 class ItemManager
 {
     constructor()
@@ -144,6 +143,18 @@ class ItemManager
 
                     case ENT_WATERDROPS:
                         shouldDestroy = false;
+                        break;
+
+                    case ENT_PEARL:
+                        //WIP!!!
+                        break;
+
+                    case ENT_PORTAL:
+                        shouldDestroy = false;
+                        flash = flashTime;
+                        flashColor = portalFlashColor;
+                        plPos = vec2(this.ents[i].connectionPortal.p.x, this.ents[i].connectionPortal.p.y - portalSpawnDistance);
+                        activeSector = this.ents[i].connectionPortal.sector;
                         break;
 
                     default:
