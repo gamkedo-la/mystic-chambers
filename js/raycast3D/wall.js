@@ -21,12 +21,15 @@ wallImages = [
     new ImageObject("images/wallTanRedlight.png", vec2(160, 160)),
     new ImageObject("images/wallTech.png", vec2(160, 160)),
     new ImageObject("images/wallTechServer.png", vec2(160, 160)),
+    new ImageObject("images/doorRed.png", vec2(160, 160)),
+    new ImageObject("images/doorGreen.png", vec2(160, 160)),
+    new ImageObject("images/doorBlue.png", vec2(160, 160)),
 ];
 wallColors = [
     "#ffff0077",
     "#00dd0077",
     "#dd00dd77",
-    "#ff000077",
+    "#ff555577",
     "#dd000077",
     "#bbbb0077",
     "#dddddd77",
@@ -44,7 +47,10 @@ wallColors = [
     "#dddddd77",
     "#dddddd77",
     "#dddddd77",
-    "#dddddd77"
+    "#dddddd77",
+    "#ff0000dd",
+    "#00ff00dd",
+    "#0000ffdd",
 ];
 wall = [];
 
