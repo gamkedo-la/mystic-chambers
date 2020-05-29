@@ -116,6 +116,9 @@ function setupGameplayUI()
         "Click to switch into\nSECTOR EDITING MODE"), false, "#024050", "#000000"));
 
     cpEditObjects = [];
+    newLevelBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "New Level", undefined),
+    new Button(tr(), "#000066ff"), "Click to start a NEW level.\nMake sure to SAVE the previous one.");
+    cpEditObjects.push(newLevelBtn);
     toggleGridBtn = new TextButton(tr(vec2(), btnSize), new Label(tr(), "Grid " + (showGrid ? "ON" : "OFF"), undefined, showGrid ? toggleONColor : toggleOFFColor),
         undefined,"Click to toggle\neditor grid.");
     cpEditObjects.push(toggleGridBtn);
@@ -146,7 +149,7 @@ function setupGameplayUI()
     cpEditGrid = new FlexGroup(
         tr(vec2(10, 5), panelSize),
         new SubState(tr(), cpEditObjects),
-        false, vec2(5, 5), vec2(1, 12));
+        false, vec2(5, 5), vec2(1, 13));
     
     cpEditPanel = new Panel(
         tr(vec2(5, 60), panelSize), new SubState(tr(), [cpEditGrid]
@@ -489,7 +492,47 @@ function gameplayUICustomEvents(deltaTime)
         else if(currentEditTabIndex == 4) currentEntityType = enemyStartType;
     }
 
-    if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
+    if (newLevelBtn.button.output == UIOUTPUT_SELECT)
+    {
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
+        activeSector = undefined;
+
+        while(area.length > 0) area.pop();
+        area = new Array();
+
+        while(decor.ents.length > 0)
+        {
+            removeEntity(decor.ents[decor.ents.length - 1]);
+            decor.ents.pop();
+        }
+        decor.ents = new Array();
+
+        while(items.ents.length > 0)
+        {
+            removeEntity(items.ents[items.ents.length - 1]);
+            items.ents.pop();
+        }
+        items.ents = new Array();
+        
+        while(enemies.ents.length > 0)
+        {
+            removeEntity(enemies.ents[enemies.ents.length - 1]);
+            enemies.ents.pop();
+        }
+        enemies.ents = new Array();
+
+        resetWallIndexes();
+        entitiesInSectorSet = [];
+        setEntitiesInSectors();
+        deleteEntitiesOutsideSector();
+        decor.removeIfNotInEntities();
+        items.removeIfNotInEntities();
+        enemies.removeIfNotInEntities();
+        fixBtn.button.resetOutput();
+
+        newLevelBtn.button.resetOutput();
+    }
+    else if (toggleGridBtn.button.output == UIOUTPUT_SELECT)
     {
         showGrid = !showGrid;
         if(showGrid) { toggleGridBtn.label.text = "Grid ON"; toggleGridBtn.label.textColor = toggleONColor; }
