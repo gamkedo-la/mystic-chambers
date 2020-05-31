@@ -158,7 +158,8 @@ class ItemManager
                         shouldDestroy = false;
                         flash = flashTime;
                         flashColor = portalFlashColor;
-                        plPos = vec2(this.ents[i].connectionPortal.p.x, this.ents[i].connectionPortal.p.y - portalSpawnDistance);
+                        plPos = vec2(this.ents[i].connectionPortal.p.x + (Math.cos(degToRad(ray[ray.length/2].angle)) * portalSpawnDistance),
+                            this.ents[i].connectionPortal.p.y + (Math.sin(degToRad(ray[ray.length/2].angle)) * portalSpawnDistance));
                         activeSector = this.ents[i].connectionPortal.sector;
                         break;
 
