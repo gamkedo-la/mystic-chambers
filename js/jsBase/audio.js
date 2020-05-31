@@ -24,6 +24,7 @@ const WALL2 = 18;
 const WALL3 = 19;
 const PLAYER_WALK1 = 20;
 const PLAYER_WALK2 = 21;
+const INCEPTION = 22;
 
 
 var soundsList = [
@@ -48,7 +49,8 @@ var soundsList = [
 	"audio/wall2.mp3",
 	"audio/wall3.mp3",
 	"audio/lightFootSteps2Rev1.wav",
-	"audio/lightFootSteps2Rev2.wav"
+	"audio/lightFootSteps2Rev2.wav",
+	"audio/Inception.mp3"
 ];
 
 var sounds = [];

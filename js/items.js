@@ -166,6 +166,22 @@ class ItemManager
                         shouldDestroy = false;
                         break;
 
+                    case ENT_LADDER:
+                        //go to next level...
+                        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
+                        while(area.length > 0) area.pop();
+                        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
+                        activeSector = undefined;
+                        currentLevel++;
+                        if(currentLevel >= totalLevels + 1) currentLevel = 1;
+                        loadLevel(wall, area);
+                        lvLabel.text = getLevelName();
+                        flash = flashTime*3;
+                        flashColor = levelCompleteFlashColor;
+                        audio.play1DSound(sounds[INCEPTION]);
+                        subtitleManager.updateAndDisplayText("LEVEL COMPLETE!");
+                        break;
+
                     default:
                         //do nothing
                 }

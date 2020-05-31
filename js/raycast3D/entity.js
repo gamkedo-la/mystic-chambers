@@ -193,6 +193,11 @@ entProp[ENT_CRACK].color = "#80808090";
 entProp[ENT_CRACK].idleImg = new ImageObject("images/crack.png", vec2(160, 160));
 entProp[ENT_CRACK].renderOffset = vec2(0,0);
 
+const ENT_LADDER = 31;
+entProp[ENT_LADDER].color = "#FFDD0090";
+entProp[ENT_LADDER].idleImg = new ImageObject("images/ladder.png", vec2(1280, 160));
+entProp[ENT_LADDER].renderOffset = vec2(0,-100);
+
 const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
 // ENEMIES: id 40 to 44

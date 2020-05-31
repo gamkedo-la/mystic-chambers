@@ -10,6 +10,7 @@ var wallCrackFlashColor = "#FF995550";
 var redKeyDoorFlashColor = "#FF000015";
 var greenKeyDoorFlashColor = "#00FF0015";
 var blueKeyDoorFlashColor = "#0000FF15";
+var levelCompleteFlashColor = "#FF00DD15";
 
 var portalFlashColor = "#FF44BBAA";
 var portalSpawnDistance = 6.0;
