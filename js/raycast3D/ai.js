@@ -140,6 +140,29 @@ function aiSpinning() {
     var spd = 0.1;
     this.aimAngleRadians = this.aimAngleRadians + spd;
     validateRotation.call(this); // stay in 0..360 deg
+
+    //Idle Play Sounds START
+    switch(this.id)
+    {
+        case ENT_FIRE:
+            break;
+
+        case ENT_FIRE_MYSTIC:
+            break;
+
+        case ENT_FIRE_COLD:
+            break;
+
+        case ENT_PORTAL:
+            if(typeof this.portalSound == "undefined")
+                this.portalSound = {source:{buffer :null}}
+            
+            if(this.portalSound.source == null
+                || this.portalSound.source.buffer == null)
+                this.portalSound = audio.play3DSound(sounds[PORTAL], this.p, rndAP(), rndAP());
+            break;
+    }
+    //Idle Play Sounds END
 }
 
 // spin around and bob up and down

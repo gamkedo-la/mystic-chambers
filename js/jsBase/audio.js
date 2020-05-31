@@ -25,7 +25,8 @@ const WALL3 = 19;
 const PLAYER_WALK1 = 20;
 const PLAYER_WALK2 = 21;
 const INCEPTION = 22;
-
+const PORTAL = 23;
+const PORTAL_TRAVEL = 24;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -50,7 +51,9 @@ var soundsList = [
 	"audio/wall3.mp3",
 	"audio/lightFootSteps2Rev1.wav",
 	"audio/lightFootSteps2Rev2.wav",
-	"audio/Inception.mp3"
+	"audio/Inception.wav",
+	"audio/portal-sound-v5.wav",
+	"audio/portal-travel.wav"
 ];
 
 var sounds = [];

@@ -161,6 +161,8 @@ class ItemManager
                         plPos = vec2(this.ents[i].connectionPortal.p.x + (Math.cos(degToRad(ray[ray.length/2].angle)) * portalSpawnDistance),
                             this.ents[i].connectionPortal.p.y + (Math.sin(degToRad(ray[ray.length/2].angle)) * portalSpawnDistance));
                         activeSector = this.ents[i].connectionPortal.sector;
+                        audio.play1DSound(sounds[PORTAL_TRAVEL]);
+                        subtitleManager.updateAndDisplayText("ENTERED THE PORTAL!");
                         break;
 
                     case ENT_CRACK:
