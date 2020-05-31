@@ -269,6 +269,7 @@ class Entity
         else if(this.id == ENT_CRACK)
         {
             this.connectionWall = getNearestMidpointWall(this.p);
+            this.connectionWall.type = getNearestMidpointWall(this.p, this.connectionWall).type;
         }
     }
 

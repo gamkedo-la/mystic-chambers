@@ -9,8 +9,9 @@ var editorDeleteKey = "x";
 var editorAddKey = "c";
 var editorChangeKey = "v";
 
-var editorNoTouchWidth = screen.width * 0.15;
-var editorNoTouchColor = "#ff000010";
+var editorNoTouchWidth = screen.width * 0.2;
+var editorNoTouchHeight = screen.height * 0.1;
+var editorNoTouchColor = "#220000ff";
 
 var currentLevel = 1;
 var levelStartingPlayerPos = vec2(window.innerWidth/2, window.innerHeight/2);
@@ -104,7 +105,9 @@ function editorEvents(deltaTime, offset, walls, areas, decorEnts, itemEnts, enem
         removeKeyPressed(editorChangeKey);
     }
 
-    if(touchPos[0].x < editorNoTouchWidth) return;
+    if(touchPos[0].x < editorNoTouchWidth
+    || touchPos[0].y < editorNoTouchHeight)
+        return;
 
     if(cpEditPanel.enabled)
     {
@@ -140,6 +143,8 @@ function editorDraw(renderer, offset, walls, areas, decorEnts, itemEnts, enemyEn
     if(cpEditPanel.enabled)
     {
         drawRect(renderer, vec2(0,0), vec2(editorNoTouchWidth, window.innerHeight),
+            true, editorNoTouchColor, 0);
+        drawRect(renderer, vec2(0,0), vec2(window.innerWidth, editorNoTouchHeight),
             true, editorNoTouchColor, 0);
 
         levelStartingPlayerPos = levelStartingPlayerPos.add(offset.negative());

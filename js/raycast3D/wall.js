@@ -1,5 +1,8 @@
 wallImages = [
     new ImageObject("images/sector.png", vec2(160, 160)),
+    new ImageObject("images/doorRed.png", vec2(160, 160)),
+    new ImageObject("images/doorGreen.png", vec2(160, 160)),
+    new ImageObject("images/doorBlue.png", vec2(160, 160)),
     new ImageObject("images/wallBrickGreen.png", vec2(160, 160)),
     new ImageObject("images/wallBrickPurple.png", vec2(160, 160)),
     new ImageObject("images/wallBrickRed.png", vec2(160, 160)),
@@ -20,20 +23,18 @@ wallImages = [
     new ImageObject("images/wallTan.png", vec2(160, 160)),
     new ImageObject("images/wallTanRedlight.png", vec2(160, 160)),
     new ImageObject("images/wallTech.png", vec2(160, 160)),
-    new ImageObject("images/wallTechServer.png", vec2(160, 160)),
-
-    new ImageObject("images/doorRed.png", vec2(160, 160)), //22
-    new ImageObject("images/doorGreen.png", vec2(160, 160)), //23
-    new ImageObject("images/doorBlue.png", vec2(160, 160)), //24
-    
+    new ImageObject("images/wallTechServer.png", vec2(160, 160))
 ];
 
-const WALL_RED = 22;
-const WALL_GREEN = 23;
-const WALL_BLUE = 24;
+const WALL_RED = 0;
+const WALL_GREEN = 1;
+const WALL_BLUE = 2;
 
 wallColors = [
-    "#ffff0077",
+    "#ffff0099",
+    "#ff000099",
+    "#00ff0099",
+    "#0000ff99",
     "#00dd0077",
     "#dd00dd77",
     "#ff555577",
@@ -55,15 +56,13 @@ wallColors = [
     "#dddddd77",
     "#dddddd77",
     "#dddddd77",
-    "#ff0000dd",
-    "#00ff00dd",
-    "#0000ffdd",
 ];
 wall = [];
 
-var wallShrinkSpeed = 0.025;
 var wallCollisionPadding = 0.25;
 var keyDoorTriggerPadding = 50.0;
+//var wallShrinkSpeed = 0.025;
+//var wallShrinkThreshold = 10.0;
 
 activeSector = undefined;
 class SectorData {
@@ -139,15 +138,9 @@ class Wall
 
     getCollValue(p, prevP, allowSectors)
     {
-        //Key Door Shrink
-        if(typeof this.shrink != "undefined")
-            this.p2 = lerpVec2(this.p2, this.p1, wallShrinkSpeed);
-
         if(typeof allowSectors == "undefined" || allowSectors == false)
         {
-            if(this.type <= 0) return p;
-            if(typeof this.sectorData.wallsLeft != "undefined"
-            || typeof this.sectorData.wallsRight != "undefined") return p;
+            if(this.type == 0) return p;
         }
 
         if(isPointOnLine(vec2(this.p1.x, this.p1.y),
@@ -156,26 +149,26 @@ class Wall
             //Key Door System
             if(this.type == WALL_RED && availableKeys[KEY_RED])
             {
-                this.shrink = true;
+                this.type = 0;
                 availableKeys[KEY_RED] = false;
-                flash = flashTime;
+                flash = flashTime*10;
                 flashColor = redKeyDoorFlashColor;
                 subtitleManager.updateAndDisplayText("RED DOOR UNLOCKED!");
             }
             else if(this.type == WALL_GREEN && availableKeys[KEY_GREEN])
             {
-                this.shrink = true;
+                this.type = 0;
                 availableKeys[KEY_GREEN] = false;
-                flash = flashTime;
+                flash = flashTime*10;
                 flashColor = greenKeyDoorFlashColor;
                 subtitleManager.updateAndDisplayText("GREEN DOOR UNLOCKED!");
 
             }
             else if(this.type == WALL_BLUE && availableKeys[KEY_BLUE])
             {
-                this.shrink = true;
+                this.type = 0;
                 availableKeys[KEY_BLUE] = false;
-                flash = flashTime;
+                flash = flashTime*10;
                 flashColor = blueKeyDoorFlashColor;
                 subtitleManager.updateAndDisplayText("BLUE DOOR UNLOCKED!");
             }
@@ -638,29 +631,61 @@ function collisionWithWallsInSector(currentPos, previousPos, sec)
     {
         var pos = getPositionSideInSector(sec, currentPos);
 
-        if(pos < 0 && typeof sec.sectorData.wallsLeft != "undefined")
+        if(pos < 0)
         {
-            for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
+            if(typeof sec.sectorData.wallsLeft != "undefined")
             {
-                if(typeof sec.sectorData.wallsLeft[i].sectorData.wallsLeft == "undefined"
-                && typeof sec.sectorData.wallsLeft[i].sectorData.wallsRight == "undefined"
-                && sec.sectorData.wallsLeft[i].type > 0)
+                for(let i = 0; i < sec.sectorData.wallsLeft.length; i++)
                 {
-                    currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
-                    if(currentPos == previousPos) return currentPos;
+                    if(typeof sec.sectorData.wallsLeft[i].sectorData.wallsLeft == "undefined"
+                    && typeof sec.sectorData.wallsLeft[i].sectorData.wallsRight == "undefined"
+                    && sec.sectorData.wallsLeft[i].type > 0)
+                    {
+                        currentPos = sec.sectorData.wallsLeft[i].getCollValue(currentPos, previousPos);
+                        if(currentPos == previousPos) return currentPos;
+                    }
+                }
+            }
+            if(typeof sec.sectorData.sectorsLeft != "undefined")
+            {
+                for(let i = 0; i < sec.sectorData.sectorsLeft.length; i++)
+                {
+                    if(typeof sec.sectorData.sectorsLeft[i].sectorData.sectorsLeft == "undefined"
+                    && typeof sec.sectorData.sectorsLeft[i].sectorData.sectorsRight == "undefined"
+                    && sec.sectorData.sectorsLeft[i].type > 0)
+                    {
+                        currentPos = sec.sectorData.sectorsLeft[i].getCollValue(currentPos, previousPos);
+                        if(currentPos == previousPos) return currentPos;
+                    }
                 }
             }
         }
-        if(pos > 0 && typeof sec.sectorData.wallsRight != "undefined")
+        if(pos > 0)
         {
-            for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
+            if(typeof sec.sectorData.wallsRight != "undefined")
             {
-                if(typeof sec.sectorData.wallsRight[i].sectorData.wallsLeft == "undefined"
-                && typeof sec.sectorData.wallsRight[i].sectorData.wallsRight == "undefined"
-                && sec.sectorData.wallsRight[i].type > 0)
+                for(let i = 0; i < sec.sectorData.wallsRight.length; i++)
                 {
-                    currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
-                    if(currentPos == previousPos) return currentPos;
+                    if(typeof sec.sectorData.wallsRight[i].sectorData.wallsLeft == "undefined"
+                    && typeof sec.sectorData.wallsRight[i].sectorData.wallsRight == "undefined"
+                    && sec.sectorData.wallsRight[i].type > 0)
+                    {
+                        currentPos = sec.sectorData.wallsRight[i].getCollValue(currentPos, previousPos);
+                        if(currentPos == previousPos) return currentPos;
+                    }
+                }
+            }
+            if(typeof sec.sectorData.sectorsRight != "undefined")
+            {
+                for(let i = 0; i < sec.sectorData.sectorsRight.length; i++)
+                {
+                    if(typeof sec.sectorData.sectorsRight[i].sectorData.sectorsLeft == "undefined"
+                    && typeof sec.sectorData.sectorsRight[i].sectorData.sectorsRight == "undefined"
+                    && sec.sectorData.sectorsRight[i].type > 0)
+                    {
+                        currentPos = sec.sectorData.sectorsRight[i].getCollValue(currentPos, previousPos);
+                        if(currentPos == previousPos) return currentPos;
+                    }
                 }
             }
         }
@@ -916,19 +941,23 @@ function deleteWallFromActiveSector(w)
     }
 }
 
-function getNearestMidpointWall(vec2)
+function getNearestMidpointWall(vec2, exceptionWall)
 {
     var distanceFromWall = 999999;
     var nearestWallIndex = -1;
 
     for(let i = 0; i < wall.length; i++)
     {
-        var wMid = lerpVec2(wall[i].p1, wall[i].p2, 0.5);
-
-        if(wMid.distance(vec2) < distanceFromWall)
+        if(typeof exceptionWall == "undefined"
+        || (wall[i] != exceptionWall && wall[i].type != 0))
         {
-            distanceFromWall = wMid.distance(vec2);
-            nearestWallIndex = i;
+            var wMid = lerpVec2(wall[i].p1, wall[i].p2, 0.5);
+
+            if(wMid.distance(vec2) < distanceFromWall)
+            {
+                distanceFromWall = wMid.distance(vec2);
+                nearestWallIndex = i;
+            }
         }
     }
 
