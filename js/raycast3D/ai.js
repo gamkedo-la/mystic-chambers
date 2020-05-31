@@ -145,12 +145,30 @@ function aiSpinning() {
     switch(this.id)
     {
         case ENT_FIRE:
+            if(typeof this.fireSound == "undefined")
+                this.fireSound = {source:{buffer :null}}
+            
+            if(this.fireSound.source == null
+            || this.fireSound.source.buffer == null)
+                this.fireSound = audio.play3DSound(sounds[FIRE], this.p, rndAP(), rndAP());
             break;
 
         case ENT_FIRE_MYSTIC:
+            if(typeof this.fireSound == "undefined")
+                this.fireSound = {source:{buffer :null}}
+            
+            if(this.fireSound.source == null
+            || this.fireSound.source.buffer == null)
+                this.fireSound = audio.play3DSound(sounds[FIRE], this.p, rndAP(), rndAP());
             break;
 
         case ENT_FIRE_COLD:
+            if(typeof this.fireSound == "undefined")
+                this.fireSound = {source:{buffer :null}}
+            
+            if(this.fireSound.source == null
+            || this.fireSound.source.buffer == null)
+                this.fireSound = audio.play3DSound(sounds[FIRE], this.p, rndAP(), rndAP());
             break;
 
         case ENT_PORTAL:
@@ -158,7 +176,7 @@ function aiSpinning() {
                 this.portalSound = {source:{buffer :null}}
             
             if(this.portalSound.source == null
-                || this.portalSound.source.buffer == null)
+            || this.portalSound.source.buffer == null)
                 this.portalSound = audio.play3DSound(sounds[PORTAL], this.p, rndAP(), rndAP());
             break;
     }

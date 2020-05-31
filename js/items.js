@@ -233,8 +233,8 @@ function itemToPlayerShotReaction(item) //return true to destroy item
     switch(item.id)
     {
         case ENT_PILLAR:
-            if(typeof item.hp == "undefined") item.hp = 1;
-            else if(item.hp > 0) item.hp--;
+            if(typeof item.hp == "undefined") { item.hp = 1; }
+            else if(item.hp > 0) { item.hp--; }
             else { item.id = ENT_PILLAR_BROKEN;
                 item.setIDProperties(); }
 
@@ -248,8 +248,8 @@ function itemToPlayerShotReaction(item) //return true to destroy item
 
         case ENT_SPIKES:
 
-            if(typeof item.hp == "undefined") item.hp = 1;
-            else if(item.hp > 0) item.hp--;
+            if(typeof item.hp == "undefined") { item.hp = 1; }
+            else if(item.hp > 0) { item.hp--; }
             else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
 
             //WIP!!!
@@ -261,9 +261,12 @@ function itemToPlayerShotReaction(item) //return true to destroy item
 
         case ENT_BARREL_STEEL:
 
-            if(typeof item.hp == "undefined") item.hp = 1;
-            else if(item.hp > 0) item.hp--;
-            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
+            item.p.x += Math.cos(degToRad(ray[ray.length/2].angle))*4.0;
+            item.p.y += Math.sin(degToRad(ray[ray.length/2].angle))*4.0;
+
+            /*if(typeof item.hp == "undefined") { item.hp = 1; }
+            else if(item.hp > 0) {item.hp--; }
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }*/
 
             //WIP!!!
             //Play sound!!!
@@ -274,18 +277,23 @@ function itemToPlayerShotReaction(item) //return true to destroy item
 
         case ENT_BARREL_RED:
 
-            if(typeof item.hp == "undefined") item.hp = 1;
-            else if(item.hp > 0) item.hp--;
+            item.p.x += Math.cos(degToRad(ray[ray.length/2].angle))*4.0;
+            item.p.y += Math.sin(degToRad(ray[ray.length/2].angle))*4.0;
+
+            if(typeof item.hp == "undefined") { item.hp = 1; }
+            else if(item.hp > 0) { item.hp--; }
             else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
 
             //WIP!!!
             //Play sound!!!
             
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
             break;
 
         case ENT_CRACK:
-            if(typeof item.hp == "undefined") item.hp = 3;
-            else if(item.hp > 0) item.hp--;
+            if(typeof item.hp == "undefined") { item.hp = 3; }
+            else if(item.hp > 0) { item.hp--; }
             else { decor.addUsingAnotherEntity(item, ENT_DESTROY1);
                 wall[item.connectionWall.index].type = 0;
                 /*wall[item.connectionWall.index].p1 = wall[item.connectionWall.index].p2;

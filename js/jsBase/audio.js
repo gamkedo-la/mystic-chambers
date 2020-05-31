@@ -27,6 +27,8 @@ const PLAYER_WALK2 = 21;
 const INCEPTION = 22;
 const PORTAL = 23;
 const PORTAL_TRAVEL = 24;
+const HOVER = 25;
+const FIRE = 26;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -53,7 +55,9 @@ var soundsList = [
 	"audio/lightFootSteps2Rev2.wav",
 	"audio/Inception.wav",
 	"audio/portal-sound-v5.wav",
-	"audio/portal-travel.wav"
+	"audio/portal-travel.wav",
+	"audio/flash.wav",
+	"audio/fire2.wav",
 ];
 
 var sounds = [];
@@ -62,7 +66,7 @@ var sounds = [];
 const VOLUME_INCREMENT = 0.1;
 const CROSSFADE_TIME = 0.25;
 const DROPOFF_MIN = 20;
-const DROPOFF_MAX = 200;//400;
+const DROPOFF_MAX = 150;//400;
 const REVERB_MAX = 3;//5;
 const BEHIND_THE_HEAD = 0.5;
 

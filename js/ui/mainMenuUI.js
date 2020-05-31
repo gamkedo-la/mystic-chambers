@@ -19,6 +19,8 @@ var mainMenuFontSize = 20;
 var leftdoor;
 var rightdoor;
 
+var hoverSoundDone = false;
+
 function setupMainMenuUI()
 {
     leftdoor = document.getElementById("leftdoor");
@@ -40,11 +42,11 @@ function setupMainMenuUI()
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(loadButton);
-    settingsButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  SETTINGS        S",
+    creditsButton = new TextButton(tr(vec2(), btnSize),
+        new Label(tr(), "  CREDITS        C",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    menuButtons.push(settingsButton);
+    menuButtons.push(creditsButton);
 
     mainMenuUI.push(new FlexGroup(tr(vec2(50, 350), vec2(window.innerWidth, window.innerHeight-350)),
         new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3, 20), vec2(1, 5), true));
@@ -75,6 +77,15 @@ function mainMenuUICustomEvents()
         rightdoor.style.left = "320px";
     }
 
+    if(playButton.button.output == UIOUTPUT_HOVER
+        || editorButton.button.output == UIOUTPUT_HOVER
+        || loadButton.button.output == UIOUTPUT_HOVER
+        || creditsButton.button.output == UIOUTPUT_HOVER)
+    {
+        if(!hoverSoundDone) audio.play1DSound(sounds[HOVER]);
+        hoverSoundDone = true;
+    }
+    else hoverSoundDone = false;
     
     if(playButton.button.output == UIOUTPUT_SELECT
         || keysDown.indexOf('p') != -1)
@@ -109,16 +120,15 @@ function mainMenuUICustomEvents()
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         loadButton.button.resetOutput();
     }
-    else if(settingsButton.button.output == UIOUTPUT_SELECT
+    else if(creditsButton.button.output == UIOUTPUT_SELECT
         || keysDown.indexOf('s') != -1)
     {
         hideMainMenuCube();
-        //will toggle settings substate
-        //(i.e no seperate state, within main menu)
+        //will toggle credits state
         //  WIP!!!
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
-        settingsButton.button.resetOutput();
+        creditsButton.button.resetOutput();
     }
 }
 
