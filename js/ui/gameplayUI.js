@@ -6,6 +6,10 @@ var flashColor = "#00000000";
 
 var itemPickupFlashColor = "#FFFFFF15";
 var playerDamageFlashColor = "#FF000050";
+var wallCrackFlashColor = "#FF995550";
+var redKeyDoorFlashColor = "#FF000015";
+var greenKeyDoorFlashColor = "#00FF0015";
+var blueKeyDoorFlashColor = "#0000FF15";
 
 var portalFlashColor = "#FF44BBAA";
 var portalSpawnDistance = 6.0;

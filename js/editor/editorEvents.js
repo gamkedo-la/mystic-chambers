@@ -56,11 +56,11 @@ var lastSelectedEnemyIndex = -1;
 
 function switchTabAccordingToType(dir)
 {
-    if(cpEditTabs[0].selector.selected || cpEditTabs[5].selector.selected)
+    if(cpEditTabs[0].selector.selected)
     {
         if(dir > 0 && currentWallType >= wallImages.length)
         {
-            cpEditTabs[0].selector.selected = cpEditTabs[5].selector.selected = false;
+            cpEditTabs[0].selector.selected = false;
             cpEditTabs[2].selector.selected = true;
             currentEditTabIndex = 2;
             currentWallType = wallImages.length - 1;
@@ -68,7 +68,7 @@ function switchTabAccordingToType(dir)
         }
         else if(dir < 0 && currentWallType <= 0)
         {
-            cpEditTabs[0].selector.selected = cpEditTabs[5].selector.selected = false;
+            cpEditTabs[0].selector.selected = false;
             cpEditTabs[4].selector.selected = true;
             currentEditTabIndex = 4;
             currentEntityType = enemyStartType + enemyTotalTypes - 1 + 1;
@@ -999,8 +999,8 @@ function sectorHandleEvents(activeSector, walls, offset)
     if(oldType != currentWallType)
         switchTabAccordingToType(currentWallType - oldType);
 
-    //if(currentWallType >= wallImages.length) currentWallType = 0;
-    //else if(currentWallType <= -1) currentWallType = wallImages.length - 1;
+    if(currentWallType >= wallImages.length) currentWallType = 0;
+    else if(currentWallType <= -1) currentWallType = wallImages.length - 1;
 
     if(editorSelectionCurrentDelay > 0)
     {
@@ -1023,6 +1023,7 @@ function sectorHandleEvents(activeSector, walls, offset)
 
                     if(wallHandleTouchIndex > -1)
                     {
+                        lastSelectedWallIndex = i;
                         editorSelectionCurrentDelay = editorSelectionDelay;
                         if(editorMode == -1 || editorMode == 1)
                         {

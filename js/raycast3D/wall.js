@@ -21,10 +21,17 @@ wallImages = [
     new ImageObject("images/wallTanRedlight.png", vec2(160, 160)),
     new ImageObject("images/wallTech.png", vec2(160, 160)),
     new ImageObject("images/wallTechServer.png", vec2(160, 160)),
-    new ImageObject("images/doorRed.png", vec2(160, 160)),
-    new ImageObject("images/doorGreen.png", vec2(160, 160)),
-    new ImageObject("images/doorBlue.png", vec2(160, 160)),
+
+    new ImageObject("images/doorRed.png", vec2(160, 160)), //22
+    new ImageObject("images/doorGreen.png", vec2(160, 160)), //23
+    new ImageObject("images/doorBlue.png", vec2(160, 160)), //24
+    
 ];
+
+const WALL_RED = 22;
+const WALL_GREEN = 23;
+const WALL_BLUE = 24;
+
 wallColors = [
     "#ffff0077",
     "#00dd0077",
@@ -54,7 +61,9 @@ wallColors = [
 ];
 wall = [];
 
+var wallShrinkSpeed = 0.025;
 var wallCollisionPadding = 0.25;
+var keyDoorTriggerPadding = 50.0;
 
 activeSector = undefined;
 class SectorData {
@@ -130,6 +139,10 @@ class Wall
 
     getCollValue(p, prevP, allowSectors)
     {
+        //Key Door Shrink
+        if(typeof this.shrink != "undefined")
+            this.p2 = lerpVec2(this.p2, this.p1, wallShrinkSpeed);
+
         if(typeof allowSectors == "undefined" || allowSectors == false)
         {
             if(this.type <= 0) return p;
@@ -138,8 +151,41 @@ class Wall
         }
 
         if(isPointOnLine(vec2(this.p1.x, this.p1.y),
+        vec2(this.p2.x, this.p2.y), vec2(p.x, p.y), keyDoorTriggerPadding))
+        {
+            //Key Door System
+            if(this.type == WALL_RED && availableKeys[KEY_RED])
+            {
+                this.shrink = true;
+                availableKeys[KEY_RED] = false;
+                flash = flashTime;
+                flashColor = redKeyDoorFlashColor;
+                subtitleManager.updateAndDisplayText("RED DOOR UNLOCKED!");
+            }
+            else if(this.type == WALL_GREEN && availableKeys[KEY_GREEN])
+            {
+                this.shrink = true;
+                availableKeys[KEY_GREEN] = false;
+                flash = flashTime;
+                flashColor = greenKeyDoorFlashColor;
+                subtitleManager.updateAndDisplayText("GREEN DOOR UNLOCKED!");
+
+            }
+            else if(this.type == WALL_BLUE && availableKeys[KEY_BLUE])
+            {
+                this.shrink = true;
+                availableKeys[KEY_BLUE] = false;
+                flash = flashTime;
+                flashColor = blueKeyDoorFlashColor;
+                subtitleManager.updateAndDisplayText("BLUE DOOR UNLOCKED!");
+            }
+        }
+
+        if(isPointOnLine(vec2(this.p1.x, this.p1.y),
         vec2(this.p2.x, this.p2.y), vec2(p.x, p.y), wallCollisionPadding))
+        {
             p = prevP;
+        }
         
         return p;
     }
@@ -868,4 +914,23 @@ function deleteWallFromActiveSector(w)
             }
         }
     }
+}
+
+function getNearestMidpointWall(vec2)
+{
+    var distanceFromWall = 999999;
+    var nearestWallIndex = -1;
+
+    for(let i = 0; i < wall.length; i++)
+    {
+        var wMid = lerpVec2(wall[i].p1, wall[i].p2, 0.5);
+
+        if(wMid.distance(vec2) < distanceFromWall)
+        {
+            distanceFromWall = wMid.distance(vec2);
+            nearestWallIndex = i;
+        }
+    }
+
+    return wall[nearestWallIndex];
 }

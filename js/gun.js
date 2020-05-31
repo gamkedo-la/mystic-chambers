@@ -121,10 +121,8 @@ function checkPlayerToEnemyShot()
                 {
                     enemies.ents[i].hp -= 1;
 
-                    if(Math.random() < 0.5)
-                        decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT2);
-                    else
-                        decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT3);
+                    if(Math.random() < 0.5) decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT2);
+                    else decor.addUsingAnotherEntity(enemies.ents[i], ENT_EFFECT3);
                 }
                 else
                 {
@@ -138,6 +136,31 @@ function checkPlayerToEnemyShot()
                 }
 
                 //break;
+            }
+        }
+    }
+}
+
+function checkPlayerToItemShot()
+{
+    for(let i = 0; i < items.ents.length; i++)
+    {
+        var angBtwPlEn = radToDeg(plPos.angle(items.ents[i].p));
+        var distBtwPlEn = plPos.distance(items.ents[i].p);
+        var angPl = ray[ray.length/2].angle + 180;
+
+        if(Math.abs(angBtwPlEn-angPl) < playerShotAccuracyFactor/distBtwPlEn)
+        {
+            if(!playerSectorWallCheck(distBtwPlEn-10))
+            {
+                if(itemToPlayerShotReaction(items.ents[i]))
+                {
+                    removeEntityInAllSectors(items.ents[i]);
+                    removeEntityInSector(items.ents[i]);
+                    removeEntity(items.ents[i]);
+                    items.ents.splice(i, 1);
+                    i--;
+                }
             }
         }
     }
@@ -212,6 +235,7 @@ function gunEvent()
 
                     //SHOOTING!
                     checkPlayerToEnemyShot();
+                    checkPlayerToItemShot();
 
                     if(currentGun == GUN_REVOLVER)
                         audio.play1DSound(sounds[REVOLVER_SHOT]);

@@ -82,20 +82,25 @@ class ItemManager
 
                     case ENT_BARREL_STEEL:
                         plPos = prevPlPos;
-                        this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
-                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;
+                        /*this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
+                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;*/
+                        
                         // FIXME play metal clang sound, but otherwise do nothing
                         // console.log("steel barrel hit!");
+
                         shouldDestroy = false;
                         break;
 
                     case ENT_BARREL_RED:
                         plPos = prevPlPos;
-                        this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
-                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;
+                        /*this.ents[i].p.x += Math.cos(degToRad(ray[ray.length/2].angle))/2.0;
+                        this.ents[i].p.y += Math.sin(degToRad(ray[ray.length/2].angle))/2.0;*/
+                        
                         // FIXME explode!
                         // console.log("red barrel hit!");
+
                         shouldDestroy = false; // TODO: BOOM!!!!
+
                         break;
 
                     case ENT_SPIKES:
@@ -157,6 +162,10 @@ class ItemManager
                         activeSector = this.ents[i].connectionPortal.sector;
                         break;
 
+                    case ENT_CRACK:
+                        shouldDestroy = false;
+                        break;
+
                     default:
                         //do nothing
                 }
@@ -199,3 +208,93 @@ class ItemManager
 }
 
 var items = new ItemManager();
+
+function itemToPlayerShotReaction(item) //return true to destroy item
+{
+    switch(item.id)
+    {
+        case ENT_PILLAR:
+            if(typeof item.hp == "undefined") item.hp = 1;
+            else if(item.hp > 0) item.hp--;
+            else { item.id = ENT_PILLAR_BROKEN;
+                item.setIDProperties(); }
+
+            if(Math.random() < 0.5) audio.play3DSound(sounds[WALL1], item.p, rndAP(), rndAP());
+            else { if(Math.random() < 0.5) audio.play3DSound(sounds[WALL2], item.p, rndAP(), rndAP());
+            else audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP()); }
+
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+            break;
+
+        case ENT_SPIKES:
+
+            if(typeof item.hp == "undefined") item.hp = 1;
+            else if(item.hp > 0) item.hp--;
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
+
+            //WIP!!!
+            //Play sound!!!
+
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+            break;
+
+        case ENT_BARREL_STEEL:
+
+            if(typeof item.hp == "undefined") item.hp = 1;
+            else if(item.hp > 0) item.hp--;
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
+
+            //WIP!!!
+            //Play sound!!!
+
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+            break;
+
+        case ENT_BARREL_RED:
+
+            if(typeof item.hp == "undefined") item.hp = 1;
+            else if(item.hp > 0) item.hp--;
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
+
+            //WIP!!!
+            //Play sound!!!
+            
+            break;
+
+        case ENT_CRACK:
+            if(typeof item.hp == "undefined") item.hp = 3;
+            else if(item.hp > 0) item.hp--;
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1);
+                //wall[item.connectionWall.index].shrink = true; //for key door
+                wall[item.connectionWall.index].p1 = wall[item.connectionWall.index].p2;
+                deleteWallFromAllSectors(wall[item.connectionWall.index]);
+                wall.splice(item.connectionWall.index, 1);
+                resetWallIndexes();
+                audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP());
+                audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP());
+                flash = flashTime;
+                flashColor = wallCrackFlashColor;
+                subtitleManager.updateAndDisplayText("HIDDEN PATH DISCOVERED!"); return true; }
+
+            if(Math.random() < 0.5) audio.play3DSound(sounds[WALL1], item.p, rndAP(), rndAP());
+            else { if(Math.random() < 0.5) audio.play3DSound(sounds[WALL2], item.p, rndAP(), rndAP());
+            else audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP()); }
+
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+            break;
+
+        default:
+            if(Math.random() < 0.5) audio.play3DSound(sounds[WALL1], item.p, rndAP(), rndAP());
+            else { if(Math.random() < 0.5) audio.play3DSound(sounds[WALL2], item.p, rndAP(), rndAP());
+            else audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP()); }
+
+            if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+    }
+
+    return false;
+}

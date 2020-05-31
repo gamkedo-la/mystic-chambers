@@ -18,6 +18,8 @@ var maxSpeed = [1.4, 1.2, 0.8, 0.8];
 var speedIncrement = 0.004;
 var speedDecrement = 0.006;
 var speedThreshold = 0.16;
+var playerWalkSound = {source:{buffer :null}}
+var playerWalkAlt = false;
 
 var playerAngleMovement = true;
 var playerCalculatedAngleMovement = 0.0;
@@ -176,6 +178,18 @@ function playerEvents(deltaTime)
     currentPlayerY = plPos.y; 
     currentPlayerPos.x = currentPlayerX;
     currentPlayerPos.y = currentPlayerY;
+
+    if(currentSpeed[0] > 0 || currentSpeed[1] > 0
+    || currentSpeed[2] > 0 || currentSpeed[3] > 0)
+    {
+        if (playerWalkSound.source.buffer == null)
+        {
+            if(playerWalkAlt) playerWalkSound = audio.play3DSound(sounds[PLAYER_WALK1], plPos, rndAP(), rndAP());
+            else playerWalkSound = audio.play3DSound(sounds[PLAYER_WALK2], plPos, rndAP(), rndAP());
+            playerWalkAlt = !playerWalkAlt;
+        }
+    }
+    
 }
 
 function haltPlayer()

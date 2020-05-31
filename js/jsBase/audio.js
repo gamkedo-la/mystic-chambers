@@ -11,14 +11,20 @@ const REVOLVER_SHOT = 5;
 const REVOLVER_RELOAD = 6;
 const WINCHESTER_SHOT = 7;
 const WINCHESTER_RELOAD = 8;
-const PLAYER_HURT = 8;
-const PLAYER_HURT2 = 9;
-const FIRESKULL_IDLE = 10;
-const FIRESKULL_DASH = 11;
-const FIRESKULL_ATTACK = 12;
-const DWARF_IDLE = 13;
-const DWARF_ATTACK = 14;
+const PLAYER_HURT = 9;
+const PLAYER_HURT2 = 10;
+const FIRESKULL_IDLE = 11;
+const FIRESKULL_DASH = 12;
+const FIRESKULL_ATTACK = 13;
+const DWARF_IDLE = 14;
+const DWARF_ATTACK = 15;
 const DRIP = 16;
+const WALL1 = 17;
+const WALL2 = 18;
+const WALL3 = 19;
+const PLAYER_WALK1 = 20;
+const PLAYER_WALK2 = 21;
+
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -38,6 +44,11 @@ var soundsList = [
 	"audio/dwarf-idle-01.mp3",
 	"audio/dwarf-attack-01.mp3",
 	"audio/drip-02.mp3",
+	"audio/wall1.mp3",
+	"audio/wall2.mp3",
+	"audio/wall3.mp3",
+	"audio/lightFootSteps2Rev1.wav",
+	"audio/lightFootSteps2Rev2.wav"
 ];
 
 var sounds = [];

@@ -188,6 +188,11 @@ entProp[ENT_PORTAL].idleImg = new ImageObject("images/portal.png", vec2(800, 160
 entProp[ENT_PORTAL].renderOffset = vec2(0,0);
 entProp[ENT_PORTAL].ai = aiSpinning;
 
+const ENT_CRACK = 30;
+entProp[ENT_CRACK].color = "#80808090";
+entProp[ENT_CRACK].idleImg = new ImageObject("images/crack.png", vec2(160, 160));
+entProp[ENT_CRACK].renderOffset = vec2(0,0);
+
 const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
 // ENEMIES: id 40 to 44
@@ -254,6 +259,11 @@ class Entity
 
                 prevPortal = undefined;
             }
+        }
+        //CRACK CODE
+        else if(this.id == ENT_CRACK)
+        {
+            this.connectionWall = getNearestMidpointWall(this.p);
         }
     }
 
