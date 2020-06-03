@@ -441,6 +441,9 @@ function disableFullscreen(e)
 {
   if (!FULLSCREEN_ENABLED) return;
 
+  // FIXME: if user hits ESC while playing (or alt-tab etc) the game bugs out below
+  // because we are not longer in fullscreen mode
+  // solution: listen for exitfullscreen event and set FULLSCREEN_ENABLED to false
   if (e.exitFullscreen)
     e.exitFullscreen();
   else if (e.mozCancelFullScreen)

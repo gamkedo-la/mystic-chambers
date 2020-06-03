@@ -11,6 +11,14 @@
 const DEBUGAI = false; // output to debug.log?
 const DO_NOT_UPDATE_WALL_DIR = true; // read-only collision detection
 
+const FIRESKULL_DODGE_SPD = 0.05; // circle strafe dodge back and forth while moving
+const FIRESKULL_SEEK_NEAR = 13;
+const FIRESKULL_SEEK_FAR = 250;
+
+const DODGE_CHANCE = 0.01;
+const DODGE_MINTIME = 10;
+const DODGE_MAXTIME = 60;
+
 var aiOffset = vec2(0,0);
 
 // random from 0..360 deg (0..2pi)
@@ -89,7 +97,7 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
     // move if not too close
     if (dist>mindist) {
         if (dist<maxdist) {
-            var turnspeed = 0.05;
+            //var turnspeed = 0.05;
 
             // determine target direction
             var rad = plRay.p.angle(this.p);
@@ -130,6 +138,26 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
 
 }
 
+function aiDodge(plRay,strafeSize=0.1) {
+    // classic FPS CIRCLE STRAFE
+    // to "strafe" means to move side-to-side perpendicular to the target
+    // like dodging back and forth to avoid getting hit
+    if (strafeSize) {
+        if (this.strafeCounter == undefined) this.strafeCounter = 0;
+        this.strafeCounter--;
+        if (this.strafeCounter > 0) {
+            this.p.x += this.strafeDirection * strafeSize * Math.cos(this.aimAngleRadians+1.5708); // +90 deg
+            this.p.y += this.strafeDirection * strafeSize * Math.sin(this.aimAngleRadians+1.5708);
+        } else { // not currently strafing
+            if (Math.random() < DODGE_CHANCE) { // occasionally
+                this.strafeCounter = Math.round(DODGE_MINTIME+Math.random()*(DODGE_MAXTIME-DODGE_MINTIME)); // for how long?
+                this.strafeDirection = Math.random()<0.5?1:-1; // left or right?
+                if (DEBUGAI) console.log("Starting to circle strafe dodge! Duration:"+this.strafeCounter+" Direction:"+this.strafeDirection);
+            }
+        }
+    } // circle strafe
+}
+
 // move away from the player
 function aiAvoid(plRay) {
     aiSeek.call(this,plRay,true);
@@ -146,7 +174,7 @@ function aiSpinning() {
     {
         case ENT_FIRE:
             if(typeof this.fireSound == "undefined")
-                this.fireSound = {source:{buffer :null}}
+                this.fireSound = {source:{buffer :null}};
             
             if(this.fireSound.source == null
             || this.fireSound.source.buffer == null)
@@ -155,7 +183,7 @@ function aiSpinning() {
 
         case ENT_FIRE_MYSTIC:
             if(typeof this.fireSound == "undefined")
-                this.fireSound = {source:{buffer :null}}
+                this.fireSound = {source:{buffer :null}};
             
             if(this.fireSound.source == null
             || this.fireSound.source.buffer == null)
@@ -164,7 +192,7 @@ function aiSpinning() {
 
         case ENT_FIRE_COLD:
             if(typeof this.fireSound == "undefined")
-                this.fireSound = {source:{buffer :null}}
+                this.fireSound = {source:{buffer :null}};
             
             if(this.fireSound.source == null
             || this.fireSound.source.buffer == null)
@@ -173,7 +201,7 @@ function aiSpinning() {
 
         case ENT_PORTAL:
             if(typeof this.portalSound == "undefined")
-                this.portalSound = {source:{buffer :null}}
+                this.portalSound = {source:{buffer :null}};
             
             if(this.portalSound.source == null
             || this.portalSound.source.buffer == null)
@@ -274,8 +302,10 @@ function fireSkullAI(plRay,deltaTime)
     }
     else
     {
-        //this.angle = plRay.angle;
-        aiSeek.call(this,plRay);
+        // move towards the player if they are close by
+        aiSeek.call(this,plRay,false,FIRESKULL_SEEK_NEAR,FIRESKULL_SEEK_FAR);
+        // dodge back and forth occasionally
+        aiDodge.call(this,plRay,FIRESKULL_DODGE_SPD);
 
         if(dist > 30)
         {
