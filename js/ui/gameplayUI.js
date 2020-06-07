@@ -19,6 +19,7 @@ var showControlPanel = true;
 var currentEditTabIndex = -1;
 
 const GAMEPLAYUI = 1;
+
 var minFPS = 99999;
 var maxFPS = 0;
 

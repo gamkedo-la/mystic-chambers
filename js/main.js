@@ -10,6 +10,7 @@ function events(deltaTime)
     {
         case MAINMENUUI: mainMenuUICustomEvents(); break;
         case GAMEPLAYUI: gameplayUICustomEvents(deltaTime); break;
+        case NEXTLEVELUI: nextLevelUICustomEvents(); break;
     }
     ui.event();
 }
@@ -27,6 +28,7 @@ function draw(deltaTime)
     {
         case MAINMENUUI: mainMenuUICustomDraw(); break;
         case GAMEPLAYUI: gameplayUICustomDraw(deltaTime); break;
+        case NEXTLEVELUI: nextLevelUICustomDraw(deltaTime); break;
     }
     ui.draw(deltaTime);
 }

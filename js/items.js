@@ -282,7 +282,7 @@ function itemToPlayerShotReaction(item) //return true to destroy item
 
             if(typeof item.hp == "undefined") { item.hp = 1; }
             else if(item.hp > 0) { item.hp--; }
-            else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }
+            else { decor.addUsingAnotherEntity(item, ENT_DESTROY2); return true; }
 
             //WIP!!!
             //Play sound!!!

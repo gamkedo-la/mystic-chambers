@@ -62,6 +62,10 @@ const ENT_DESTROY1 = 6;
 entProp[ENT_DESTROY1].idleImg = new ImageObject("images/destroy1.png", vec2(1280, 160));
 entProp[ENT_DESTROY1].effectFrame = 40;
 
+const ENT_DESTROY2 = 7;
+entProp[ENT_DESTROY2].idleImg = new ImageObject("images/destroy2.png", vec2(1280, 160));
+entProp[ENT_DESTROY2].effectFrame = 40;
+
 const decorTotalTypes = 10;
 //////////////////////////////////////////////////////
 // ITEMS

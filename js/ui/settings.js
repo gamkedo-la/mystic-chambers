@@ -3,9 +3,11 @@ function uiInit()
     uiSettings();
     setupGameplayUI();
     setupMainMenuUI();
+    setupNextLevelUI();
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
     uistates.push(new UIState(gameplayUI));
+    uistates.push(new UIState(nextLevelUI));
     ui = new UI(uistates, MAINMENUUI);
 }
 
