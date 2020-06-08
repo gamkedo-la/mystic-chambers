@@ -357,11 +357,83 @@ function fireSkullAI(plRay,deltaTime)
 
 function evilDwarfAI(plRay)
 {
-    aiExplore.call(this,plRay);
-    //aiSeek.call(this,plRay);
+    if(typeof this.aiStage == "undefined") this.aiStage = -1;
+    if(typeof this.stopTimer == "undefined") this.stopTimer = 0;
+    if(typeof this.attackTimer == "undefined") this.attackTimer = 0;
+    if(typeof this.normalTimer == "undefined") this.normalTimer = 0;
 
-    if (Math.random() < 0.0005) 
+    // fragile and slow
+    if(typeof this.hp == "undefined") this.hp = 1; 
+    const exploredist = 150;
+    const attackrange = 30;
+    const seekspeed = 0.1;
+    const attackspeed = 2; // fast attack
+    const normalspeed = 0.2; // really slow
+    const meleerange = 10; // longish reach
+    const meleedamage = 1; // weak punch
+    const evadespeed = -1; // not sure
+
+    var dist = plRay.p.distance(this.p);
+
+    if(dist > exploredist)
     {
-    	audio.play3DSound(sounds[DWARF_IDLE], this.p, rndAP(), rndAP());
+        aiExplore.call(this,plRay);
+        if (Math.random() < 0.0005 * deltaTime) 
+        {
+        	audio.play3DSound(sounds[FIRESKULL_IDLE], this.p, rndAP(), rndAP());
+        }
     }
+    else
+    {
+        // move towards the player if they are close by
+        aiSeek.call(this,plRay,false,FIRESKULL_SEEK_NEAR,FIRESKULL_SEEK_FAR);
+        // dodge back and forth occasionally
+        aiDodge.call(this,plRay,FIRESKULL_DODGE_SPD);
+
+        if(dist > attackrange)
+        {
+            this.speed = seekspeed;
+            this.stopTimer = this.attackTimer = this.normalTimer = this.aiStage = -1;
+        }
+        else
+        {
+            if(this.aiStage <= -1 && this.stopTimer <= 0)
+            {
+                this.stopTimer = 300;
+                this.aiStage = 0;
+            }
+            else if(this.aiStage == 0 && this.attackTimer <= 0)
+            {
+                this.attackTimer = 300;
+                this.aiStage = 1;
+            }
+            else if(this.aiStage == 1 && this.normalTimer <= 0)
+            {
+                this.normalTimer = 1200;
+                this.aiStage = 2;
+            }
+            else if(this.aiStage == 2 && this.normalTimer <= 0)
+            {
+                this.aiStage = -1;
+            }
+
+            if(this.stopTimer > 0) { this.speed = 0.0; this.stopTimer -= deltaTime; }
+            else if(this.attackTimer > 0) { this.speed = attackspeed; this.attackTimer -= deltaTime; }
+            else if(this.normalTimer > 0) { this.speed = normalspeed; this.normalTimer -= deltaTime; }
+
+            if(dist < meleerange && this.attackTimer > 0)
+            {
+                playerHealth -= meleedamage;
+                flash = flashTime;
+                flashColor = playerDamageFlashColor;
+                plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle));
+                plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
+                this.attackTimer = 0;
+
+                audio.play1DSound(sounds[PLAYER_HURT+rndOff()]);
+            }
+        }
+    }
+
+    if(typeof this.damageDelay != "undefined" && this.damageDelay > 0) this.speed = evadespeed;
 }
