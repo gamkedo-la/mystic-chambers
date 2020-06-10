@@ -156,6 +156,8 @@ function aiDodge(plRay,strafeSize=0.1) {
             }
         }
     } // circle strafe
+    
+    validateRotation.call(this); // stay in 0..360 deg - not sure if this is required
 }
 
 // move away from the player
