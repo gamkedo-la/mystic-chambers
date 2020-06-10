@@ -326,7 +326,8 @@ class Entity
                 var imageSide = radToDeg(spriteAngle) / (360.0 /
                     (entProp[this.id].idleImg.size.x / 160.0));
 
-                if(this.id == ENT_FIRESKULL)
+                if(this.id == ENT_FIRESKULL ||
+                    this.id == ENT_EVILDWARF)
                 {
                     if(typeof this.hp != "undefined"
                     && typeof this.prevHp == "undefined")

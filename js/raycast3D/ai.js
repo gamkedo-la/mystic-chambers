@@ -355,7 +355,7 @@ function fireSkullAI(plRay,deltaTime)
     if(typeof this.damageDelay != "undefined" && this.damageDelay > 0) this.speed = -1.0;
 }
 
-function evilDwarfAI(plRay)
+function evilDwarfAI(plRay,deltaTime)
 {
     if(typeof this.aiStage == "undefined") this.aiStage = -1;
     if(typeof this.stopTimer == "undefined") this.stopTimer = 0;
