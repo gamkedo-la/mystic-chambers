@@ -15,7 +15,7 @@ var editorNoTouchColor = "#220000ff";
 
 var currentLevel = 1;
 var levelStartingPlayerPos = vec2(window.innerWidth/2, window.innerHeight/2);
-var totalLevels = 10;
+var totalLevels = 2;//3;
 const levelPrefix = "levels/lv";
 const levelPostfix = ".txt";
 

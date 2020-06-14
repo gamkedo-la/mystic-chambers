@@ -176,13 +176,35 @@ class ItemManager
                         while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
                         activeSector = undefined;
                         currentLevel++;
-                        if(currentLevel >= totalLevels + 1) currentLevel = 1;
                         loadLevel(wall, area);
                         lvLabel.text = getLevelName();
                         flash = flashTime*3;
                         flashColor = levelCompleteFlashColor;
                         audio.play1DSound(sounds[INCEPTION]);
                         subtitleManager.updateAndDisplayText("LEVEL COMPLETE!");
+
+                        ui.stateIndex = NEXTLEVELUI;
+                        flexibleLabel.text = "LEVEL " + (currentLevel-1).toString() + " COMPLETED!";
+                        flexibleLabel.textColor = "#44FF44";
+                        ui.transitionAnimation();
+                        break;
+
+                    case ENT_TREASURE:
+                        //go to next level...
+                        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
+                        while(area.length > 0) area.pop();
+                        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
+                        activeSector = undefined;
+                        currentLevel++;
+                        flash = flashTime*3;
+                        flashColor = levelCompleteFlashColor;
+                        audio.play1DSound(sounds[INCEPTION]);
+                        subtitleManager.updateAndDisplayText("GAME FINISH!");
+
+                        ui.stateIndex = NEXTLEVELUI;
+                        flexibleLabel.text = "YOU FOUND THE MYSTUS TREASURE!";
+                        flexibleLabel.textColor = "#FFFF44";
+                        ui.transitionAnimation();
                         break;
 
                     default:
@@ -315,12 +337,13 @@ function itemToPlayerShotReaction(item) //return true to destroy item
             break;
 
         default:
-            if(Math.random() < 0.5) audio.play3DSound(sounds[WALL1], item.p, rndAP(), rndAP());
+            //NOTHING!
+            /*if(Math.random() < 0.5) audio.play3DSound(sounds[WALL1], item.p, rndAP(), rndAP());
             else { if(Math.random() < 0.5) audio.play3DSound(sounds[WALL2], item.p, rndAP(), rndAP());
             else audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP()); }
 
             if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
-            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
+            else decor.addUsingAnotherEntity(item, ENT_EFFECT3);*/
     }
 
     return false;

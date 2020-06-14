@@ -4,10 +4,12 @@ function uiInit()
     setupGameplayUI();
     setupMainMenuUI();
     setupNextLevelUI();
+    setupCreditsUI();
     uistates = [];
     uistates.push(new UIState(mainMenuUI));
     uistates.push(new UIState(gameplayUI));
     uistates.push(new UIState(nextLevelUI));
+    uistates.push(new UIState(creditsUI));
     ui = new UI(uistates, MAINMENUUI);
 }
 

@@ -37,11 +37,11 @@ function setupMainMenuUI()
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(editorButton);
-    loadButton = new TextButton(tr(vec2(), btnSize),
+    /*loadButton = new TextButton(tr(vec2(), btnSize),
         new Label(tr(), "  LOAD LEVEL        L",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    menuButtons.push(loadButton);
+    menuButtons.push(loadButton);*/
     creditsButton = new TextButton(tr(vec2(), btnSize),
         new Label(tr(), "  CREDITS        C",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
@@ -50,8 +50,6 @@ function setupMainMenuUI()
 
     mainMenuUI.push(new FlexGroup(tr(vec2(50, 350), vec2(window.innerWidth, window.innerHeight-350)),
         new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3, 20), vec2(1, 5), true));
-
-    //mainMenuUI.push(new Label(tr(vec2(window.innerWidth/2+200, window.innerHeight/2), vec2(400, 100)), "Background Door will be here"));
 }
 
 function mainMenuUICustomDraw()
@@ -79,7 +77,7 @@ function mainMenuUICustomEvents()
 
     if(playButton.button.output == UIOUTPUT_HOVER
         || editorButton.button.output == UIOUTPUT_HOVER
-        || loadButton.button.output == UIOUTPUT_HOVER
+        //|| loadButton.button.output == UIOUTPUT_HOVER
         || creditsButton.button.output == UIOUTPUT_HOVER)
     {
         if(!hoverSoundDone) audio.play1DSound(sounds[HOVER]);
@@ -94,6 +92,15 @@ function mainMenuUICustomEvents()
         ui.stateIndex = GAMEPLAYUI;
         ui.transitionAnimation();
         if(mapMode) toggleGameplay();
+        restrictLevelEditor = true;
+
+        while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
+        while(area.length > 0) area.pop();
+        while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
+        activeSector = undefined;
+        currentLevel = 1;
+        loadLevel(wall, area);
+        lvLabel.text = getLevelName();
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         playButton.button.resetOutput();
@@ -105,11 +112,12 @@ function mainMenuUICustomEvents()
         ui.stateIndex = GAMEPLAYUI;
         ui.transitionAnimation();
         if(!mapMode) toggleGameplay();
+        restrictLevelEditor = false;
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         editorButton.button.resetOutput();
     }
-    else if(loadButton.button.output == UIOUTPUT_SELECT
+    /*else if(loadButton.button.output == UIOUTPUT_SELECT
         || keysDown.indexOf('l') != -1)
     {
         hideMainMenuCube();
@@ -119,13 +127,13 @@ function mainMenuUICustomEvents()
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         loadButton.button.resetOutput();
-    }
+    }*/
     else if(creditsButton.button.output == UIOUTPUT_SELECT
         || keysDown.indexOf('s') != -1)
     {
         hideMainMenuCube();
-        //will toggle credits state
-        //  WIP!!!
+        ui.stateIndex = CREDITSUI;
+        ui.transitionAnimation();
 
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         creditsButton.button.resetOutput();

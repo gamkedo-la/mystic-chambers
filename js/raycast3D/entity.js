@@ -202,6 +202,11 @@ entProp[ENT_LADDER].color = "#FFDD0090";
 entProp[ENT_LADDER].idleImg = new ImageObject("images/ladder.png", vec2(1280, 160));
 entProp[ENT_LADDER].renderOffset = vec2(0,-100);
 
+const ENT_TREASURE = 32;
+entProp[ENT_TREASURE].color = "#FFFF00FF";
+entProp[ENT_TREASURE].idleImg = new ImageObject("images/treasure.png", vec2(1280, 160));
+entProp[ENT_TREASURE].renderOffset = vec2(0,-100);
+
 const itemTotalTypes = 30;
 //////////////////////////////////////////////////////
 // ENEMIES: id 40 to 44

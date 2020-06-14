@@ -343,6 +343,9 @@ function setupGameplayUI()
         )
     );
 
+    menuKeyLabel = new Label(tr(vec2(window.innerWidth - 160, 0), vec2(160, 40)), "M - Exit To Menu", (scrSizeFactor * 0.025).toString() + "px Lucida, sans-serif");
+    gameplayUI.push(menuKeyLabel);
+
     if (platform == ANDROID)
     {
         gameplayUI.push(new TextButton(
@@ -483,6 +486,15 @@ function gameplayUICustomEvents(deltaTime)
     healthLabel.text = playerHealth.toString();
 
     //handleToolTips();
+
+    if(keysDown.indexOf('m') != -1)
+    {
+        ui.stateIndex = MAINMENUUI;
+        ui.transitionAnimation();
+
+        playerHealth = playerMaxHealth;
+        currentLevel = 1;
+    }
 
     controlPanel.enabled = mapMode;
 

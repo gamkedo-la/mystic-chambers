@@ -50,6 +50,8 @@ var keysDisplayUI = new Sprite(tr(vec2(), vec2(0.5, 0.5)), undefined);
 var keyDisplayUIOffset = vec2(screen.width * 0.2, screen.height - (screen.height/8.6));
 var keyDisplayXIncrement = 40.0;
 
+var restrictLevelEditor = false;
+
 function playerInit()
 {
     if(typeof levelStartingPlayerPos == "undefined")
@@ -109,6 +111,15 @@ function playerJumpEvent()
 
 function playerEvents(deltaTime)
 {
+    if(playerHealth <= 0)
+    {
+        mapMode = false;
+        ui.stateIndex = NEXTLEVELUI;
+        flexibleLabel.text = "GAMEOVER!";
+        flexibleLabel.textColor = "#FF4444";
+        ui.transitionAnimation();
+    }
+
     if(playerAngleMovement)
     {
         for (let i = 0; i < ray.length; i++)
@@ -249,7 +260,7 @@ function toggleGameplay()
         enableFullScreen(document.documentElement);
         enablePointerLock(canvas);
     }
-    else
+    else if(!restrictLevelEditor)
     {
         mapMode = true;
         disableFullscreen(document.documentElement);

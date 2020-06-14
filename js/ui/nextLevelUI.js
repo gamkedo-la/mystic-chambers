@@ -1,79 +1,71 @@
 //Next Level UI will also display Game Finish Screen.
 
 const NEXTLEVELUI = 2;
+var nextLevelCounter = 0;
 
 nextLevelUI = [];
 
 function setupNextLevelUI()
 {
-    // menuButtons = [];
-    // playButton = new TextButton(tr(vec2(), btnSize),
-    //     new Label(tr(), "  PLAY        P",
-    //     mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
-    //     new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    // menuButtons.push(playButton);
-    // editorButton = new TextButton(tr(vec2(), btnSize),
-    //     new Label(tr(), "  LEVEL EDITOR        E",
-    //     mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
-    //     new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    // menuButtons.push(editorButton);
-    // loadButton = new TextButton(tr(vec2(), btnSize),
-    //     new Label(tr(), "  LOAD LEVEL        L",
-    //     mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
-    //     new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    // menuButtons.push(loadButton);
-    // creditsButton = new TextButton(tr(vec2(), btnSize),
-    //     new Label(tr(), "  CREDITS        C",
-    //     mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
-    //     new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    // menuButtons.push(creditsButton);
+    nextLevelUIObjects = [];
 
-    // mainMenuUI.push(new FlexGroup(tr(vec2(50, 350), vec2(window.innerWidth, window.innerHeight-350)),
-    //     new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3, 20), vec2(1, 5), true));
+    flexibleLabel = new Label(tr(), "none",
+        (mainMenuFontSize * 3.0).toString() + "px " + uiContext.fontFamily, "#44FF44");
+    nextLevelUIObjects.push(flexibleLabel);
 
-    //mainMenuUI.push(new Label(tr(vec2(window.innerWidth/2+200, window.innerHeight/2), vec2(400, 100)), "Background Door will be here"));
+    timeTakenLabel = new Label(tr(), "TIME TAKEN: 123 SECONDS",
+        (mainMenuFontSize * 1.5).toString() + "px " + uiContext.fontFamily);
+    nextLevelUIObjects.push(timeTakenLabel);
+    enemiesKilledLabel = new Label(tr(), "ENEMIES KILLED: 123",
+        (mainMenuFontSize * 1.5).toString() + "px " + uiContext.fontFamily);
+    nextLevelUIObjects.push(enemiesKilledLabel);
+    pressKeyLabel = new Label(tr(), "  PRESS ANY KEY TO PROCEED!",
+        (mainMenuFontSize * 1.5).toString() + "px " + uiContext.fontFamily, "white");
+    nextLevelUIObjects.push(pressKeyLabel);
+
+    nextLevelUI.push(new FlexGroup(tr(vec2(0, 100), vec2(window.innerWidth, window.innerHeight-200)),
+        new SubState(tr(), nextLevelUIObjects),false, vec2(0, 0), vec2(1, 4), true));
 }
 
 function nextLevelUICustomDraw()
 {
+    mainMenuBackground.draw();
 }
 
 function nextLevelUICustomEvents()
 {
-    // if(playButton.button.output == UIOUTPUT_SELECT
-    //     || keysDown.indexOf('p') != -1)
-    // {
-    //     ui.stateIndex = GAMEPLAYUI;
-    //     ui.transitionAnimation();
-    //     if(mapMode) toggleGameplay();
+    if(keysDown.length > 0)
+    {
+        if(nextLevelCounter > 100)
+        {
+            if(playerHealth <= 0)
+            {
+                ui.stateIndex = MAINMENUUI;
 
-    //     audio.play1DSound(sounds[MENU_CLICK_BTN]);
-    //     playButton.button.resetOutput();
-    // }
-    // else if(editorButton.button.output == UIOUTPUT_SELECT
-    //     || keysDown.indexOf('e') != -1)
-    // {
-    //     ui.stateIndex = GAMEPLAYUI;
-    //     ui.transitionAnimation();
-    //     if(!mapMode) toggleGameplay();
+                playerHealth = playerMaxHealth;
+                currentLevel = 1;
+            }
+            else if(currentLevel > totalLevels)
+            {
+                ui.stateIndex = CREDITSUI;
 
-    //     audio.play1DSound(sounds[MENU_CLICK_BTN]);
-    //     editorButton.button.resetOutput();
-    // }
-    // else if(loadButton.button.output == UIOUTPUT_SELECT
-    //     || keysDown.indexOf('l') != -1)
-    // {
-    //     //  WIP!!!
+                playerHealth = playerMaxHealth;
+                currentLevel = 1;
+            }
+            else
+            {
+                ui.stateIndex = GAMEPLAYUI;
+            }
+            
+            ui.transitionAnimation();
+            if(mapMode) toggleGameplay();
 
-    //     audio.play1DSound(sounds[MENU_CLICK_BTN]);
-    //     loadButton.button.resetOutput();
-    // }
-    // else if(creditsButton.button.output == UIOUTPUT_SELECT
-    //     || keysDown.indexOf('s') != -1)
-    // {
-    //     //  WIP!!!
+            nextLevelCounter = 0;
 
-    //     audio.play1DSound(sounds[MENU_CLICK_BTN]);
-    //     creditsButton.button.resetOutput();
-    // }
+            audio.play1DSound(sounds[MENU_CLICK_BTN]);
+            nextLevelButton.button.resetOutput();
+        }
+    }
+
+    nextLevelCounter++;
 }
