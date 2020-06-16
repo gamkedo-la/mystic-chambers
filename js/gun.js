@@ -205,6 +205,11 @@ function gunEvent()
     {
         if(!isKeyPressed(gunReloadKeyPress))
         {
+            if(currentGun == GUN_REVOLVER)
+                audio.play1DSound(sounds[REVOLVER_RELOAD]);
+            else if(currentGun == GUN_WINCHESTER)
+                audio.play1DSound(sounds[WINCHESTER_RELOAD]);
+
             while(ammoInGun[currentGun] < gunAmmoCapacity[currentGun]
                 && totalAmmo[currentGun] > 0)
             {
