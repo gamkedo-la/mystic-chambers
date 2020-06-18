@@ -117,6 +117,8 @@ function playerEvents(deltaTime)
         ui.stateIndex = NEXTLEVELUI;
         flexibleLabel.text = "GAMEOVER!";
         flexibleLabel.textColor = "#FF4444";
+        timeTakenLabel.text = "TIME TAKEN: " + (gameTimer/1000.0).toString() + " SECONDS";
+        enemiesKilledLabel.text = "ENEMIES KILLED: " + enemiesKilled.toString();
         ui.transitionAnimation();
     }
 

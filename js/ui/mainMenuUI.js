@@ -37,11 +37,6 @@ function setupMainMenuUI()
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(editorButton);
-    /*loadButton = new TextButton(tr(vec2(), btnSize),
-        new Label(tr(), "  LOAD LEVEL        L",
-        mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
-        new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
-    menuButtons.push(loadButton);*/
     creditsButton = new TextButton(tr(vec2(), btnSize),
         new Label(tr(), "  CREDITS        C",
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
@@ -94,6 +89,10 @@ function mainMenuUICustomEvents()
         if(mapMode) toggleGameplay();
         restrictLevelEditor = true;
 
+        gameTimer = 0;
+        gameTimerStart = true;
+        enemiesKilled = 0;
+
         while(wall.length > 0) { deleteWallFromAllSectors(wall[wall.length - 1]); wall.pop(); }
         while(area.length > 0) area.pop();
         while(entities.length > 0) { entities.pop(); decor.removeIfNotInEntities(); items.removeIfNotInEntities(); enemies.removeIfNotInEntities(); }
@@ -114,22 +113,15 @@ function mainMenuUICustomEvents()
         if(!mapMode) toggleGameplay();
         restrictLevelEditor = false;
 
+        gameTimer = 0;
+        gameTimerStart = false;
+        enemiesKilled = 0;
+
         audio.play1DSound(sounds[MENU_CLICK_BTN]);
         editorButton.button.resetOutput();
     }
-    /*else if(loadButton.button.output == UIOUTPUT_SELECT
-        || keysDown.indexOf('l') != -1)
-    {
-        hideMainMenuCube();
-        //will get the file that you give it
-        //and loads that file for playing
-        //  WIP!!!
-
-        audio.play1DSound(sounds[MENU_CLICK_BTN]);
-        loadButton.button.resetOutput();
-    }*/
     else if(creditsButton.button.output == UIOUTPUT_SELECT
-        || keysDown.indexOf('s') != -1)
+        || keysDown.indexOf('c') != -1)
     {
         hideMainMenuCube();
         ui.stateIndex = CREDITSUI;

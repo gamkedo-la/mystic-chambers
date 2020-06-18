@@ -13,10 +13,10 @@ function setupNextLevelUI()
         (mainMenuFontSize * 3.0).toString() + "px " + uiContext.fontFamily, "#44FF44");
     nextLevelUIObjects.push(flexibleLabel);
 
-    timeTakenLabel = new Label(tr(), "TIME TAKEN: 123 SECONDS",
+    timeTakenLabel = new Label(tr(), "TIME TAKEN: " + gameTimer.toString() + " SECONDS",
         (mainMenuFontSize * 1.5).toString() + "px " + uiContext.fontFamily);
     nextLevelUIObjects.push(timeTakenLabel);
-    enemiesKilledLabel = new Label(tr(), "ENEMIES KILLED: 123",
+    enemiesKilledLabel = new Label(tr(), "ENEMIES KILLED: " + enemiesKilled.toString(),
         (mainMenuFontSize * 1.5).toString() + "px " + uiContext.fontFamily);
     nextLevelUIObjects.push(enemiesKilledLabel);
     pressKeyLabel = new Label(tr(), "  PRESS ANY KEY TO PROCEED!",
@@ -42,6 +42,10 @@ function nextLevelUICustomEvents()
             {
                 ui.stateIndex = MAINMENUUI;
 
+                gameTimer = 0;
+                gameTimerStart = false;
+                enemiesKilled = 0;
+
                 playerHealth = playerMaxHealth;
                 currentLevel = 1;
             }
@@ -49,12 +53,20 @@ function nextLevelUICustomEvents()
             {
                 ui.stateIndex = CREDITSUI;
 
+                gameTimer = 0;
+                gameTimerStart = false;
+                enemiesKilled = 0;
+
                 playerHealth = playerMaxHealth;
                 currentLevel = 1;
             }
             else
             {
                 ui.stateIndex = GAMEPLAYUI;
+
+                gameTimer = 0;
+                gameTimerStart = true;
+                enemiesKilled = 0;
             }
             
             ui.transitionAnimation();

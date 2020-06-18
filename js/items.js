@@ -186,6 +186,8 @@ class ItemManager
                         ui.stateIndex = NEXTLEVELUI;
                         flexibleLabel.text = "LEVEL " + (currentLevel-1).toString() + " COMPLETED!";
                         flexibleLabel.textColor = "#44FF44";
+                        timeTakenLabel.text = "TIME TAKEN: " + (gameTimer/1000.0).toString() + " SECONDS";
+                        enemiesKilledLabel.text = "ENEMIES KILLED: " + enemiesKilled.toString();
                         ui.transitionAnimation();
                         break;
 
@@ -204,6 +206,8 @@ class ItemManager
                         ui.stateIndex = NEXTLEVELUI;
                         flexibleLabel.text = "YOU FOUND THE MYSTUS TREASURE!";
                         flexibleLabel.textColor = "#FFFF44";
+                        timeTakenLabel.text = "TIME TAKEN: " + (gameTimer/1000.0).toString() + " SECONDS";
+                        enemiesKilledLabel.text = "ENEMIES KILLED: " + enemiesKilled.toString();
                         ui.transitionAnimation();
                         break;
 

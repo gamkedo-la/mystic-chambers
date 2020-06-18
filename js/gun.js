@@ -128,6 +128,8 @@ function checkPlayerToEnemyShot()
                 {
                     decor.addUsingAnotherEntity(enemies.ents[i], ENT_DESTROY1);
 
+                    enemiesKilled++;
+
                     removeEntityInAllSectors(enemies.ents[i]);
                     removeEntityInSector(enemies.ents[i]);
                     removeEntity(enemies.ents[i]);

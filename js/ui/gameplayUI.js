@@ -1,5 +1,9 @@
 const PLAY_BUTTON = '1';
 
+var gameTimer = 0;
+var gameTimerStart = false;
+var enemiesKilled = 0;
+
 var flashTime = 160;
 var flash = 0;
 var flashColor = "#00000000";
@@ -54,6 +58,15 @@ function gameplayEvents(deltaTime)
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
     floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
+
+    if(gameTimerStart)
+    {
+        gameTimer += deltaTime;
+        if(typeof gameTimerLabel != "undefined")
+        {
+            gameTimerLabel.text = Math.floor(gameTimer/1000.0).toString();
+        }
+    }
 }
 
 function setupGameplayUI()
@@ -343,6 +356,8 @@ function setupGameplayUI()
         )
     );
 
+    gameTimerLabel = new Label(tr(vec2(20, 0), vec2(20, 40)), "0", (scrSizeFactor * 0.025).toString() + "px Lucida, sans-serif");
+    gameplayUI.push(gameTimerLabel);
     menuKeyLabel = new Label(tr(vec2(window.innerWidth - 160, 0), vec2(160, 40)), "M - Exit To Menu", (scrSizeFactor * 0.025).toString() + "px Lucida, sans-serif");
     gameplayUI.push(menuKeyLabel);
 
