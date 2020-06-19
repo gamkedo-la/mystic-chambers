@@ -87,6 +87,14 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
     if (DEBUGAI) console.log("aiSeek"+(backwards?" (AVOID)":"")+" for entity id " + this.id + " named " + this.name);
     if (DEBUGAI) console.log("pos: " + this.p.x.toFixed(1)+","+this.p.y.toFixed(1)+" angle: "+this.angle.toFixed(1));
 
+    if(typeof this.targetPosition != "undefined")
+    {
+        this.tempPlRayPosX = plRay.p.x;
+        this.tempPlRayPosY = plRay.p.y;
+        plRay.p.x = this.targetPosition.x;
+        plRay.p.y = this.targetPosition.y;
+    }
+
     // this is recorded here only for debug red line display in entity draw
     this.debugTarget = plRay.p.subtract(aiOffset);
 
@@ -134,6 +142,14 @@ function aiSeek(plRay, backwards=false,mindist=0,maxdist=250) {
         }
     } else {
         if (DEBUGAI) console.log("too close to player: seek paused");
+    }
+
+    if(typeof this.targetPosition != "undefined")
+    {
+        plRay.p.x = this.tempPlRayPosX;
+        plRay.p.y = this.tempPlRayPosY;
+        this.tempPlRayPosX = undefined;
+        this.tempPlRayPosY = undefined;
     }
 
 }
@@ -286,6 +302,8 @@ function aiWaypointNavigation() {
 
 function fireSkullAI(plRay,deltaTime)
 {
+    console.log(this.targetPosition);
+
     if(typeof this.aiStage == "undefined") this.aiStage = -1;
     if(typeof this.stopTimer == "undefined") this.stopTimer = 0;
     if(typeof this.attackTimer == "undefined") this.attackTimer = 0;
@@ -294,10 +312,10 @@ function fireSkullAI(plRay,deltaTime)
 
     var dist = plRay.p.distance(this.p);
 
-    if(dist > 100)
+    if(dist > 160 && typeof this.targetPosition == "undefined")
     {
         aiExplore.call(this,plRay);
-        if (Math.random() < 0.0005 * deltaTime) 
+        if (Math.random() < 0.0005 * deltaTime)
         {
         	audio.play3DSound(sounds[FIRESKULL_IDLE], this.p, rndAP(), rndAP());
         }
@@ -309,7 +327,7 @@ function fireSkullAI(plRay,deltaTime)
         // dodge back and forth occasionally
         aiDodge.call(this,plRay,FIRESKULL_DODGE_SPD);
 
-        if(dist > 30)
+        if(dist > 40 && typeof this.targetPosition == "undefined")
         {
             this.speed = 0.15;
             this.stopTimer = this.attackTimer = this.normalTimer = this.aiStage = -1;
@@ -318,17 +336,21 @@ function fireSkullAI(plRay,deltaTime)
         {
             if(this.aiStage <= -1 && this.stopTimer <= 0)
             {
-                this.stopTimer = 500;
+                this.stopTimer = 1000;
                 this.aiStage = 0;
             }
-            else if(this.aiStage == 0 && this.attackTimer <= 0)
+            else if(this.aiStage == 0 && this.attackTimer <= 0
+            && typeof this.targetPosition == "undefined")
             {
-                this.attackTimer = 500;
+                this.targetPosition = vec2(plRay.p.x, plRay.p.y);
+                this.attackTimer = 400;
                 this.aiStage = 1;
             }
-            else if(this.aiStage == 1 && this.normalTimer <= 0)
+            else if(this.aiStage == 1 && this.normalTimer <= 0
+            && this.attackTimer <= 0)
             {
-                this.normalTimer = 2500;
+                this.targetPosition = undefined;
+                this.normalTimer = 3000;
                 this.aiStage = 2;
             }
             else if(this.aiStage == 2 && this.normalTimer <= 0)
@@ -337,17 +359,20 @@ function fireSkullAI(plRay,deltaTime)
             }
 
             if(this.stopTimer > 0) { this.speed = 0.0; this.stopTimer -= deltaTime; }
-            else if(this.attackTimer > 0) { this.speed = 1.25; this.attackTimer -= deltaTime; }
-            else if(this.normalTimer > 0) { this.speed = 0.3; this.normalTimer -= deltaTime; }
+            else if(this.attackTimer > 0) { this.speed = 2.0; this.attackTimer -= deltaTime; }
+            else if(this.normalTimer > 0) { this.speed = 0.4; this.normalTimer -= deltaTime; }
 
-            if(dist < 5 && this.attackTimer > 0)
+            if(dist < 28 && this.stopTimer > 0) this.speed = -1.0;
+            else if(dist < 16 && this.attackTimer > 0)
             {
                 playerHealth -= 20;
                 flash = flashTime;
                 flashColor = playerDamageFlashColor;
-                plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle));
-                plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
+                //plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle))*4.0;
+                //plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle))*4.0;
+                plKnockBack = vec2(4.0, 4.0);
                 this.attackTimer = 0;
+                this.targetPosition = undefined;
 
                 audio.play1DSound(sounds[PLAYER_HURT+rndOff()]);
             }

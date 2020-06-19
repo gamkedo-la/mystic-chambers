@@ -40,6 +40,8 @@ var jumpSetZero = 2.0;
 var rayAngleDiff = 0;
 var rayRenderFOV = 0;
 
+var plKnockBack = vec2();
+
 //KEYS
 var KEY_RED = 0;
 var KEY_GREEN = 1;
@@ -155,6 +157,11 @@ function playerEvents(deltaTime)
 
     playerJumpEvent();
     gunEvent();
+
+    plPos.x -= Math.cos(degToRad(ray[ray.length/2].angle))*plKnockBack.x;
+    plPos.y -= Math.sin(degToRad(ray[ray.length/2].angle))*plKnockBack.y;
+    plKnockBack.x /= 1.5;
+    plKnockBack.y /= 1.5;
     
     for(let keyI = 0; keyI < 4; keyI++)
     {
@@ -202,7 +209,6 @@ function playerEvents(deltaTime)
             playerWalkAlt = !playerWalkAlt;
         }
     }
-    
 }
 
 function haltPlayer()

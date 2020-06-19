@@ -66,6 +66,16 @@ function gameplayEvents(deltaTime)
         {
             gameTimerLabel.text = Math.floor(gameTimer/1000.0).toString();
         }
+
+        if(Math.random() <= 0.01)
+        {
+            entitiesInSectorSet = [];
+            setEntitiesInSectors();
+            deleteEntitiesOutsideSector();
+            //decor.removeIfNotInEntities();
+            //items.removeIfNotInEntities();
+            enemies.removeIfNotInEntities();
+        }
     }
 }
 

@@ -331,8 +331,6 @@ class Entity
                 var imageSide = Math.floor(radToDeg(spriteAngle) / (360.0 /
                     (entProp[this.id].idleImg.size.x / 160.0)));
 
-                console.log("imageSide:"+imageSide);
-
                 if(this.id == ENT_FIRESKULL ||
                     this.id == ENT_EVILDWARF)
                 {
