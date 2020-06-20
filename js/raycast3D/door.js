@@ -1,6 +1,6 @@
 //TODO:
 //set correct value at changeThis variables
-var changeThis = 'change';
+/*var changeThis = 'change';
 
 //set color door to be locked
 var doorLocked = true;
@@ -35,5 +35,5 @@ function unlockDoor(doorColor)
             }
         }
     }
-}
+}*/
 

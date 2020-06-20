@@ -67,7 +67,7 @@ function gameplayEvents(deltaTime)
             gameTimerLabel.text = Math.floor(gameTimer/1000.0).toString();
         }
 
-        if(Math.random() <= 0.01)
+        if(Math.random() <= 0.05)
         {
             entitiesInSectorSet = [];
             setEntitiesInSectors();
@@ -470,7 +470,7 @@ function gameplayUICustomDraw(deltaTime)
 
             drawEntities(renderer, ray[ray.length/2], true, deltaTime);
 
-            for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors, 12);
+            for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors);
             drawSectorsMap(renderer, vec2(window.innerWidth/2, window.innerHeight/2), vec2(0,0));
             addOffsetToList(wall, off);
 
@@ -495,6 +495,8 @@ function gameplayUICustomDraw(deltaTime)
             drawAllGunsDisplay(renderer);
             drawKeysDisplay(renderer);
             drawCrosshair(renderer);
+
+            for (let i = 0; i < wall.length; i++) wall[i].draw(renderer, wallColors, true);
         }
 
         if(flash > 0)

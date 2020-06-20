@@ -308,7 +308,7 @@ function fireSkullAI(plRay,deltaTime)
     if(typeof this.stopTimer == "undefined") this.stopTimer = 0;
     if(typeof this.attackTimer == "undefined") this.attackTimer = 0;
     if(typeof this.normalTimer == "undefined") this.normalTimer = 0;
-    if(typeof this.hp == "undefined") this.hp = 5;
+    if(typeof this.hp == "undefined") this.hp = 4;
 
     var dist = plRay.p.distance(this.p);
 
@@ -368,8 +368,6 @@ function fireSkullAI(plRay,deltaTime)
                 playerHealth -= 20;
                 flash = flashTime;
                 flashColor = playerDamageFlashColor;
-                //plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle))*4.0;
-                //plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle))*4.0;
                 plKnockBack = vec2(4.0, 4.0);
                 this.attackTimer = 0;
                 this.targetPosition = undefined;
@@ -390,19 +388,19 @@ function evilDwarfAI(plRay,deltaTime)
     if(typeof this.normalTimer == "undefined") this.normalTimer = 0;
 
     // fragile and slow
-    if(typeof this.hp == "undefined") this.hp = 1; 
-    const exploredist = 150;
-    const attackrange = 30;
+    if(typeof this.hp == "undefined") this.hp = 8; 
+    const exploredist = 160;
+    const attackrange = 40;
     const seekspeed = 0.1;
     const attackspeed = 2; // fast attack
     const normalspeed = 0.2; // really slow
-    const meleerange = 10; // longish reach
-    const meleedamage = 1; // weak punch
-    const evadespeed = -1; // not sure
+    const meleerange = 16;
+    const meleedamage = 25;
+    const evadespeed = -1;
 
     var dist = plRay.p.distance(this.p);
 
-    if(dist > exploredist)
+    if(dist > exploredist && typeof this.targetPosition == "undefined")
     {
         aiExplore.call(this,plRay);
         if (Math.random() < 0.0005 * deltaTime) 
@@ -426,16 +424,20 @@ function evilDwarfAI(plRay,deltaTime)
         {
             if(this.aiStage <= -1 && this.stopTimer <= 0)
             {
-                this.stopTimer = 300;
+                this.stopTimer = 500;
                 this.aiStage = 0;
             }
-            else if(this.aiStage == 0 && this.attackTimer <= 0)
+            else if(this.aiStage == 0 && this.attackTimer <= 0
+            && typeof this.targetPosition == "undefined")
             {
-                this.attackTimer = 300;
+                this.targetPosition = vec2(plRay.p.x, plRay.p.y);
+                this.attackTimer = 600;
                 this.aiStage = 1;
             }
-            else if(this.aiStage == 1 && this.normalTimer <= 0)
+            else if(this.aiStage == 1 && this.normalTimer <= 0
+            && this.attackTimer <= 0)
             {
+                this.targetPosition = undefined;
                 this.normalTimer = 1200;
                 this.aiStage = 2;
             }
@@ -453,9 +455,9 @@ function evilDwarfAI(plRay,deltaTime)
                 playerHealth -= meleedamage;
                 flash = flashTime;
                 flashColor = playerDamageFlashColor;
-                plRay.p.x -= Math.cos(degToRad(ray[ray.length/2].angle));
-                plRay.p.y -= Math.sin(degToRad(ray[ray.length/2].angle));
+                plKnockBack = vec2(8.0, 8.0);
                 this.attackTimer = 0;
+                this.targetPosition = undefined;
 
                 audio.play1DSound(sounds[PLAYER_HURT+rndOff()]);
             }

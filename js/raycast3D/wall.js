@@ -105,10 +105,50 @@ class Wall
         this.angle = this.p1.angle(this.p2);
     }
 
-    draw(renderer, typeColors, length)
+    draw(renderer, typeColors, minimap, length)
     {
-        drawLine(renderer, this.p1, this.p2,
-            typeof typeColors == "undefined" ? "white" : typeColors[this.type]);
+        if(typeof minimap == "undefined") minimap = false;
+        if(!minimap)
+        {
+            drawLine(renderer, this.p1, this.p2,
+                typeof typeColors == "undefined" ? "white" : typeColors[this.type]);
+        }
+        else
+        {
+            var tp1 = vec2(this.p1.x, this.p1.y);
+            var tp2 = vec2(this.p2.x, this.p2.y);
+
+            var off = vec2(ray[ray.length/2].p.x - (window.innerWidth/2),
+                ray[ray.length/2].p.y - (window.innerHeight/2));
+
+            tp1.x -= off.x;
+            tp1.y -= off.y;
+            tp2.x -= off.x;
+            tp2.y -= off.y;
+
+            //tp1 = tp1.add(vec2(window.innerWidth * 0.25, window.innerHeight * 0.25));
+            //tp2 = tp2.add(vec2(window.innerWidth * 0.25, window.innerHeight * 0.25));
+
+            var mapP1 = vec2(window.innerWidth * 0.4, window.innerHeight * 0.4);
+            var mapP2 = vec2(window.innerWidth * 0.6, window.innerHeight * 0.6);
+
+            tp1.x = clamp(tp1.x, mapP1.x, mapP2.x);
+            tp1.y = clamp(tp1.y, mapP1.y, mapP2.y);
+            tp2.x = clamp(tp2.x, mapP1.x, mapP2.x);
+            tp2.y = clamp(tp2.y, mapP1.y, mapP2.y);
+
+            var mapOffset = vec2(window.innerWidth * 0.4, window.innerHeight * 0.4);
+            
+            drawLine(renderer, tp1.add(mapOffset), tp2.add(mapOffset),
+                typeof typeColors == "undefined" ? "white" : typeColors[this.type]);
+
+            drawCircle(renderer, lerpVec2(mapP1.add(mapOffset), mapP2.add(mapOffset), 0.5), 3, false, "green");
+
+            drawLine(renderer, mapP1.add(mapOffset), vec2(mapP2.x, mapP1.y).add(mapOffset), "black");
+            drawLine(renderer, mapP1.add(mapOffset), vec2(mapP1.x, mapP2.y).add(mapOffset), "black");
+            drawLine(renderer, vec2(mapP2.x, mapP1.y).add(mapOffset), mapP2.add(mapOffset), "black");
+            drawLine(renderer, vec2(mapP1.x, mapP2.y).add(mapOffset), mapP2.add(mapOffset), "black");
+        }
 
         if(typeof length != "undefined")
 		{
