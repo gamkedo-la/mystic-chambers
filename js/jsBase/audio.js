@@ -29,6 +29,8 @@ const PORTAL = 23;
 const PORTAL_TRAVEL = 24;
 const HOVER = 25;
 const FIRE = 26;
+const SFX_BARREL_HIT = 27;
+const SFX_BARREL_EXPLODE = 28;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -57,7 +59,9 @@ var soundsList = [
 	"audio/portal-sound-v5.wav",
 	"audio/portal-travel.wav",
 	"audio/flash.wav",
-	"audio/fire2.wav",
+    "audio/fire2.wav",
+    "audio/barrel_hit.mp3",
+    "audio/barrel_explode.mp3",
 ];
 
 var sounds = [];
