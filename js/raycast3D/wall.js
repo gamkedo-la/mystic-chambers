@@ -26,9 +26,9 @@ wallImages = [
     new ImageObject("images/wallTechServer.png", vec2(160, 160))
 ];
 
-const WALL_RED = 0;
-const WALL_GREEN = 1;
-const WALL_BLUE = 2;
+const WALL_RED = 1;
+const WALL_GREEN = 2;
+const WALL_BLUE = 3;
 
 wallColors = [
     "#ffff0099",
@@ -60,9 +60,7 @@ wallColors = [
 wall = [];
 
 var wallCollisionPadding = 0.25;
-var keyDoorTriggerPadding = 50.0;
-//var wallShrinkSpeed = 0.025;
-//var wallShrinkThreshold = 10.0;
+var keyDoorTriggerPadding = 25.0;
 
 activeSector = undefined;
 class SectorData {
@@ -186,30 +184,40 @@ class Wall
         if(isPointOnLine(vec2(this.p1.x, this.p1.y),
         vec2(this.p2.x, this.p2.y), vec2(p.x, p.y), keyDoorTriggerPadding))
         {
+            console.log("colliding with key wall");
             //Key Door System
             if(this.type == WALL_RED && availableKeys[KEY_RED])
             {
-                this.type = 0;
+                //this.type = 0;
+                this.p2.x = this.p1.x;
+                this.p2.y = this.p1.y;
                 availableKeys[KEY_RED] = false;
                 flash = flashTime*10;
                 flashColor = redKeyDoorFlashColor;
+                audio.play1DSound(sounds[DOOR_OPEN]);
                 subtitleManager.updateAndDisplayText("RED DOOR UNLOCKED!");
             }
             else if(this.type == WALL_GREEN && availableKeys[KEY_GREEN])
             {
-                this.type = 0;
+                //this.type = 0;
+                this.p2.x = this.p1.x;
+                this.p2.y = this.p1.y;
                 availableKeys[KEY_GREEN] = false;
                 flash = flashTime*10;
                 flashColor = greenKeyDoorFlashColor;
+                audio.play1DSound(sounds[DOOR_OPEN]);
                 subtitleManager.updateAndDisplayText("GREEN DOOR UNLOCKED!");
 
             }
             else if(this.type == WALL_BLUE && availableKeys[KEY_BLUE])
             {
-                this.type = 0;
+                //this.type = 0;
+                this.p2.x = this.p1.x;
+                this.p2.y = this.p1.y;
                 availableKeys[KEY_BLUE] = false;
                 flash = flashTime*10;
                 flashColor = blueKeyDoorFlashColor;
+                audio.play1DSound(sounds[DOOR_OPEN]);
                 subtitleManager.updateAndDisplayText("BLUE DOOR UNLOCKED!");
             }
         }

@@ -305,16 +305,22 @@ function itemToPlayerShotReaction(item) //return true to destroy item
             item.p.x += Math.cos(degToRad(ray[ray.length/2].angle))*4.0;
             item.p.y += Math.sin(degToRad(ray[ray.length/2].angle))*4.0;
 
-            if(typeof item.hp == "undefined") { item.hp = 1; }
-            else if(item.hp > 0) { 
+            if(typeof item.hp == "undefined")
+            {
+                item.hp = 1;
+                audio.play1DSound(sounds[SFX_BARREL_HIT]);
+            }
+            else if(item.hp > 0)
+            { 
                 item.hp--; 
                 audio.play1DSound(sounds[SFX_BARREL_HIT]);
             }
-            else { 
+            else
+            { 
                 audio.play1DSound(sounds[SFX_BARREL_EXPLODE]);
                 decor.addUsingAnotherEntity(item, ENT_DESTROY2); return true; 
             }
-            
+
             if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
             else decor.addUsingAnotherEntity(item, ENT_EFFECT3);
             break;
