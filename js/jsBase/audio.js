@@ -60,8 +60,8 @@ var soundsList = [
 	"audio/portal-travel.wav",
 	"audio/flash.wav",
     "audio/fire2.wav",
-    "audio/barrel_hit.mp3",
-    "audio/barrel_explode.mp3",
+    "audio/barrel_hit.wav",
+    "audio/barrel_explode.wav",
 ];
 
 var sounds = [];

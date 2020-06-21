@@ -294,7 +294,6 @@ function itemToPlayerShotReaction(item) //return true to destroy item
             else if(item.hp > 0) {item.hp--; }
             else { decor.addUsingAnotherEntity(item, ENT_DESTROY1); return true; }*/
 
-            //Play sound!!!
             audio.play1DSound(sounds[SFX_BARREL_HIT]);
 
             if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
@@ -315,9 +314,6 @@ function itemToPlayerShotReaction(item) //return true to destroy item
                 audio.play1DSound(sounds[SFX_BARREL_EXPLODE]);
                 decor.addUsingAnotherEntity(item, ENT_DESTROY2); return true; 
             }
-
-            //WIP!!!
-            //Play sound!!!
             
             if(Math.random() < 0.5) decor.addUsingAnotherEntity(item, ENT_EFFECT2);
             else decor.addUsingAnotherEntity(item, ENT_EFFECT3);

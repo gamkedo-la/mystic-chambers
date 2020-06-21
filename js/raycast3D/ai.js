@@ -302,8 +302,6 @@ function aiWaypointNavigation() {
 
 function fireSkullAI(plRay,deltaTime)
 {
-    console.log(this.targetPosition);
-
     if(typeof this.aiStage == "undefined") this.aiStage = -1;
     if(typeof this.stopTimer == "undefined") this.stopTimer = 0;
     if(typeof this.attackTimer == "undefined") this.attackTimer = 0;
