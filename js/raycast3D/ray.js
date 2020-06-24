@@ -298,7 +298,7 @@ class Ray
             }*/
         }
 
-        if(raycast.index > -1 && w[raycast.index].type > 0)
+        if(raycast.index > -1 && w[raycast.index]!=undefined && w[raycast.index].type > 0)
         {
             data.index = w[raycast.index].index;
             data.depth = raycast.pdist;
