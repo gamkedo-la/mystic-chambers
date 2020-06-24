@@ -329,11 +329,8 @@ function itemToPlayerShotReaction(item) //return true to destroy item
             if(typeof item.hp == "undefined") { item.hp = 3; }
             else if(item.hp > 0) { item.hp--; }
             else { decor.addUsingAnotherEntity(item, ENT_DESTROY1);
-                wall[item.connectionWall.index].type = 0;
-                /*wall[item.connectionWall.index].p1 = wall[item.connectionWall.index].p2;
-                deleteWallFromAllSectors(wall[item.connectionWall.index]);
-                wall.splice(item.connectionWall.index, 1);
-                resetWallIndexes();*/
+                wall[item.connectionWall.index].p2.x = wall[item.connectionWall.index].p1.x;
+                wall[item.connectionWall.index].p2.y = wall[item.connectionWall.index].p1.y;
                 audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP());
                 audio.play3DSound(sounds[WALL3], item.p, rndAP(), rndAP());
                 flash = flashTime;

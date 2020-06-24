@@ -195,7 +195,7 @@ class Wall
                 flash = flashTime*10;
                 flashColor = redKeyDoorFlashColor;
                 audio.play1DSound(sounds[DOOR_OPEN]);
-                subtitleManager.updateAndDisplayText("RED DOOR UNLOCKED!");
+                subtitleManager.updateAndDisplayText("RED AREA UNLOCKED!");
             }
             else if(this.type == WALL_GREEN && availableKeys[KEY_GREEN])
             {
@@ -206,7 +206,7 @@ class Wall
                 flash = flashTime*10;
                 flashColor = greenKeyDoorFlashColor;
                 audio.play1DSound(sounds[DOOR_OPEN]);
-                subtitleManager.updateAndDisplayText("GREEN DOOR UNLOCKED!");
+                subtitleManager.updateAndDisplayText("GREEN AREA UNLOCKED!");
 
             }
             else if(this.type == WALL_BLUE && availableKeys[KEY_BLUE])
@@ -218,7 +218,16 @@ class Wall
                 flash = flashTime*10;
                 flashColor = blueKeyDoorFlashColor;
                 audio.play1DSound(sounds[DOOR_OPEN]);
-                subtitleManager.updateAndDisplayText("BLUE DOOR UNLOCKED!");
+                subtitleManager.updateAndDisplayText("BLUE AREA UNLOCKED!");
+            }
+            else
+            {
+                if(this.type == WALL_RED)
+                    subtitleManager.updateAndDisplayText("RED KEY REQUIRED TO UNLOCK THE AREA");
+                if(this.type == WALL_GREEN)
+                    subtitleManager.updateAndDisplayText("GREEN KEY REQUIRED TO UNLOCK THE AREA");
+                if(this.type == WALL_BLUE)
+                    subtitleManager.updateAndDisplayText("BLUE KEY REQUIRED TO UNLOCK THE AREA");
             }
         }
 
