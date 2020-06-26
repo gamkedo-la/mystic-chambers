@@ -308,7 +308,6 @@ function itemToPlayerShotReaction(item) //return true to destroy item
             if(typeof item.hp == "undefined")
             {
                 item.hp = 1;
-                audio.play1DSound(sounds[SFX_BARREL_HIT]);
             }
             else if(item.hp > 0)
             { 

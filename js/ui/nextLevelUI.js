@@ -75,7 +75,6 @@ function nextLevelUICustomEvents()
             nextLevelCounter = 0;
 
             audio.play1DSound(sounds[MENU_CLICK_BTN]);
-            nextLevelButton.button.resetOutput();
         }
     }
 

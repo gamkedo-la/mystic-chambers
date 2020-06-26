@@ -121,6 +121,7 @@ function playerEvents(deltaTime)
         flexibleLabel.textColor = "#FF4444";
         timeTakenLabel.text = "TIME TAKEN: " + (gameTimer/1000.0).toString() + " SECONDS";
         enemiesKilledLabel.text = "ENEMIES KILLED: " + enemiesKilled.toString();
+        audio.play1DSound(sounds[DEATH]);
         ui.transitionAnimation();
     }
 

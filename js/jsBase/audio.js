@@ -32,6 +32,7 @@ const FIRE = 26;
 const SFX_BARREL_HIT = 27;
 const SFX_BARREL_EXPLODE = 28;
 const DOOR_OPEN = 29;
+const DEATH = 30;
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -63,7 +64,8 @@ var soundsList = [
     "audio/fire2.wav",
     "audio/barrel_hit.wav",
 	"audio/barrel_explode.wav",
-	"audio/doorOpen.wav"
+	"audio/doorOpen.wav",
+	"audio/deathStab1.mp3",
 ];
 
 var sounds = [];

@@ -184,7 +184,6 @@ class Wall
         if(isPointOnLine(vec2(this.p1.x, this.p1.y),
         vec2(this.p2.x, this.p2.y), vec2(p.x, p.y), keyDoorTriggerPadding))
         {
-            console.log("colliding with key wall");
             //Key Door System
             if(this.type == WALL_RED && availableKeys[KEY_RED])
             {
