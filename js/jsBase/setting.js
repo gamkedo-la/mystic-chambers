@@ -10,13 +10,14 @@ function init()
     
     spritesRenderer = renderer;
 
-    audio.init();
+    //audio.init(); // won't run until the user has clicked once
 
     //Custom Initialization
     playerInit();
     editorInit(wall, area);
     uiInit();
-    audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
+    // browsers will not allow us to do this here:
+    // audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
     floorAndCeiling = new floorClass();
     inputSetup();
 }

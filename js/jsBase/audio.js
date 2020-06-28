@@ -1,3 +1,6 @@
+var userHasInteracted = false; // this global is set to true after the first click
+
+
 var AUDIO_DEBUG = false;
 var audioTestLocation = vec2(0, 0);
 
@@ -82,7 +85,7 @@ var audio = new AudioGlobal();
 
 function AudioGlobal() {
 
-	var initialized = false;
+    var initialized = false;
 	var audioCtx;
 	var musicBus, soundEffectsBus, masterBus;
 	var musicVolume, soundEffectsVolume;
@@ -91,7 +94,8 @@ function AudioGlobal() {
 
 //--//Set up WebAudioAPI nodes------------------------------------------------
 	this.init = function() {
-		if (initialized) return;
+        if (!userHasInteracted) return;
+        if (initialized) return;
 
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		this.context = audioCtx;
@@ -116,7 +120,8 @@ function AudioGlobal() {
 	};
 
 	this.update = function() {
-		if (!initialized) audio.init();
+        if (!userHasInteracted) return;
+        if (!initialized) audio.init();
 
 		now = audioCtx.currentTime;
 		//if (!AUDIO_DEBUG) {
@@ -132,7 +137,9 @@ function AudioGlobal() {
 	};
 
 	this.draw = function(off) {
-		let v1 = vec2(0,0);
+        if (!userHasInteracted) return;
+
+        let v1 = vec2(0,0);
 		let v2 = vec2(0,0);
 
 		for (var i in currentSoundSources) {
@@ -167,7 +174,7 @@ function AudioGlobal() {
 
 //--//volume handling functions-----------------------------------------------
 	this.toggleMute = function() {
-		if (!initialized) return;
+        if (!initialized) return;
 
 		var newVolume = (masterBus.gain.value === 0 ? 1 : 0);
 		masterBus.gain.setTargetAtTime(newVolume, audioCtx.currentTime, 0.03);
@@ -395,7 +402,8 @@ function AudioGlobal() {
 	};
 
 	function play3DSound5(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation and reverb
-		if (!initialized) return;
+        if (!userHasInteracted) return;
+        if (!initialized) return;
 
 		var pos = calculatePropogationPosition(location);
 		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
@@ -429,7 +437,17 @@ function AudioGlobal() {
 			source.buffer = null;
 		}
 
-		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
+        referance = {
+            source: source, 
+            volume: gainNode, 
+            pan: panNode, 
+            pos: pos, 
+            // bugfix: .buffer can be null here
+            endTime: (audioCtx?audioCtx.currentTime:0)
+                +(source.buffer?source.buffer.duration:0)
+                +(verbNode.buffer?verbNode.buffer.duration:0)
+        };
+
 		currentSoundSources.push(referance);
 		return referance;
 	};
