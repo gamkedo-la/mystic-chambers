@@ -370,6 +370,8 @@ function setupGameplayUI()
     gameplayUI.push(gameTimerLabel);
     menuKeyLabel = new Label(tr(vec2(window.innerWidth - 160, 0), vec2(160, 40)), "M - Exit To Menu", (scrSizeFactor * 0.025).toString() + "px Lucida, sans-serif");
     gameplayUI.push(menuKeyLabel);
+    pointerLockLabel = new Label(tr(vec2(window.innerWidth - 160, 40), vec2(160, 40)), "P - FPS MODE", (scrSizeFactor * 0.025).toString() + "px Lucida, sans-serif");
+    gameplayUI.push(pointerLockLabel);
 
     if (platform == ANDROID)
     {
@@ -433,6 +435,9 @@ function getCurrentEditTabIndex()
 
 function gameplayUICustomDraw(deltaTime)
 {
+    if(keysDown.indexOf('p') != -1)
+        enablePointerLock(canvas);
+
     plPos = collisionWithWallsInSector(plPos, prevPlPos);
 
         if(!mapMode || renderEditorAndGameTogether >= 1)
