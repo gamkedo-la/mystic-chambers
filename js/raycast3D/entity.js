@@ -618,9 +618,13 @@ function isEntityInsideWalls(ent, walls, otherSectors, sector)
     var wallsDone = [];
     var totalWallsToBeDone = walls.length + 1;
     if(typeof otherSectors != "undefined") totalWallsToBeDone += otherSectors.length;
+    
+    //BUG FIX!
+    totalWallsToBeDone -= 2;
+
     var checkerLength = 1000;
     var skipThisOne = false;
-    for(let r = 0; r < 360; r+=5)
+    for(let r = 0; r < 360; r+=10)
     {
         var x1 = ent.p.x;
         var y1 = ent.p.y;

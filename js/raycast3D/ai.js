@@ -366,7 +366,7 @@ function fireSkullAI(plRay,deltaTime)
                 playerHealth -= 20;
                 flash = flashTime;
                 flashColor = playerDamageFlashColor;
-                plKnockBack = vec2(4.0, 4.0);
+                plKnockBack = vec2(2.0, 2.0);
                 this.attackTimer = 0;
                 this.targetPosition = undefined;
 
@@ -453,7 +453,7 @@ function evilDwarfAI(plRay,deltaTime)
                 playerHealth -= meleedamage;
                 flash = flashTime;
                 flashColor = playerDamageFlashColor;
-                plKnockBack = vec2(8.0, 8.0);
+                plKnockBack = vec2(4.0, 4.0);
                 this.attackTimer = 0;
                 this.targetPosition = undefined;
 

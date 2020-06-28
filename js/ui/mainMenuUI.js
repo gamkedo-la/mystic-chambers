@@ -42,9 +42,12 @@ function setupMainMenuUI()
         mainMenuFontSize.toString() + "px " + uiContext.fontFamily, undefined, -1),
         new Button(tr(), "#00000090", "#990099FF", "#330033FF"),"");
     menuButtons.push(creditsButton);
+    bugLabel = new Label(tr(), "NOTE: If you see void/black areas, just move into them or turn a lil' bit ;)",
+        (mainMenuFontSize/1.25).toString() + "px " + uiContext.fontFamily, "yellow", -1);
+    menuButtons.push(bugLabel);
 
     mainMenuUI.push(new FlexGroup(tr(vec2(50, 350), vec2(window.innerWidth, window.innerHeight-350)),
-        new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3, 20), vec2(1, 5), true));
+        new SubState(tr(), menuButtons),false, vec2(window.innerWidth/3.5, 20), vec2(1, 5), true));
 }
 
 function mainMenuUICustomDraw()
