@@ -427,7 +427,8 @@ function enableFullScreen(e)
 {
     if (!FULLSCREEN_ENABLED) return;
 
-  if (e.requestFullscreen)
+  try {
+    if (e.requestFullscreen)
     e.requestFullscreen();
   else if (e.msRequestFullscreen)
     e.msRequestFullscreen();
@@ -435,6 +436,9 @@ function enableFullScreen(e)
     e.mozRequestFullScreen();
   else if (e.webkitRequestFullScreen)
     e.webkitRequestFullScreen();
+  } catch(e) {
+      console.log("browser refused fullscreen request. ignoring.")
+  }
 }
 
 function disableFullscreen(e) 
