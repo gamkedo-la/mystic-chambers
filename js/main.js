@@ -19,7 +19,7 @@ function events(deltaTime)
 function update()
 {
     ui.update();
-    audio.update();
+    if (AUDIO_ENABLED) audio.update();
 }
 
 function draw(deltaTime)

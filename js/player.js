@@ -203,7 +203,7 @@ function playerEvents(deltaTime)
     if(currentSpeed[0] > 0 || currentSpeed[1] > 0
     || currentSpeed[2] > 0 || currentSpeed[3] > 0)
     {
-        if (playerWalkSound.source.buffer == null)
+        if (AUDIO_ENABLED && playerWalkSound.source.buffer == null)
         {
             if(playerWalkAlt) playerWalkSound = audio.play3DSound(sounds[PLAYER_WALK1], plPos, rndAP(), rndAP());
             else playerWalkSound = audio.play3DSound(sounds[PLAYER_WALK2], plPos, rndAP(), rndAP());

@@ -71,10 +71,12 @@ function onTouchEnd(ev)
 function onMouseDown(ev)
 {
     if (!userHasInteracted) {
-        console.log("user has interacted with the game! initializing audio...")
         userHasInteracted = true; // this will allow the audio routines to init
-        audio.init(); // won't run until the user has clicked once
-        audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
+        if (AUDIO_ENABLED) {
+            console.log("user has interacted with the game! initializing audio...")
+            audio.init(); // won't run until the user has clicked once
+            audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
+        }
     }
     isTouched = true;
     touchPos[0] = vec2(ev.clientX, ev.clientY);

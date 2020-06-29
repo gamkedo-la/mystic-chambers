@@ -485,7 +485,7 @@ function writeFile(file, str)
 
 function readFile(file)
 {
-    console.log("reading level data: " + file);
+    //console.log("reading level data: " + file);
     // post-release optimization: hardcoded level data used for lv 1 2 3 only
     if (file=="levels/lv1.txt") return LV1_DATA;
     if (file=="levels/lv2.txt") return LV2_DATA;

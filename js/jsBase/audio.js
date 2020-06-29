@@ -1,7 +1,7 @@
+const AUDIO_ENABLED = false; // turned off for crash testing
+
 var userHasInteracted = false; // this global is set to true after the first click
-
-
-var AUDIO_DEBUG = false;
+var AUDIO_DEBUG = true;
 var audioTestLocation = vec2(0, 0);
 
 //Sound IDs
@@ -94,6 +94,7 @@ function AudioGlobal() {
 
 //--//Set up WebAudioAPI nodes------------------------------------------------
 	this.init = function() {
+        if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (initialized) return;
 
@@ -120,6 +121,7 @@ function AudioGlobal() {
 	};
 
 	this.update = function() {
+        if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) audio.init();
 
@@ -137,6 +139,7 @@ function AudioGlobal() {
 	};
 
 	this.draw = function(off) {
+        if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 
         let v1 = vec2(0,0);
@@ -174,6 +177,7 @@ function AudioGlobal() {
 
 //--//volume handling functions-----------------------------------------------
 	this.toggleMute = function() {
+        if (!AUDIO_ENABLED) return;
         if (!initialized) return;
 
 		var newVolume = (masterBus.gain.value === 0 ? 1 : 0);
@@ -183,6 +187,7 @@ function AudioGlobal() {
 	};
 
 	this.setMute = function(tOrF) {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		var newVolume = (tOrF === false ? 1 : 0);
@@ -192,6 +197,7 @@ function AudioGlobal() {
 	};
 
 	this.setMusicVolume = function(amount) {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		musicVolume = amount;
@@ -206,6 +212,7 @@ function AudioGlobal() {
 	};
 
 	this.setSoundEffectsVolume = function(amount) {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		soundEffectsVolume = amount;
@@ -220,6 +227,7 @@ function AudioGlobal() {
 	};
 
 	this.turnVolumeUp = function() {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		this.setMusicVolume(musicVolume + VOLUME_INCREMENT);
@@ -227,6 +235,7 @@ function AudioGlobal() {
 	};
 
 	this.turnVolumeDown = function() {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		this.setMusicVolume(musicVolume - VOLUME_INCREMENT);
@@ -235,6 +244,7 @@ function AudioGlobal() {
 
 //--//Audio playback classes--------------------------------------------------
 	this.play1DSound = function(buffer, mixVolume = 1, rate = 1) {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -256,11 +266,13 @@ function AudioGlobal() {
 	};
 
 	this.play3DSound = function(buffer, location,  mixVolume = 1, rate = 1) {
+        if (!AUDIO_ENABLED) return;
 		return play3DSound5(buffer, location,  mixVolume, rate);
 	};
 
 	function play3DSound1(buffer, location,  mixVolume = 1, rate = 1) {//3d panning and volume
-		if (!initialized) return;
+        if (!AUDIO_ENABLED) return;
+        if (!initialized) return;
 
 		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
 			return false;
@@ -292,7 +304,8 @@ function AudioGlobal() {
 	};
 
 	function play3DSound2(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion
-		if (!initialized) return;
+        if (!AUDIO_ENABLED) return;
+        if (!initialized) return;
 
 		if (lineOfSight(location, currentPlayerPos)) {
 			return false;
@@ -327,7 +340,8 @@ function AudioGlobal() {
 	};
 
 	function play3DSound3(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
-		if (!initialized) return;
+        if (!AUDIO_ENABLED) return;
+        if (!initialized) return;
 
 		if (lineOfSight(location, currentPlayerPos)) {
 			return false;
@@ -369,7 +383,8 @@ function AudioGlobal() {
 	};
 
 	function play3DSound4(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation
-		if (!initialized) return;
+        if (!AUDIO_ENABLED) return;
+        if (!initialized) return;
 
 		var pos = calculatePropogationPosition(location);
 		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
@@ -402,6 +417,7 @@ function AudioGlobal() {
 	};
 
 	function play3DSound5(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation and reverb
+        if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) return;
 
@@ -453,6 +469,7 @@ function AudioGlobal() {
 	};
 
 	this.playMusic = function(buffer, fadeIn = false) {
+        if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
 		var source = audioCtx.createBufferSource();
@@ -482,6 +499,7 @@ function AudioGlobal() {
 	};
 
 	this.loadBGMusic = function(url) {
+        if (!AUDIO_ENABLED) return;
 		var request = new XMLHttpRequest();
 		request.open('GET', url, true);
 		request.responseType = 'arraybuffer';
@@ -494,6 +512,7 @@ function AudioGlobal() {
 	};
 
 	this.loadMusicEvent = function(url) {
+        if (!AUDIO_ENABLED) return;
 		var request = new XMLHttpRequest();
 		request.open('GET', url, true);
 		request.responseType = 'arraybuffer';
@@ -507,6 +526,7 @@ function AudioGlobal() {
 	};
 
 	this.loadSounds = function(id = 0) {
+        if (!AUDIO_ENABLED) return;
 		var request = new XMLHttpRequest();
 		request.open('GET', soundsList[id], true);
 		request.responseType = 'arraybuffer';
@@ -520,16 +540,19 @@ function AudioGlobal() {
 	};
 
 	this.duckMusic = function (duration, volume = 0) {
+        if (!AUDIO_ENABLED) return;
 		currentMusicTrack.volume.gain.setTargetAtTime(volume, audioCtx.currentTime, CROSSFADE_TIME);
 		currentMusicTrack.volume.gain.setTargetAtTime(1, audioCtx.currentTime + duration, CROSSFADE_TIME);
 		return;
 	};
 
 	function calcuateVolumeDropoff(location) {
+        if (!AUDIO_ENABLED) return;
 		return calcuateVolumeDropoff2(location);
 	}
 
-	function calcuateVolumeDropoff1(location) {//Distance dropoff only
+    function calcuateVolumeDropoff1(location) {//Distance dropoff only
+        if (!AUDIO_ENABLED) return;
 		var distance = currentPlayerPos.distance(location);
 
 		var newVolume = 1;
@@ -542,7 +565,8 @@ function AudioGlobal() {
 		return Math.pow(newVolume, 2);
 	}
 
-	function calcuateVolumeDropoff2(location) {// +Head shadow
+    function calcuateVolumeDropoff2(location) {// +Head shadow
+        if (!AUDIO_ENABLED) return;
 		var distance = currentPlayerPos.distance(location);
 
 		var newVolume = 1;
@@ -570,10 +594,12 @@ function AudioGlobal() {
 	}
 
 	function calcuatePan(location) {
+        if (!AUDIO_ENABLED) return;
 		return calcuatePan2(location);
 	}
 
-	function calcuatePan1(location) {//360 pan
+    function calcuatePan1(location) {//360 pan
+        if (!AUDIO_ENABLED) return;
 		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
@@ -596,7 +622,8 @@ function AudioGlobal() {
 		return pan;
 	}
 
-	function calcuatePan2(location) {// +proximity
+    function calcuatePan2(location) {// +proximity
+        if (!AUDIO_ENABLED) return;
 		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
 		while (direction >= 360) {
 			direction -= 360;
@@ -626,6 +653,7 @@ function AudioGlobal() {
 	}
 
 	function calcuateReverbPresence(location) {
+        if (!AUDIO_ENABLED) return;
 		var distance = currentPlayerPos.distance(location);
 
 		var mixVolume = 0;
@@ -635,6 +663,7 @@ function AudioGlobal() {
 	}
 
 	function calculatePropogationPosition(location) {
+        if (!AUDIO_ENABLED) return;
 		if (lineOfSight(location, currentPlayerPos)) return location;
 
 		var distance = DROPOFF_MAX;
@@ -659,6 +688,7 @@ function AudioGlobal() {
 	}
 
 	function checkAudGeo(pointToCheck, location, pointsChecked) {
+        if (!AUDIO_ENABLED) return;
 		var newPointsChecked = pointsChecked;
 		newPointsChecked.push(pointToCheck);
 		var distance = DROPOFF_MAX;
@@ -705,6 +735,7 @@ var fauxAudGeo = [
 
 var currentAudGeo = []; //{point: vec2, connections: [indexs]}
 function generateAudGeo() {
+    if (!AUDIO_ENABLED) return;
 	currentAudGeo = new Array();
 
 	for (var i = 0; i < fauxAudGeo.length; i++) {
