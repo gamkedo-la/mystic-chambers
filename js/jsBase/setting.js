@@ -1,3 +1,5 @@
+const FLOOR_AND_CEILING_CSS3D_ENABLED = false;
+
 function init()
 {
     canvas = document.getElementById("gameCanvas");
@@ -18,6 +20,10 @@ function init()
     uiInit();
     // browsers will not allow us to do this here:
     // audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
-    floorAndCeiling = new floorClass();
+    
+    if (FLOOR_AND_CEILING_CSS3D_ENABLED) {
+        floorAndCeiling = new floorClass();
+    }
+    
     inputSetup();
 }

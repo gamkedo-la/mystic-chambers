@@ -57,7 +57,10 @@ function gameplayEvents(deltaTime)
     //loadRoofAndFloorTextureDataOnce();
     gridOffset = vec2(-((ray[ray.length/2].p.x - (window.innerWidth/2)) % gridCellSize),
         -((ray[ray.length/2].p.y - (window.innerHeight/2)) % gridCellSize));
-    floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
+    
+    if (FLOOR_AND_CEILING_CSS3D_ENABLED) {
+        floorAndCeiling.update(ray[ray.length/2].p, ray[ray.length/2].angle);
+    }
 
     if(gameTimerStart)
     {

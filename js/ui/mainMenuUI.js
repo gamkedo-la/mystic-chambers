@@ -1,3 +1,5 @@
+const MAIN_MENU_CSS3D_ENABLED = false;
+
 const MAINMENUUI = 0;
 
 mainMenuBackground = new Sprite(tr(vec2(0, 0)),
@@ -23,8 +25,10 @@ var hoverSoundDone = false;
 
 function setupMainMenuUI()
 {
-    leftdoor = document.getElementById("leftdoor");
-    rightdoor = document.getElementById("rightdoor");
+    if (MAIN_MENU_CSS3D_ENABLED) {
+        leftdoor = document.getElementById("leftdoor");
+        rightdoor = document.getElementById("rightdoor");
+    }
 
     menuButtons = [];
     playButton = new TextButton(tr(vec2(), btnSize),
@@ -65,12 +69,14 @@ function mainMenuUICustomDraw()
 function mainMenuUICustomEvents()
 {
     // open the main menu doors
-    if(playButton.button.output == UIOUTPUT_HOVER) {
-        leftdoor.style.left = "-92px";
-        rightdoor.style.left = "526px";
-    } else {
-        leftdoor.style.left = "114px";
-        rightdoor.style.left = "320px";
+    if (MAIN_MENU_CSS3D_ENABLED) {
+        if(playButton.button.output == UIOUTPUT_HOVER) {
+            leftdoor.style.left = "-92px";
+            rightdoor.style.left = "526px";
+        } else {
+            leftdoor.style.left = "114px";
+            rightdoor.style.left = "320px";
+        }
     }
 
     if(playButton.button.output == UIOUTPUT_HOVER
