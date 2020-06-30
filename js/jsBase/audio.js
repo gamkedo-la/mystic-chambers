@@ -3,6 +3,7 @@ const AUDIO_FILTER_EVERY_FRAME = false; // costly routine turned off for crash t
 
 var AUDIO_DEBUG = true; // console logs
 var userHasInteracted = false; // this global is set to true after the first click
+var audioPreloaded = false; // set to true when all mp3s and wavs are loaded
 
 //Sound IDs
 const REVERB = 0;
@@ -128,6 +129,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) audio.init();
+        if (!audioPreloaded) return;
         
         if (!AUDIO_FILTER_EVERY_FRAME) return;
 
@@ -190,6 +192,7 @@ function AudioGlobal() {
 	this.toggleMute = function() {
         if (!AUDIO_ENABLED) return;
         if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		var newVolume = (masterBus.gain.value === 0 ? 1 : 0);
 		masterBus.gain.setTargetAtTime(newVolume, audioCtx.currentTime, 0.03);
@@ -200,6 +203,7 @@ function AudioGlobal() {
 	this.setMute = function(tOrF) {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		var newVolume = (tOrF === false ? 1 : 0);
 		masterBus.gain.setTargetAtTime(newVolume, audioCtx.currentTime, 0.03);
@@ -210,6 +214,7 @@ function AudioGlobal() {
 	this.setMusicVolume = function(amount) {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		musicVolume = amount;
 		if (musicVolume > 1.0) {
@@ -225,6 +230,7 @@ function AudioGlobal() {
 	this.setSoundEffectsVolume = function(amount) {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		soundEffectsVolume = amount;
 		if (soundEffectsVolume > 1.0) {
@@ -240,6 +246,7 @@ function AudioGlobal() {
 	this.turnVolumeUp = function() {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		this.setMusicVolume(musicVolume + VOLUME_INCREMENT);
 		this.setSoundEffectsVolume(soundEffectsVolume + VOLUME_INCREMENT);
@@ -248,6 +255,7 @@ function AudioGlobal() {
 	this.turnVolumeDown = function() {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
 		this.setMusicVolume(musicVolume - VOLUME_INCREMENT);
 		this.setSoundEffectsVolume(soundEffectsVolume - VOLUME_INCREMENT);
@@ -257,6 +265,7 @@ function AudioGlobal() {
 	this.play1DSound = function(buffer, mixVolume = 1, rate = 1) {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
         if (AUDIO_DEBUG) console.log("audio.play1DSound()");
 
@@ -282,6 +291,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) return;
+        if (!audioPreloaded) return;
 		return play3DSound5(buffer, location,  mixVolume, rate);
 	};
 
@@ -289,6 +299,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) return;
+        if (!audioPreloaded) return;
 
         if (AUDIO_DEBUG) console.log("audio.play3DSound5()");
 
@@ -343,6 +354,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
         if (AUDIO_DEBUG) console.log("audio.playMusic()");
 
@@ -376,6 +388,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
         if (AUDIO_DEBUG) console.log("audio.loadBGMusic()");
 
@@ -418,6 +431,13 @@ function AudioGlobal() {
 				sounds.push(buffer);
                 if (AUDIO_DEBUG) console.log("sound "+sounds.length+" of "+soundsList.length+" is ready.");
                 if(id + 1 < soundsList.length) audio.loadSounds(id + 1);
+
+                // detect game audio load complete
+                if (sounds.length >= soundsList.length) {
+                    if (AUDIO_DEBUG) console.log("all audio files have been downloaded!");
+                    audioPreloaded = true;
+                }
+
 			});
 		};
 		request.send();
@@ -427,7 +447,8 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 		if (!initialized) return;
-		currentMusicTrack.volume.gain.setTargetAtTime(volume, audioCtx.currentTime, CROSSFADE_TIME);
+        if (!audioPreloaded) return;
+        currentMusicTrack.volume.gain.setTargetAtTime(volume, audioCtx.currentTime, CROSSFADE_TIME);
 		currentMusicTrack.volume.gain.setTargetAtTime(1, audioCtx.currentTime + duration, CROSSFADE_TIME);
 		return;
 	};
@@ -436,7 +457,8 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 		if (!initialized) return;
-		return calcuateVolumeDropoff2(location);
+        if (!audioPreloaded) return;
+        return calcuateVolumeDropoff2(location);
 	}
 
     /*
@@ -459,6 +481,7 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 		if (!initialized) return;
+        if (!audioPreloaded) return;
 
         var distance = currentPlayerPos.distance(location);
 

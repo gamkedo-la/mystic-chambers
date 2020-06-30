@@ -73,7 +73,7 @@ function onMouseDown(ev)
     if (!userHasInteracted) {
         userHasInteracted = true; // this will allow the audio routines to init
         if (AUDIO_ENABLED) {
-            console.log("user has interacted with the game! initializing audio...")
+            console.log("user has interacted with the game! initializing audio...");
             audio.init(); // won't run until the user has clicked once
             audio.loadBGMusic("audio/ambientBackgroundMusic1.mp3");
         }
@@ -120,11 +120,11 @@ function onKeyDown(ev)
     if (AUDIO_DEBUG && ev.keyCode ==53) { //6 key for audio debugging
         audioTestLocation.x = currentPlayerX;
         audioTestLocation.y = currentPlayerY;
-        console.log("set sound location")
+        console.log("set sound location");
     }
     if (AUDIO_DEBUG && ev.keyCode ==54) { //6 key for audio debugging
-        audio.play3DSound(sounds[1], audioTestLocation)
-        console.log("play sound")
+        audio.play3DSound(sounds[1], audioTestLocation);
+        console.log("play sound");
     }
     if(keysDown.indexOf(ev.key) == -1)
         keysDown.push(ev.key);
