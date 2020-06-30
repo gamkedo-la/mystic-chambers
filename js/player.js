@@ -18,7 +18,7 @@ var maxSpeed = [1.4, 1.2, 0.8, 0.8];
 var speedIncrement = 0.004;
 var speedDecrement = 0.006;
 var speedThreshold = 0.16;
-var playerWalkSound = {source:{buffer :null}}
+var playerWalkSound = {source:{buffer :null}};
 var playerWalkAlt = false;
 
 var playerAngleMovement = true;
