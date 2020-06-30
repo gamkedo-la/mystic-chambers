@@ -1,4 +1,4 @@
-const FLOOR_AND_CEILING_CSS3D_ENABLED = false;
+const FLOOR_AND_CEILING_CSS3D_ENABLED = true;
 
 function init()
 {

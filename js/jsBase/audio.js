@@ -1,8 +1,8 @@
-const AUDIO_ENABLED = false; // turned off for crash testing
+const AUDIO_ENABLED = true; // turned off for crash testing
+const AUDIO_FILTER_EVERY_FRAME = false; // costly routine turned off for crash testing
 
+var AUDIO_DEBUG = true; // console logs
 var userHasInteracted = false; // this global is set to true after the first click
-var AUDIO_DEBUG = true;
-var audioTestLocation = vec2(0, 0);
 
 //Sound IDs
 const REVERB = 0;
@@ -36,6 +36,8 @@ const SFX_BARREL_HIT = 27;
 const SFX_BARREL_EXPLODE = 28;
 const DOOR_OPEN = 29;
 const DEATH = 30;
+
+var audioTestLocation = vec2(0, 0);
 
 var soundsList = [
 	"audio/reverb3.wav",
@@ -98,6 +100,8 @@ function AudioGlobal() {
         if (!userHasInteracted) return;
         if (initialized) return;
 
+        if (AUDIO_DEBUG) console.log("audio.init()");
+
 		audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 		this.context = audioCtx;
 		this.audioListener = audioCtx.listener;
@@ -124,6 +128,10 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) audio.init();
+        
+        if (!AUDIO_FILTER_EVERY_FRAME) return;
+
+        //if (AUDIO_DEBUG) console.log("audio.update()"); // too spammy, runs every frame
 
 		now = audioCtx.currentTime;
 		//if (!AUDIO_DEBUG) {
@@ -142,10 +150,13 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
 
-        let v1 = vec2(0,0);
-		let v2 = vec2(0,0);
+        if (AUDIO_DEBUG) console.log("audio.draw()");
 
-		for (var i in currentSoundSources) {
+        let v1 = vec2(0,0);
+        let v2 = vec2(0,0);
+        var i,j;
+
+		for (i in currentSoundSources) {
 			v1.x = currentSoundSources[i].pos.x - off.x;
 			v1.y = currentSoundSources[i].pos.y - off.y;
 			v2.x = currentPlayerX - off.x;
@@ -154,7 +165,7 @@ function AudioGlobal() {
 			drawRect(renderer, vec2(v1.x-2, v1.y-2), vec2(5, 5), true, "#FFFFFF", false);
 		}
 
-		for (var i in currentAudGeo) {
+		for (i in currentAudGeo) {
 			v1.x = currentAudGeo[i].point.x - off.x;
 			v1.y = currentAudGeo[i].point.y - off.y;
 			v2.x = currentPlayerX - off.x;
@@ -164,7 +175,7 @@ function AudioGlobal() {
 				drawLine(renderer, v1, v2, "#885088");
 			}
 
-			for (var j in currentAudGeo[i].connections) {
+			for (j in currentAudGeo[i].connections) {
 				var index = currentAudGeo[i].connections[j];
 				v2.x = currentAudGeo[index].point.x - off.x;
 				v2.y = currentAudGeo[index].point.y - off.y;
@@ -247,6 +258,8 @@ function AudioGlobal() {
         if (!AUDIO_ENABLED) return;
 		if (!initialized) return;
 
+        if (AUDIO_DEBUG) console.log("audio.play1DSound()");
+
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
 
@@ -260,166 +273,24 @@ function AudioGlobal() {
 
 		source.onended = function(evt) {
 			source.buffer = null;
-		}
+		};
 
 		return {source: source, volume: gainNode};
 	};
 
 	this.play3DSound = function(buffer, location,  mixVolume = 1, rate = 1) {
         if (!AUDIO_ENABLED) return;
+        if (!userHasInteracted) return;
+        if (!initialized) return;
 		return play3DSound5(buffer, location,  mixVolume, rate);
-	};
-
-	function play3DSound1(buffer, location,  mixVolume = 1, rate = 1) {//3d panning and volume
-        if (!AUDIO_ENABLED) return;
-        if (!initialized) return;
-
-		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
-			return false;
-		}
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createStereoPanner();
-
-		source.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		gainNode.gain.value = calcuateVolumeDropoff(location);
-		panNode.pan.value = calcuatePan(location);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		source.start();
-
-		source.onended = function() {
-			source.buffer = null;
-		}
-
-		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration};
-		currentSoundSources.push(referance);
-		return referance;
-	};
-
-	function play3DSound2(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion
-        if (!AUDIO_ENABLED) return;
-        if (!initialized) return;
-
-		if (lineOfSight(location, currentPlayerPos)) {
-			return false;
-		}
-		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
-			return false;
-		}
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createStereoPanner();
-
-		source.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		gainNode.gain.value = calcuateVolumeDropoff(location);
-		panNode.pan.value = calcuatePan(location);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		source.start();
-
-		source.onended = function() {
-			source.buffer = null;
-		}
-
-		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration};
-		currentSoundSources.push(referance);
-		return referance;
-	};
-
-	function play3DSound3(buffer, location,  mixVolume = 1, rate = 1) {// +Occlusion and reverb
-        if (!AUDIO_ENABLED) return;
-        if (!initialized) return;
-
-		if (lineOfSight(location, currentPlayerPos)) {
-			return false;
-		}
-		if (currentPlayerPos.distance(location) >= DROPOFF_MAX) {
-			return false;
-		}
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createStereoPanner();
-		var verbMixNode = audioCtx.createGain();
-		var verbNode = audioCtx.createConvolver();
-
-		source.connect(gainNode);
-		source.connect(verbMixNode);
-		verbMixNode.connect(verbNode);
-		verbNode.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		gainNode.gain.value = calcuateVolumeDropoff(location);
-		verbMixNode.gain.value = calcuateReverbPresence(location);
-		panNode.pan.value = calcuatePan(location);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		verbNode.buffer = sounds[REVERB];
-		source.start();
-
-		source.onended = function() {
-			source.buffer = null;
-		}
-
-		referance = {source: source, volume: gainNode, pan: panNode, pos: location, endTime: audioCtx.currentTime+source.buffer.duration+verbNode.buffer.duration};
-		currentSoundSources.push(referance);
-		return referance;
-	};
-
-	function play3DSound4(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation
-        if (!AUDIO_ENABLED) return;
-        if (!initialized) return;
-
-		var pos = calculatePropogationPosition(location);
-		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
-			return false;
-		}
-
-		var source = audioCtx.createBufferSource();
-		var gainNode = audioCtx.createGain();
-		var panNode = audioCtx.createStereoPanner();
-
-		source.connect(gainNode);
-		gainNode.connect(panNode);
-		panNode.connect(soundEffectsBus);
-
-		gainNode.gain.value = calcuateVolumeDropoff(pos);
-		panNode.pan.value = calcuatePan(pos);
-
-		source.buffer = buffer;
-		source.playbackRate.value = rate;
-		gainNode.gain.value *= Math.pow(mixVolume, 2);
-		source.start();
-
-		source.onended = function() {
-			source.buffer = null;
-		}
-
-		referance = {source: source, volume: gainNode, pan: panNode, pos: pos, endTime: audioCtx.currentTime+source.buffer.duration};
-		currentSoundSources.push(referance);
-		return referance;
 	};
 
 	function play3DSound5(buffer, location,  mixVolume = 1, rate = 1) {// +Propogation and reverb
         if (!AUDIO_ENABLED) return;
         if (!userHasInteracted) return;
         if (!initialized) return;
+
+        if (AUDIO_DEBUG) console.log("audio.play3DSound5()");
 
 		var pos = calculatePropogationPosition(location);
 		if (currentPlayerPos.distance(pos) >= DROPOFF_MAX) {
@@ -451,7 +322,7 @@ function AudioGlobal() {
 
 		source.onended = function() {
 			source.buffer = null;
-		}
+		};
 
         referance = {
             source: source, 
@@ -466,11 +337,14 @@ function AudioGlobal() {
 
 		currentSoundSources.push(referance);
 		return referance;
-	};
+	}
 
 	this.playMusic = function(buffer, fadeIn = false) {
         if (!AUDIO_ENABLED) return;
+        if (!userHasInteracted) return;
 		if (!initialized) return;
+
+        if (AUDIO_DEBUG) console.log("audio.playMusic()");
 
 		var source = audioCtx.createBufferSource();
 		var gainNode = audioCtx.createGain();
@@ -500,6 +374,11 @@ function AudioGlobal() {
 
 	this.loadBGMusic = function(url) {
         if (!AUDIO_ENABLED) return;
+        if (!userHasInteracted) return;
+		if (!initialized) return;
+
+        if (AUDIO_DEBUG) console.log("audio.loadBGMusic()");
+
 		var request = new XMLHttpRequest();
 		request.open('GET', url, true);
 		request.responseType = 'arraybuffer';
@@ -513,6 +392,9 @@ function AudioGlobal() {
 
 	this.loadMusicEvent = function(url) {
         if (!AUDIO_ENABLED) return;
+
+        if (AUDIO_DEBUG) console.log("audio.loadMusicEvent: "+url);
+
 		var request = new XMLHttpRequest();
 		request.open('GET', url, true);
 		request.responseType = 'arraybuffer';
@@ -528,12 +410,14 @@ function AudioGlobal() {
 	this.loadSounds = function(id = 0) {
         if (!AUDIO_ENABLED) return;
 		var request = new XMLHttpRequest();
-		request.open('GET', soundsList[id], true);
+        if (AUDIO_DEBUG) console.log("downloading " + soundsList[id]);
+        request.open('GET', soundsList[id], true);
 		request.responseType = 'arraybuffer';
 		request.onload = function() {
 			audio.context.decodeAudioData(request.response, function(buffer) {
 				sounds.push(buffer);
-				if(id + 1 < soundsList.length) audio.loadSounds(id + 1);
+                if (AUDIO_DEBUG) console.log("sound "+sounds.length+" of "+soundsList.length+" is ready.");
+                if(id + 1 < soundsList.length) audio.loadSounds(id + 1);
 			});
 		};
 		request.send();
@@ -541,6 +425,8 @@ function AudioGlobal() {
 
 	this.duckMusic = function (duration, volume = 0) {
         if (!AUDIO_ENABLED) return;
+        if (!userHasInteracted) return;
+		if (!initialized) return;
 		currentMusicTrack.volume.gain.setTargetAtTime(volume, audioCtx.currentTime, CROSSFADE_TIME);
 		currentMusicTrack.volume.gain.setTargetAtTime(1, audioCtx.currentTime + duration, CROSSFADE_TIME);
 		return;
@@ -548,9 +434,12 @@ function AudioGlobal() {
 
 	function calcuateVolumeDropoff(location) {
         if (!AUDIO_ENABLED) return;
+        if (!userHasInteracted) return;
+		if (!initialized) return;
 		return calcuateVolumeDropoff2(location);
 	}
 
+    /*
     function calcuateVolumeDropoff1(location) {//Distance dropoff only
         if (!AUDIO_ENABLED) return;
 		var distance = currentPlayerPos.distance(location);
@@ -564,10 +453,14 @@ function AudioGlobal() {
 
 		return Math.pow(newVolume, 2);
 	}
+    */
 
     function calcuateVolumeDropoff2(location) {// +Head shadow
         if (!AUDIO_ENABLED) return;
-		var distance = currentPlayerPos.distance(location);
+        if (!userHasInteracted) return;
+		if (!initialized) return;
+
+        var distance = currentPlayerPos.distance(location);
 
 		var newVolume = 1;
 		if (distance > DROPOFF_MIN && distance <= DROPOFF_MAX) {
@@ -598,6 +491,7 @@ function AudioGlobal() {
 		return calcuatePan2(location);
 	}
 
+    /*
     function calcuatePan1(location) {//360 pan
         if (!AUDIO_ENABLED) return;
 		var direction = currentPlayerAngleDegrees + radToDeg(location.angle(currentPlayerPos));
@@ -621,6 +515,7 @@ function AudioGlobal() {
 
 		return pan;
 	}
+    */
 
     function calcuatePan2(location) {// +proximity
         if (!AUDIO_ENABLED) return;
@@ -670,7 +565,7 @@ function AudioGlobal() {
 		var pos = location;
 		for (var i in currentAudGeo) {
 			if (lineOfSight(currentPlayerPos, currentAudGeo[i].point)) {
-				var newDistance = checkAudGeo(i, location, [])
+				var newDistance = checkAudGeo(i, location, []);
 				if (newDistance < distance) {
 					distance = newDistance;
 					pos = currentAudGeo[i].point;
